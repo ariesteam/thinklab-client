@@ -8,7 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.data.MediaType;
-import org.restlet.ext.json.JsonConverter;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
@@ -79,21 +78,27 @@ public class Session {
 			JSONArray opts = (JSONArray)cmds.getResult(i,3);
 			
 			_commands.put(id, new RemoteCommand(id, ds, args, opts));
-		}
-		
-		
+		}		
 	}
 	
-	public Session(String url, String name) throws ThinklabClientException {
+	public Session(String url, String name, String user, String password) throws ThinklabClientException {
 
 		_server = url;
 		_name = name;
+		
 		initialize();
 
 		/*
 		 * get an unauthenticated session, establish ID
 		 */
-		Result auth = send("auth", false);
+		Result auth = 
+			user == null ? 
+				send("auth", false) :
+				send("auth", false, "user", user, "password", password);
+				
+		if (auth.getStatus() != Result.OK)
+			throw new ThinklabClientException(auth.print());
+		
 		this._id = auth.get("session").toString();
 	}
 
@@ -105,6 +110,7 @@ public class Session {
 		 * get an authenticated session, establish ID
 		 */
 		Result auth = send("auth", false, "user", user, "password", password);
+		this._id = auth.get("session").toString();
 	}
 
 	/**
@@ -124,7 +130,7 @@ public class Session {
 		
 		String url = _server + "/" + command + "?session=" + _id;
 		
-		if (arguments != null) {
+		if (arguments != null && arguments.length > 0) {
 			url += "?";
 			for (int i = 0; i < arguments.length; i++)
 				url += 

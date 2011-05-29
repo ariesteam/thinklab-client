@@ -26,12 +26,27 @@ public class Connect extends CommandHandler {
 		if (server == null)
 			throw new ThinklabClientException("server " + remote + " is unknown");
 		
+		String user = null;
+		String password = null;
+		
+		if (arguments.getArguments().size() >= 2) {
+			user = expect(arguments, 1);
+		}
+
+		if (arguments.getArguments().size() >= 3) {
+			password = expect(arguments, 2);
+		} else if (user != null){
+			password = cl.ask("password for " + user + ": ");
+		}
+		
 		/*
 		 * establish session with server
 		 */
-		session = new Session(server, remote);
+		session = new Session(server, remote, user, password);
 		
-		return Result.ok(session).info("connected to " + session.getServer());
+		return Result.ok(session).info(
+				"connected to " + session.getServer() + "\n" +
+				(user == null ? "anonymous" : user) + " session established");
 	}
 
 }

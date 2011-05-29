@@ -16,7 +16,7 @@ public class Result {
 
 	static public final int OK = 0, FAIL = 1, WAIT = 2; 
 	
-	long   _status = 0;	
+	int    _status = 0;	
 	String _taskID = null;
 	public JSONObject js = null;
 	public Object _result = null;
@@ -106,9 +106,6 @@ public class Result {
 	}
 
 	public int resultSize() throws ThinklabClientException {
-
-		if (_status != OK)
-			throw new ThinklabClientException("cannot retrieve result size: command failed");
 		
 		return (_result == null || JSONObject.NULL.equals(_result)) ? 
 				0 : 
@@ -117,9 +114,6 @@ public class Result {
 	
 	public Object getResult(int i) throws ThinklabClientException {
 
-		if (_status != OK)
-			throw new ThinklabClientException("cannot retrieve result: command failed");
-		
 		try {
 			JSONArray js = asArray();
 			return js == null? null : asArray().get(i);
@@ -130,9 +124,6 @@ public class Result {
 	
 	public Object getResult(int i, int j) throws ThinklabClientException {
 
-		if (_status != OK)
-			throw new ThinklabClientException("cannot retrieve result: command failed");
-		
 		Object ret = null;
 		try {
 			JSONArray jj = asArray();
@@ -149,9 +140,6 @@ public class Result {
 
 	public JSONArray asArray() throws ThinklabClientException {
 
-		if (_status != OK)
-			throw new ThinklabClientException("cannot retrieve result: command failed");
-		
 		if (!(_result instanceof JSONArray))
 			throw new ThinklabClientException("result is not an array");
 		if (JSONObject.NULL.equals(_result))
@@ -161,9 +149,6 @@ public class Result {
 	
 	public Object get(String field) throws ThinklabClientException {
 		
-		if (_status != OK)
-			throw new ThinklabClientException("cannot retrieve result: command failed");
-		
 		try {
 			return
 				js == null ?
@@ -172,6 +157,10 @@ public class Result {
 		} catch (JSONException e) {
 			throw new ThinklabClientException(e);
 		}
+	}
+
+	public int getStatus() {
+		return _status;
 	}
 	
 }
