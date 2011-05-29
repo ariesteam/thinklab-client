@@ -16,6 +16,6 @@
 	<classpathentry kind="lib" path="lib/org.restlet.ext.json.jar"/>
 	<classpathentry kind="lib" path="lib/org.restlet.jar"/>
 	<classpathentry kind="lib" path="lib/bsh_custom.jar"/>
-	<classpathentry kind="lib" path="lib/jopt-simple-2.4-beta2.jar"/>
+	<classpathentry kind="lib" path="lib/jewelcli-0.6.jar" sourcepath="/jewelcli"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

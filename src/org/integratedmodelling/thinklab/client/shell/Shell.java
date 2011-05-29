@@ -46,6 +46,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Modifier;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -53,9 +55,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.apache.commons.io.FileUtils;
+import org.integratedmodelling.thinklab.client.CommandHandler;
+import org.integratedmodelling.thinklab.client.CommandManager;
 import org.integratedmodelling.thinklab.client.Configuration;
+import org.integratedmodelling.thinklab.client.Result;
 import org.integratedmodelling.thinklab.client.Session;
+import org.integratedmodelling.thinklab.client.annotations.Command;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
+import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
 
 import bsh.util.JConsole;
 
@@ -115,12 +122,37 @@ public class Shell {
 	Font outputFont = new Font("Courier", Font.PLAIN, 12);
 	Session currentSession = null;
 	
+	public static void initialize() {
+				
+		for (Class<?> cls : 
+				MiscUtilities.findSubclasses(
+						CommandHandler.class, 
+						"org.integratedmodelling.thinklab.client.commands", 
+						Shell.class.getClassLoader())) {	
+			
+			/*
+			 * lookup annotation, ensure we can use the class
+			 */
+			if (cls.isInterface() || Modifier.isAbstract(cls.getModifiers()))
+				continue;
+			
+			/*
+			 * lookup implemented concept
+			 */
+			for (Annotation annotation : cls.getAnnotations()) {
+				if (annotation instanceof Command) {
+					CommandManager.registerCommand(((Command)annotation).id(), (Class<? extends CommandHandler>) cls);
+				}
+			}
+		}
+	}
+	
 	public class ConsolePanel extends JFrame {
 
 		private static final long serialVersionUID = -1303258585100820402L;
 
 		public ConsolePanel() {
-		    super("Thinklab console");
+		    super("Thinklab client");
 		    Container content = getContentPane();
 		    content.setBackground(Color.lightGray);
 		    JPanel controlArea = new JPanel(new GridLayout(2, 1));
@@ -129,7 +161,7 @@ public class Shell {
 		    console.setFont(outputFont);
 		    // Preferred height is irrelevant, since using WEST region
 		    console.setPreferredSize(new Dimension(600, 400));
-		    console.setBorder(BorderFactory.createLineBorder (Color.blue, 2));
+		    console.setBorder(BorderFactory.createLineBorder (Color.lightGray, 2));
 		    console.setBackground(Color.white);
 		    content.add(console, BorderLayout.WEST);
 		    pack();
@@ -252,17 +284,12 @@ public class Shell {
 
 	private void execute(String input) {
 
-		/*
-		 * get first token; if class XxxxCommand is found in package commands, 
-		 * fill in public members with options and call execute(). Otherwise 
-		 * send to server if any.
-		 */
-		
 		
 		try {
+			
+			Result result = CommandManager.execute(input, currentSession);
+			
 			this.error = false;
-
-			Object result = null;
 			
             if (result != null)
                 console.println(result.toString());
@@ -289,6 +316,7 @@ public class Shell {
 	}
 	
 	public static void main(String[] args) throws Exception {
+		initialize();
 		Shell shell = new Shell();
 		shell.startConsole();
 	}

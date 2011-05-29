@@ -19,6 +19,7 @@ public class Session {
 
 	private String _server = "http://127.0.0.1:8182";
 	private String _id = null;
+	private String _name = null;
 	
 	private void initialize() throws ThinklabClientException {
 	
@@ -32,9 +33,10 @@ public class Session {
 		
 	}
 	
-	public Session(String url) throws ThinklabClientException {
+	public Session(String url, String name) throws ThinklabClientException {
 
 		_server = url;
+		_name = name;
 		initialize();
 
 		/*
@@ -66,19 +68,19 @@ public class Session {
 			String command, boolean synchronous, 
 			String ... arguments) throws ThinklabClientException {
 		
-		String url = _server + "/rest/" + command;
+		String url = _server + "/rest/" + command + "&session=" + _id;
+		
 		if (arguments != null) {
 			url += "?";
 			for (int i = 0; i < arguments.length; i++)
 				url += 
-					((i > 0) ? "&" : "") +
 					Escape.forURL(arguments[i]) + 
 					"=" +
 					Escape.forURL(arguments[++i]);
 		}
 		
 		try {
-			ClientResource cr = new ClientResource("http://127.0.0.1:8182/rest/");
+			ClientResource cr = new ClientResource(url);
 			Representation rep = cr.get(MediaType.APPLICATION_JSON);
 			JSONObject js = new JSONObject(rep.getText());
 			return new Result(js);
