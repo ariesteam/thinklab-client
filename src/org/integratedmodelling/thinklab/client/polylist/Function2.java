@@ -1,5 +1,5 @@
 /**
- * Function1.java
+ * Function2.java
  * ----------------------------------------------------------------------------------
  * 
  * Copyright (C) 2008 www.integratedmodelling.org
@@ -32,17 +32,17 @@
  * @link      http://www.integratedmodelling.org
  **/
 // author:  Robert Keller
-// purpose: Interface Function1 of polya package
+// purpose: Interface Function2 of polya package
 
-package org.integratedmodelling.thinklab.client.utils;
+package org.integratedmodelling.thinklab.client.polylist;
 
   /**
-    * Function1 is an interface defining the function argument to map
+    * Function2 is an interface defining a 2-argument function
    **/
 
-public interface Function1
+public interface Function2
   {
-  Object apply(Object x);
+  Object apply(Object x, Object y);
   }
 
 

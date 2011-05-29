@@ -1,9 +1,14 @@
 package org.integratedmodelling.thinklab.client;
 
+import java.util.HashMap;
+
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.utils.Escape;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.data.MediaType;
+import org.restlet.ext.json.JsonConverter;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
@@ -20,16 +25,62 @@ public class Session {
 	private String _server = "http://127.0.0.1:8182";
 	private String _id = null;
 	private String _name = null;
+
+	class RemoteCommand {
+
+		public String id;
+		public String ds;
+		public String[] args;
+		public String[] opts;
+
+		String[] convert(JSONArray js) throws ThinklabClientException {
+			if (js == null)
+				return null;
+			String[] ret = new String[js.length()];
+			for (int i = 0; i < js.length(); i++) {
+				try {
+					ret[i] = js.getString(i);
+				} catch (JSONException e) {
+					throw new ThinklabClientException(e);
+				}
+			}
+			return ret;
+		}
+		
+		public RemoteCommand(String id, String ds, JSONArray args,
+				JSONArray opts) throws ThinklabClientException {
+			this.id = id;
+			this.ds = ds;
+			this.args = convert(args);
+			this.opts = convert(opts);
+		}
+		
+	}
+	
+	private HashMap<String, RemoteCommand> _commands = 
+		new HashMap<String, Session.RemoteCommand>();
 	
 	private void initialize() throws ThinklabClientException {
 	
 		/*
 		 * send ping, disconnect if offline
 		 */
+		Result rs = send("", false);
 		
 		/*
 		 * get capabilities, store in session
 		 */
+		Result cmds = send("getCommands", false);
+		
+		for (int i = 0; i < cmds.resultSize(); i++) {
+			String id = (String)cmds.getResult(i,0);
+			String ds = (String)cmds.getResult(i,1);
+			JSONArray args = (JSONArray)cmds.getResult(i,2);
+			JSONArray opts = (JSONArray)cmds.getResult(i,3);
+			
+			_commands.put(id, new RemoteCommand(id, ds, args, opts));
+		}
+		
 		
 	}
 	
@@ -42,6 +93,8 @@ public class Session {
 		/*
 		 * get an unauthenticated session, establish ID
 		 */
+		Result auth = send("auth", false);
+		this._id = auth.get("session").toString();
 	}
 
 	public Session(String url, String user, String password) throws ThinklabClientException {
@@ -51,6 +104,7 @@ public class Session {
 		/*
 		 * get an authenticated session, establish ID
 		 */
+		Result auth = send("auth", false, "user", user, "password", password);
 	}
 
 	/**
@@ -68,12 +122,13 @@ public class Session {
 			String command, boolean synchronous, 
 			String ... arguments) throws ThinklabClientException {
 		
-		String url = _server + "/rest/" + command + "&session=" + _id;
+		String url = _server + "/" + command + "?session=" + _id;
 		
 		if (arguments != null) {
 			url += "?";
 			for (int i = 0; i < arguments.length; i++)
 				url += 
+					"&" + 
 					Escape.forURL(arguments[i]) + 
 					"=" +
 					Escape.forURL(arguments[++i]);
@@ -89,4 +144,11 @@ public class Session {
 		}
 	}
 	
+	public String getName() {
+		return _name;
+	}
+
+	public String getServer() {
+		return _server;
+	}
 }

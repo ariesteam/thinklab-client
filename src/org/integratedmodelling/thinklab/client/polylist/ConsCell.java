@@ -1,8 +1,8 @@
 /**
- * Growable.java
+ * polycell.java
  * ----------------------------------------------------------------------------------
  * 
- * Copyright (C) 2008 www.integratedmodelling.org
+ * Copyright (C) 2008 Robert Keller and www.integratedmodelling.org
  * Created: Jan 17, 2008
  *
  * ----------------------------------------------------------------------------------
@@ -24,7 +24,8 @@
  * 
  * ----------------------------------------------------------------------------------
  * 
- * @copyright 2008 www.integratedmodelling.org
+ * @copyright 2008 Robert Keller and www.integratedmodelling.org
+ * @author    Robert Keller (original, polya package)
  * @author    Ferdinando Villa (fvilla@uvm.edu)
  * @author    Ioannis N. Athanasiadis (ioannis@athanasiadis.info)
  * @date      Jan 17, 2008
@@ -32,11 +33,67 @@
  * @link      http://www.integratedmodelling.org
  **/
 // author:  Robert Keller
-// purpose: Define Growable class which is used as an argument to Seed
+// purpose: polycell used in implementation of Polylists
 
-package org.integratedmodelling.thinklab.client.utils;
+package org.integratedmodelling.thinklab.client.polylist;
 
-public abstract class Growable
+	
+/**
+  *  NonEmptyList is the sub-class of List consisting of non-empty 
+  *  lists.  Every NonEmptyList has a first and a rest.
+ **/
+
+class ConsCell
   {
-  public abstract Object grow();
-  }
+  private Object First;
+  private Object Rest;
+
+
+  /**
+    *  first() returns the first element of a NonEmptyList.
+   **/ 
+
+  Object first()
+    {
+    return First;
+    }
+
+
+  /**
+    *  rest() returns the rest of a NonEmptyList.
+   **/ 
+
+  Polylist rest()
+    {
+    if( Rest instanceof Seed ) 
+      {
+      Rest = ((Seed)Rest).grow();
+      }
+    return (Polylist)Rest;
+    }
+
+
+  /**
+    *  polycell is the constructor for the cell of a Polyist, 
+    *  given a First and a Rest.
+    *
+    *  Use static method cons of class Polylist to avoid using 'new' 
+    *  explicitly.
+   **/ 
+
+  ConsCell(Object First, Object Rest)
+    {
+    this.First = First;
+    this.Rest = Rest;
+    }
+
+
+  /**
+    *  setFirst() sets the first element of a NonEmptyList.
+   **/ 
+
+  void setFirst(Object value)
+    {
+    First = value;
+    }
+  }  // class polycell

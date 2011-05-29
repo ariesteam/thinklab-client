@@ -35,7 +35,7 @@
 // purpose: a Seed is an object which can grow into something else by
 //          calling a method
 
-package org.integratedmodelling.thinklab.client.utils;
+package org.integratedmodelling.thinklab.client.polylist;
 
 	
 /**

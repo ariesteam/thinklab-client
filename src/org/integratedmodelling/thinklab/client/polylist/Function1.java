@@ -1,8 +1,8 @@
 /**
- * Incremental.java
+ * Function1.java
  * ----------------------------------------------------------------------------------
  * 
- * Copyright (C) 2008 Robert Keller and www.integratedmodelling.org
+ * Copyright (C) 2008 www.integratedmodelling.org
  * Created: Jan 17, 2008
  *
  * ----------------------------------------------------------------------------------
@@ -24,8 +24,7 @@
  * 
  * ----------------------------------------------------------------------------------
  * 
- * @copyright 2008 Robert Keller and www.integratedmodelling.org
- * @author    Robert Keller (original, polya package)
+ * @copyright 2008 www.integratedmodelling.org
  * @author    Ferdinando Villa (fvilla@uvm.edu)
  * @author    Ioannis N. Athanasiadis (ioannis@athanasiadis.info)
  * @date      Jan 17, 2008
@@ -33,69 +32,18 @@
  * @link      http://www.integratedmodelling.org
  **/
 // author:  Robert Keller
-// purpose: Class Incremental of poly package
+// purpose: Interface Function1 of polya package
 
-package org.integratedmodelling.thinklab.client.utils;
+package org.integratedmodelling.thinklab.client.polylist;
 
-public class Incremental extends Polylist
+  /**
+    * Function1 is an interface defining the function argument to map
+   **/
+
+public interface Function1
   {
-  Object value;
-
-  public Object first()
-    {
-    ensureGrown();
-    return ((Polylist)value).first();
-    }
-
-  public Polylist rest()
-    {
-    ensureGrown();
-    return ((Polylist)value).rest();
-    }
-
-  public boolean isEmpty()
-    {
-    ensureGrown();
-    return ((Polylist)value).isEmpty();
-    }
-
-  public boolean nonEmpty()
-    {
-    ensureGrown();
-    return ((Polylist)value).nonEmpty();
-    }
-
-  public String toString()
-    {
-    if( value instanceof Growable )
-      return "...";
-    else
-      return ((Polylist)value).toString();
-    }
-
-  public Incremental(Growable growable)
-    {
-    value = growable;
-    }
-
-  public void ensureGrown()
-    {
-    while( value instanceof Growable )
-      {
-      value = ((Growable)value).grow();
-      }
-    }
-
-  // use with caution!
-
-  public boolean grown()
-    {
-    return !(value instanceof Growable);
-    }
-
-  public Polylist getList()
-    {
-    ensureGrown();
-    return (Polylist)value;
-    }
+  Object apply(Object x);
   }
+
+
+

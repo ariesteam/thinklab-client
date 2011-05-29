@@ -1,5 +1,5 @@
 /**
- * polycell.java
+ * Incremental.java
  * ----------------------------------------------------------------------------------
  * 
  * Copyright (C) 2008 Robert Keller and www.integratedmodelling.org
@@ -33,67 +33,69 @@
  * @link      http://www.integratedmodelling.org
  **/
 // author:  Robert Keller
-// purpose: polycell used in implementation of Polylists
+// purpose: Class Incremental of poly package
 
-package org.integratedmodelling.thinklab.client.utils;
+package org.integratedmodelling.thinklab.client.polylist;
 
-	
-/**
-  *  NonEmptyList is the sub-class of List consisting of non-empty 
-  *  lists.  Every NonEmptyList has a first and a rest.
- **/
-
-class ConsCell
+public class Incremental extends Polylist
   {
-  private Object First;
-  private Object Rest;
+  Object value;
 
-
-  /**
-    *  first() returns the first element of a NonEmptyList.
-   **/ 
-
-  Object first()
+  public Object first()
     {
-    return First;
+    ensureGrown();
+    return ((Polylist)value).first();
     }
 
-
-  /**
-    *  rest() returns the rest of a NonEmptyList.
-   **/ 
-
-  Polylist rest()
+  public Polylist rest()
     {
-    if( Rest instanceof Seed ) 
+    ensureGrown();
+    return ((Polylist)value).rest();
+    }
+
+  public boolean isEmpty()
+    {
+    ensureGrown();
+    return ((Polylist)value).isEmpty();
+    }
+
+  public boolean nonEmpty()
+    {
+    ensureGrown();
+    return ((Polylist)value).nonEmpty();
+    }
+
+  public String toString()
+    {
+    if( value instanceof Growable )
+      return "...";
+    else
+      return ((Polylist)value).toString();
+    }
+
+  public Incremental(Growable growable)
+    {
+    value = growable;
+    }
+
+  public void ensureGrown()
+    {
+    while( value instanceof Growable )
       {
-      Rest = ((Seed)Rest).grow();
+      value = ((Growable)value).grow();
       }
-    return (Polylist)Rest;
     }
 
+  // use with caution!
 
-  /**
-    *  polycell is the constructor for the cell of a Polyist, 
-    *  given a First and a Rest.
-    *
-    *  Use static method cons of class Polylist to avoid using 'new' 
-    *  explicitly.
-   **/ 
-
-  ConsCell(Object First, Object Rest)
+  public boolean grown()
     {
-    this.First = First;
-    this.Rest = Rest;
+    return !(value instanceof Growable);
     }
 
-
-  /**
-    *  setFirst() sets the first element of a NonEmptyList.
-   **/ 
-
-  void setFirst(Object value)
+  public Polylist getList()
     {
-    First = value;
+    ensureGrown();
+    return (Polylist)value;
     }
-  }  // class polycell
+  }

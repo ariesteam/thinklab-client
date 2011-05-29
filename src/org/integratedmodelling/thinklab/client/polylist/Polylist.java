@@ -33,7 +33,7 @@
  * @link      http://www.integratedmodelling.org
  **/
 
-package org.integratedmodelling.thinklab.client.utils;
+package org.integratedmodelling.thinklab.client.polylist;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,6 +48,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
+import org.integratedmodelling.thinklab.client.utils.MalformedListException;
 
 /**   
  <pre>

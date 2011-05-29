@@ -35,7 +35,7 @@
 // purpose: Class Arith of polya package
 //          Implements "polymorphic arithmetic"
 
-package org.integratedmodelling.thinklab.client.utils;
+package org.integratedmodelling.thinklab.client.polylist;
 
 public class Arith {
 	static public boolean greaterThan(Object v1, Object v2) {

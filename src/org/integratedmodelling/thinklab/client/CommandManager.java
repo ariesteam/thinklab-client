@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.integratedmodelling.thinklab.client.CommandHandler.Arguments;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
+import org.integratedmodelling.thinklab.client.shell.CommandLine;
 
 import uk.co.flamingpenguin.jewel.cli.ArgumentValidationException;
 import uk.co.flamingpenguin.jewel.cli.CliFactory;
@@ -18,7 +19,7 @@ public class CommandManager {
 		_commands.put(id, cls);
 	}
 	
-	public static Result execute(String s, Session session) throws ThinklabClientException {
+	public static Result execute(String s, Session session, CommandLine cl) throws ThinklabClientException {
 		
 		String[] ss = s.trim().split("\\ ");
 		Result ret = null;
@@ -31,11 +32,11 @@ public class CommandManager {
 			try {
 				CommandHandler cmd = cmdcl.newInstance();
 				final Object command = CliFactory.parseArguments(cmd.getArgumentsClass(), args);
-				ret = cmd.execute((Arguments) command, session);
+				ret = cmd.execute((Arguments) command, session, cl);
 			} catch (Exception e) {
 				
 				if (e instanceof ArgumentValidationException) {
-					ret = Result.info(e.getMessage());
+					ret = Result.ok(session).info(e.getMessage());
 				} else {
 					throw new ThinklabClientException(e);
 				}

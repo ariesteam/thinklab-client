@@ -35,7 +35,7 @@
 // author:  Robert Keller
 // purpose: Polylist enumeration class of polya package
 
-package org.integratedmodelling.thinklab.client.utils;
+package org.integratedmodelling.thinklab.client.polylist;
 
 
 /**

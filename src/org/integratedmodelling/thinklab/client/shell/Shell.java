@@ -112,15 +112,60 @@ import bsh.util.JConsole;
  * 
  * @author Ferdinando Villa
  */
-public class Shell {
+public class Shell implements CommandLine {
 	
 	JConsole console = null;
-	
 	File historyFile = null;
 	
 	Font inputFont = new Font("Courier", Font.BOLD, 12);
 	Font outputFont = new Font("Courier", Font.PLAIN, 12);
 	Session currentSession = null;
+	
+	protected String prompt() {
+		return currentSession == null ?
+				">" :
+				currentSession.getName() + ">";
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.integratedmodelling.thinklab.client.shell.CommandCock#ask(java.lang.String)
+	 */
+	@Override
+	public String ask(String prompt) throws ThinklabClientException {
+		console.print(prompt);
+		String ret = readLine(console.getInputStream()).trim();
+		
+		/*
+		 * the stupid console returns a ; for any empty command, which is weird - this should be
+		 * removed and the console should be fixed.
+		 */
+		return ret == null ? null : ((ret.trim().isEmpty() || ret.equals(";")) ? null : ret.trim());
+	}
+
+	/* (non-Javadoc)
+	 * @see org.integratedmodelling.thinklab.client.shell.CommandCock#ask(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public String ask(String prompt, String defaultresponse) throws ThinklabClientException {
+		String ret = ask(prompt);
+		return ret == null ? defaultresponse : ret;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.integratedmodelling.thinklab.client.shell.CommandCock#say(java.lang.String)
+	 */
+	@Override
+	public void say(String text) {
+		console.println(text);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.integratedmodelling.thinklab.client.shell.CommandCock#ask()
+	 */
+	@Override
+	public String ask() throws ThinklabClientException {
+		return ask(null);
+	}
 	
 	public static void initialize() {
 				
@@ -231,7 +276,7 @@ public class Shell {
 		/* define commands from user input */
 		while(true) {
 			
-			console.print("> ");
+			console.print(prompt() + " ");
 			console.setStyle(inputFont);
 			
 			input = readLine(console.getInputStream()).trim();
@@ -287,13 +332,17 @@ public class Shell {
 		
 		try {
 			
-			Result result = CommandManager.execute(input, currentSession);
+			Result result = CommandManager.execute(input, currentSession, this);
 			
 			this.error = false;
 			
-            if (result != null)
-                console.println(result.toString());
-            
+            if (result != null) {
+            	String ret = result.print();
+            	if (!ret.isEmpty())
+            		console.println(result.print());
+            	
+            	currentSession = result.getSession();
+            }
             console.getOut().flush();
 
 		} catch (Exception e) {

@@ -1,5 +1,5 @@
 /**
- * Function2.java
+ * Growable.java
  * ----------------------------------------------------------------------------------
  * 
  * Copyright (C) 2008 www.integratedmodelling.org
@@ -32,18 +32,11 @@
  * @link      http://www.integratedmodelling.org
  **/
 // author:  Robert Keller
-// purpose: Interface Function2 of polya package
+// purpose: Define Growable class which is used as an argument to Seed
 
-package org.integratedmodelling.thinklab.client.utils;
+package org.integratedmodelling.thinklab.client.polylist;
 
-  /**
-    * Function2 is an interface defining a 2-argument function
-   **/
-
-public interface Function2
+public abstract class Growable
   {
-  Object apply(Object x, Object y);
+  public abstract Object grow();
   }
-
-
-
