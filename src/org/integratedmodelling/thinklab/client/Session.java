@@ -1,14 +1,36 @@
 package org.integratedmodelling.thinklab.client;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
+import org.integratedmodelling.thinklab.client.listeners.ProgressListener;
 import org.integratedmodelling.thinklab.client.utils.Escape;
+import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.restlet.Client;
+import org.restlet.Component;
+import org.restlet.Response;
+import org.restlet.data.Encoding;
 import org.restlet.data.MediaType;
+import org.restlet.data.Protocol;
+import org.restlet.engine.application.EncodeRepresentation;
+import org.restlet.representation.FileRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
 
 /**
@@ -143,8 +165,117 @@ public class Session {
 		try {
 			ClientResource cr = new ClientResource(url);
 			Representation rep = cr.get(MediaType.APPLICATION_JSON);
+			
+			/*
+			 * anything not JSON means a 404 or other error
+			 */
+			if (!rep.getMediaType().equals(MediaType.APPLICATION_JSON))
+				throw new ThinklabClientException("server failure: not a Thinklab REST service");
+			
 			JSONObject js = new JSONObject(rep.getText());
 			return new Result(js);
+			
+		} catch (Exception e) {
+			throw new ThinklabClientException(e);
+		}
+	}
+	
+	/**
+	 * Download file from server specified by given handle. If fname is not null,
+	 * save to given file name, overwriting any existing ones without warning. Otherwise
+	 * save to default download directory using temp file name and subdirectory corresponding
+	 * to session id. Extension is taken from
+	 * handle. If fname is given w/o extension and handle has an extension, set the 
+	 * extension of the downloaded file to that in the handle.
+	 * 
+	 * @param handle
+	 * @param fname
+	 * @return the final file name downloaded
+	 */
+	public File download(String handle, File fname, ProgressListener listener) throws ThinklabClientException {
+
+		String hext = MiscUtilities.getFileExtension(handle);
+		String fext = fname == null ? "" : MiscUtilities.getFileExtension(fname.toString());
+		
+		if (fname == null) {
+			// download to session subdir to minimize conflicts
+			File dpath = 
+				new File(
+						Configuration.getDownloadPath()+ 
+						File.separator + 
+						MiscUtilities.getFilePath(handle));
+			dpath.mkdirs();
+			fname = new File(
+					dpath + 
+					File.separator + MiscUtilities.getFileName(handle));
+		} else {
+			// conflicts are assumed taken care of upstream when fname is passed
+			String path = MiscUtilities.getFilePath(fname.toString());
+			if (path.isEmpty())
+				fname = new File(
+					Configuration.getDownloadPath()+ 
+					File.separator + fname);
+				
+		}
+		
+		if (fext.isEmpty() && !hext.isEmpty())
+			fname = new File(fname + "." + fext);
+		
+		try {
+			HttpClient client = new DefaultHttpClient();
+			HttpGet get = new HttpGet(
+					_server + "/send?session=" + _id + 
+					"&handle=" + Escape.forURL(handle));
+			HttpResponse response = client.execute(get);
+			
+			if (response.getStatusLine().getStatusCode() != 200)
+				throw new ThinklabClientException(
+						"upload of " + fname + " failed: status code = " + 
+						response.getStatusLine().getStatusCode());
+			
+			MiscUtilities.saveStreamToFile(response.getEntity().getContent(), fname);
+		} catch (Exception e) {
+			throw new ThinklabClientException(e);
+		}
+		return fname;
+	}
+	
+	/**
+	 * Upload file to server; return handle that server will use to locate the
+	 * file. 
+	 * 
+	 * @param fname
+	 * @return
+	 * @throws ThinklabClientException
+	 */
+	public String upload(File fname, ProgressListener listener) throws ThinklabClientException {
+
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpPost httpPost = new HttpPost(_server + "/receive?session=" + _id);
+
+		FileBody uploadFilePart = new FileBody(fname);
+		MultipartEntity reqEntity = new MultipartEntity();
+		reqEntity.addPart("upload-file", uploadFilePart);
+		httpPost.setEntity(reqEntity);
+		
+		try {
+			
+			HttpResponse response = httpclient.execute(httpPost);
+			
+			if (response.getStatusLine().getStatusCode() != 200)
+				throw new ThinklabClientException(
+						"upload of " + fname + " failed: status code = " + 
+						response.getStatusLine().getStatusCode());
+			
+			String rep = MiscUtilities.convertStreamToString(
+					response.getEntity().getContent());
+			
+			Result js = new Result(new JSONObject(rep));
+			if (js.getStatus() != Result.OK)
+				throw new ThinklabClientException("transfer failed");
+			
+			return js.getResult().toString();
+			
 		} catch (Exception e) {
 			throw new ThinklabClientException(e);
 		}

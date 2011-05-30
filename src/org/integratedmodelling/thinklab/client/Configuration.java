@@ -15,6 +15,12 @@ public class Configuration {
 		return ret;
 	}
 
+	public static File getDownloadPath() {
+		File ret = new File(getConfigPath() + File.separator + "downloads"); 
+		ret.mkdirs();
+		return ret;
+	}
+	
 	public static String getVersion() {
 		return "1.0alpha";
 	}
@@ -43,5 +49,4 @@ public class Configuration {
 			throw new RuntimeException(e);
 		}
 	}
-	
 }

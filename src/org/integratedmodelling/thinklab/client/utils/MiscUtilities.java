@@ -67,8 +67,10 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
@@ -132,7 +134,43 @@ import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientExceptio
  */
 public class MiscUtilities{    
 	
+	public static void saveStreamToFile(InputStream content, File fname) throws ThinklabClientException {
+	    writeToFile(fname.toString(), content, false);		
+	}
 	
+	public static String convertStreamToString(InputStream is)
+			throws ThinklabClientException {
+		
+		/*
+		 * To convert the InputStream to String we use the Reader.read(char[]
+		 * buffer) method. We iterate until the Reader return -1 which means
+		 * there's no more data to read. We use the StringWriter class to
+		 * produce the string.
+		 */
+		if (is != null) {
+			Writer writer = new StringWriter();
+
+			char[] buffer = new char[1024];
+			try {
+				try {
+					Reader reader = new BufferedReader(new InputStreamReader(
+							is, "UTF-8"));
+					int n;
+					while ((n = reader.read(buffer)) != -1) {
+						writer.write(buffer, 0, n);
+					}
+				} finally {
+					is.close();
+				}
+			} catch (Exception e) {
+				throw new ThinklabClientException(e);
+			}
+			return writer.toString();
+		} else {
+			return "";
+		}
+	}
+
 	/**
 	 * Return a suffix representing the current date (to the second) suitable to
 	 * being used to append to a filename to make it date-specific.
@@ -268,7 +306,7 @@ public class MiscUtilities{
 	 */
 	public static String getFilePath(String s) {
 
-		String ret = s;
+		String ret = "";
 		
 		int sl = s.lastIndexOf("/");
 		if (sl < 0)
@@ -338,71 +376,72 @@ public class MiscUtilities{
 		return ret;
 	}
 	
-	  /**
-	   * Writes InputStream to a given <code>fileName<code>.
-	   * And, if directory for this file does not exists,
-	   * if createDir is true, creates it, otherwice throws OMDIOexception.
-	   *
-	   * @param fileName - filename save to.
-	   * @param iStream  - InputStream with data to read from.
-	   * @param createDir (false by default)
-	   * @throws IOException in case of any error.
-	   *
-	   * @refactored 2002-05-02 by Alexander Feldman
-	   * - moved from OMDBlob.
-	   *
-	   */
-	  public static void writeToFile(String fileName, InputStream iStream,
-	    boolean createDir)
-	    throws IOException
-	  {
-	    String me = "FileUtils.WriteToFile";
-	    if (fileName == null)
-	    {
-	      throw new IOException(me + ": filename is null");
-	    }
-	    
-	    File theFile = new File(fileName);
+	/**
+	 * Writes InputStream to a given <code>fileName<code>.
+	 * And, if directory for this file does not exists,
+	 * if createDir is true, creates it, otherwice throws OMDIOexception.
+	 * 
+	 * @param fileName
+	 *            - filename save to.
+	 * @param iStream
+	 *            - InputStream with data to read from.
+	 * @param createDir
+	 *            (false by default)
+	 * @throws IOException
+	 *             in case of any error.
+	 * @throws ThinklabClientException
+	 * 
+	 * @refactored 2002-05-02 by Alexander Feldman - moved from OMDBlob.
+	 * 
+	 */
+	public static void writeToFile(String fileName, InputStream iStream,
+			boolean createDir) throws ThinklabClientException {
+		if (fileName == null) {
+			throw new ThinklabClientException("writeToFile: filename is null");
+		}
 
-	    // Check if a file exists.
-	    if (theFile.exists())
-	    {
-	       String msg =
-	         theFile.isDirectory() ? "directory" :
-	         (! theFile.canWrite() ? "not writable" : null);
-	       if (msg != null)
-	       {
-	         throw new IOException(me + ": file '" + fileName + "' is " + msg);
-	       }
-	    }
+		File theFile = new File(fileName);
 
-	    // Create directory for the file, if requested.
-	    if (createDir && theFile.getParentFile() != null)
-	    {
-	      theFile.getParentFile().mkdirs();
-	    }
+		// Check if a file exists.
+		if (theFile.exists()) {
+			String msg = theFile.isDirectory() ? "directory" : (!theFile
+					.canWrite() ? "not writable" : null);
+			if (msg != null) {
+				throw new ThinklabClientException("writeToFile: file '"
+						+ fileName + "' is " + msg);
+			}
+		}
 
-	    // Save InputStream to the file.
-	    BufferedOutputStream fOut = null;
-	    try
-	    {
-	      fOut = new BufferedOutputStream(new FileOutputStream(theFile));
-	      byte[] buffer = new byte[32 * 1024];
-	      int bytesRead = 0;
-	      if (iStream != null) {
-	    	  while ((bytesRead = iStream.read(buffer)) != -1) {
-	    		  fOut.write(buffer, 0, bytesRead);
-	    	  }
-	      }
-	    } catch (Exception e) {
-	    	throw new IOException(me + " failed, got: " + e.toString());
-	     } finally {
-	    	  if (iStream != null)
-	    		  iStream.close();
-	    	  fOut.close();    	  
-	      }
-	  }
-	
+		// Create directory for the file, if requested.
+		if (createDir && theFile.getParentFile() != null) {
+			theFile.getParentFile().mkdirs();
+		}
+
+		// Save InputStream to the file.
+		BufferedOutputStream fOut = null;
+		try {
+			try {
+				fOut = new BufferedOutputStream(new FileOutputStream(theFile));
+				byte[] buffer = new byte[32 * 1024];
+				int bytesRead = 0;
+				if (iStream != null) {
+					while ((bytesRead = iStream.read(buffer)) != -1) {
+						fOut.write(buffer, 0, bytesRead);
+					}
+				}
+			} catch (Exception e) {
+				throw new ThinklabClientException("writeToFile failed, got: "
+						+ e.toString());
+			} finally {
+				if (iStream != null)
+					iStream.close();
+				fOut.close();
+			}
+		} catch (Exception e) {
+			throw new ThinklabClientException(e);
+		}
+	}
+
 	  /**
 	   * Closes InputStream and/or OutputStream.
 	   * It makes sure that both streams tried to be closed,
@@ -1859,5 +1898,7 @@ loop:		for(;;)
 		  }
 		  return result.toString();
 	  }
+
+
 
 }

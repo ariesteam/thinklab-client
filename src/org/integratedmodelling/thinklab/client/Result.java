@@ -69,7 +69,9 @@ public class Result {
 		try {
 			if (_status == OK) {
 				if (_result != null) {
-
+					if (js != null && js.has("info"))
+						ret = js.getString("info") + "\n";
+					ret += "[" + _result.toString() + "]";
 				} else if (js != null && js.has("warning")) {
 					ret = js.getString("warning");
 				}else if (js != null && js.has("info")) {
@@ -161,6 +163,11 @@ public class Result {
 
 	public int getStatus() {
 		return _status;
+	}
+
+	public Result setResult(String ss) {
+		_result = ss;
+		return this;
 	}
 	
 }
