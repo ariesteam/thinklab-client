@@ -1,6 +1,10 @@
 package org.integratedmodelling.thinklab.client;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
+import org.integratedmodelling.thinklab.client.utils.Pair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -168,6 +172,31 @@ public class Result {
 	public Result setResult(String ss) {
 		_result = ss;
 		return this;
+	}
+
+	/**
+	 * Return all the files to download inserted in the result by the remote command.
+	 * 
+	 * @return
+	 * @throws ThinklabClientException
+	 */
+	public Collection<Pair<String, String>> getDownloads()
+			throws ThinklabClientException {
+
+		ArrayList<Pair<String, String>> ret = new ArrayList<Pair<String, String>>();
+		try {
+			if (js != null && js.has("downloads")) {
+				JSONArray dl = js.getJSONArray("downloads");
+				for (int i = 0; i < dl.length(); i++) {
+					String fn = dl.getJSONArray(i).getString(0);
+					String fh = dl.getJSONArray(i).getString(1);
+					ret.add(new Pair<String, String>(fn, fh));
+				}
+			}
+		} catch (JSONException e) {
+			throw new ThinklabClientException(e);
+		}
+		return ret;
 	}
 	
 }

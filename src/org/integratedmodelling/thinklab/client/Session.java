@@ -47,7 +47,7 @@ public class Session {
 	private String _id = null;
 	private String _name = null;
 
-	class RemoteCommand {
+	public class RemoteCommand {
 
 		public String id;
 		public String ds;
@@ -78,6 +78,27 @@ public class Session {
 		
 	}
 	
+	public void scanCommands() throws ThinklabClientException {
+
+		_commands.clear();
+		
+		Result cmds = send("getCommands", false);
+		
+		for (int i = 0; i < cmds.resultSize(); i++) {
+			String id = (String)cmds.getResult(i,0);
+			String ds = (String)cmds.getResult(i,1);
+			JSONArray args = (JSONArray)cmds.getResult(i,2);
+			JSONArray opts = (JSONArray)cmds.getResult(i,3);
+			
+			_commands.put(id, new RemoteCommand(id, ds, args, opts));
+		}		
+		
+	}
+	
+	public RemoteCommand getRemoteCommandDeclaration(String command) {
+		return _commands.get(command);
+	}
+	
 	private HashMap<String, RemoteCommand> _commands = 
 		new HashMap<String, Session.RemoteCommand>();
 	
@@ -91,16 +112,7 @@ public class Session {
 		/*
 		 * get capabilities, store in session
 		 */
-		Result cmds = send("getCommands", false);
-		
-		for (int i = 0; i < cmds.resultSize(); i++) {
-			String id = (String)cmds.getResult(i,0);
-			String ds = (String)cmds.getResult(i,1);
-			JSONArray args = (JSONArray)cmds.getResult(i,2);
-			JSONArray opts = (JSONArray)cmds.getResult(i,3);
-			
-			_commands.put(id, new RemoteCommand(id, ds, args, opts));
-		}		
+		scanCommands();
 	}
 	
 	public Session(String url, String name, String user, String password) throws ThinklabClientException {
