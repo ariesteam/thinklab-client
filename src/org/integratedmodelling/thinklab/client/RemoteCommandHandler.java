@@ -42,7 +42,7 @@ public abstract class RemoteCommandHandler extends CommandHandler {
 		@Override
 		public void onWait(String command, String... arguments) {
 			if (!wasDelayed)
-				_cl.append("waiting for server");
+				_cl.append("waiting for server...");
 			wasDelayed = true;
 			_cl.append(".");
 		}

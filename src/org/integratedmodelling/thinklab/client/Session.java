@@ -1,19 +1,15 @@
 package org.integratedmodelling.thinklab.client;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.listeners.ProgressListener;
 import org.integratedmodelling.thinklab.client.utils.Escape;
@@ -21,16 +17,8 @@ import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.restlet.Client;
-import org.restlet.Component;
-import org.restlet.Response;
-import org.restlet.data.Encoding;
 import org.restlet.data.MediaType;
-import org.restlet.data.Protocol;
-import org.restlet.engine.application.EncodeRepresentation;
-import org.restlet.representation.FileRepresentation;
 import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
 
 /**
@@ -47,7 +35,7 @@ public class Session {
 	private String _id = null;
 	private String _name = null;
 
-	private int delay = 1000;
+	private int delay = 4000;
 	
 	public interface Listener {
 		
@@ -197,7 +185,7 @@ public class Session {
 			ret = sendInternal(command, arguments);
 			if ( (waiting = (!asynchronous && ret != null && ret.getStatus() == Result.WAIT))) {
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(delay);
 					if (listener != null)
 						listener.onWait(command, arguments);
 					command = "check";
@@ -219,7 +207,6 @@ public class Session {
 		String url = _server + "/" + command + "?session=" + _id;
 		
 		if (arguments != null && arguments.length > 0) {
-			url += "?";
 			for (int i = 0; i < arguments.length; i++)
 				url += 
 					"&" + 
