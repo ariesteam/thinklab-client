@@ -7,17 +7,13 @@ import org.integratedmodelling.thinklab.client.annotations.Command;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.shell.CommandLine;
 
-@Command(id="pload")
-public class Pload extends RemoteCommandHandler {
+@Command(id="run")
+public class Run extends RemoteCommandHandler {
 
 	@Override
 	public Result runRemote(Arguments arguments, Session session, CommandLine cl)
 			throws ThinklabClientException {
-
-		Result ret = send("pload", arguments);
-		// commands may have been added by new plugins: rescan
-		session.scanCommands();
-		return ret;
+		return send("run", arguments);
 	}
 
 }

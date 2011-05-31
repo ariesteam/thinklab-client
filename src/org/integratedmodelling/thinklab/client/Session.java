@@ -47,6 +47,15 @@ public class Session {
 	private String _id = null;
 	private String _name = null;
 
+	private int delay = 1000;
+	
+	public interface Listener {
+		
+		public void onStart(String command, String ... arguments);
+		public void onFinish(String command, Result ret, String ... arguments);
+		public void onWait(String command, String ... arguments);
+	}
+	
 	public class RemoteCommand {
 
 		public String id;
@@ -146,21 +155,66 @@ public class Session {
 		Result auth = send("auth", false, "user", user, "password", password);
 		this._id = auth.get("session").toString();
 	}
-
+	
 	/**
 	 * Send a command and if requested, wait for completion. Return result or task ID.
-	 * NOTE: this only uses get.
 	 * 
 	 * @param command
-	 * @param synchronous if this is true, we don't wait for completion of long-running commands and just 
-	 * 					  return the task ID. Default is to wait (polling the server until completion).
+	 * @param asynchronous if this is true, we don't wait for completion of long-running commands and just 
+	 * 					   return the task ID. Default is to wait (polling the server until completion).
 	 * @param arguments
 	 * @return
 	 * @throws ThinklabClientException
 	 */
 	public Result send(
-			String command, boolean synchronous, 
+			String command, boolean asynchronous,
 			String ... arguments) throws ThinklabClientException {
+		return send(command, asynchronous, null, arguments);
+	}
+	
+	/**
+	 * Send a command and if requested, wait for completion. Return result or task ID.
+	 * 
+	 * @param command
+	 * @param asynchronous if this is true, we don't wait for completion of long-running commands and just 
+	 * 					   return the task ID. Default is to wait (polling the server until completion).
+	 * @param listener a Listener to be notified of start, finish and wait.
+	 * @param arguments
+	 * @return
+	 * @throws ThinklabClientException
+	 */
+	public Result send(
+			String command, boolean asynchronous, Listener listener,
+			String ... arguments) throws ThinklabClientException {
+		
+		Result ret = null;
+		
+		if (listener != null)
+			listener.onStart(command, arguments);
+
+		boolean waiting = false;
+		do {			
+			ret = sendInternal(command, arguments);
+			if ( (waiting = (!asynchronous && ret != null && ret.getStatus() == Result.WAIT))) {
+				try {
+					Thread.sleep(1000);
+					if (listener != null)
+						listener.onWait(command, arguments);
+					command = "check";
+					arguments = new String[]{"taskid", ret.get("taskid").toString()}; 
+				} catch (InterruptedException e) {
+					throw new ThinklabClientException(e);
+				}
+			}
+		} while (waiting);
+
+		if (listener != null)
+			listener.onFinish(command, ret, arguments);
+
+		return ret;
+	}
+
+	private Result sendInternal(String command, String ... arguments) throws ThinklabClientException {
 		
 		String url = _server + "/" + command + "?session=" + _id;
 		

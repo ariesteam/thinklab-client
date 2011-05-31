@@ -7,17 +7,28 @@ import org.integratedmodelling.thinklab.client.annotations.Command;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.shell.CommandLine;
 
-@Command(id="pload")
-public class Pload extends RemoteCommandHandler {
+import uk.co.flamingpenguin.jewel.cli.Option;
+
+@Command(id="config",description="configure a plugin on the server")
+public class Config extends RemoteCommandHandler {
+
+	interface Args extends Arguments {
+		@Option
+		boolean isKeep();
+	}	
+	
+	@Override
+	public Class<? extends Arguments> getArgumentsClass() {
+		return Args.class;
+	}
 
 	@Override
 	public Result runRemote(Arguments arguments, Session session, CommandLine cl)
 			throws ThinklabClientException {
 
-		Result ret = send("pload", arguments);
-		// commands may have been added by new plugins: rescan
-		session.scanCommands();
-		return ret;
+		Args args = (Args)arguments;
+		String keep = args.isKeep() ? "true" : "false";
+		return send("config", arguments, "keep", keep);
 	}
 
 }

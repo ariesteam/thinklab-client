@@ -25,7 +25,7 @@ public interface CommandLine {
 			throws ThinklabClientException;
 
 	/**
-	 * Just print the passed text.
+	 * Just print the passed text (with newline).
 	 * 
 	 * @param text
 	 */
@@ -37,5 +37,12 @@ public interface CommandLine {
 	 * @throws ThinklabClientException
 	 */
 	public abstract String ask() throws ThinklabClientException;
+
+	/**
+	 * Append string to output stream without newline
+	 * 
+	 * @param string
+	 */
+	public abstract void append(String string);
 
 }

@@ -7,6 +7,7 @@ import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientExceptio
 import org.integratedmodelling.thinklab.client.shell.CommandLine;
 import org.integratedmodelling.thinklab.client.utils.Pair;
 
+import uk.co.flamingpenguin.jewel.cli.CliFactory;
 import uk.co.flamingpenguin.jewel.cli.Option;
 
 public abstract class RemoteCommandHandler extends CommandHandler {
@@ -24,7 +25,32 @@ public abstract class RemoteCommandHandler extends CommandHandler {
 		return Arguments.class;
 	}
 
+	class Listener implements Session.Listener {
+
+		boolean wasDelayed = false;
+		
+		@Override
+		public void onStart(String command, String... arguments) {
+		}
+
+		@Override
+		public void onFinish(String command, Result ret, String... arguments) {
+			if (wasDelayed)
+				_cl.say(" done");
+		}
+
+		@Override
+		public void onWait(String command, String... arguments) {
+			if (!wasDelayed)
+				_cl.append("waiting for server");
+			wasDelayed = true;
+			_cl.append(".");
+		}
+		
+	}
+	
 	protected boolean _asynchronous = false;
+	private CommandLine _cl;
 	
 	/**
 	 * Use this rather than session.send() to call commands on the server. Automatically sets
@@ -43,8 +69,10 @@ public abstract class RemoteCommandHandler extends CommandHandler {
 		if (rc == null)
 			throw new ThinklabClientException("command " + rc + " unknown to server " + _session.getName());
 		
-		if (rc.args.length < arguments.getArguments().size()) {
-			throw new ThinklabClientException("remote command " + rc + " has less arguments than passed " 
+		int nargs = rc.args == null ? 0 : rc.args.length;
+		
+		if (nargs < arguments.getArguments().size()) {
+			throw new ThinklabClientException("remote command " + rc + " admits less arguments than the passed " 
 						+ arguments.getArguments().size());
 		}
 		
@@ -83,7 +111,10 @@ public abstract class RemoteCommandHandler extends CommandHandler {
 			}
 		}
 		
-		return _session.send(command, _asynchronous, args);
+		/*
+		 * go 
+		 */
+		return _session.send(command, _asynchronous, new Listener(), args);
 	}
 	
 	public abstract Result runRemote(Arguments arguments, Session session, CommandLine cl)
@@ -95,11 +126,11 @@ public abstract class RemoteCommandHandler extends CommandHandler {
 		if (session == null)
 			throw new ThinklabClientException("remote command: not connected to a server");
 		
-		
 		Arguments args = (Arguments)arguments;
 		
-		_asynchronous = args.isAsync();
-		_session = session;
+		this._asynchronous = args.isAsync();
+		this._session = session;
+		this._cl = cl;
 
 		Result result = runRemote(args, session, cl);
 		

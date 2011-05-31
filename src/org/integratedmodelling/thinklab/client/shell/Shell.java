@@ -369,4 +369,9 @@ public class Shell implements CommandLine {
 		Shell shell = new Shell();
 		shell.startConsole();
 	}
+
+	@Override
+	public void append(String string) {
+		console.print(string);
+	}
 }
