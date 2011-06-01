@@ -7,21 +7,27 @@ import org.integratedmodelling.thinklab.client.annotations.Command;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.shell.CommandLine;
 
-@Command(id="disconnect")
-public class Disconnect extends CommandHandler {
+@Command(id="project")
+public class Project extends CommandHandler {
+
+	interface Args extends CommandHandler.Arguments {
+		
+	}
+	
+	@Override
+	public Class<? extends Arguments> getArgumentsClass() {
+		return Args.class;
+	}
 
 	@Override
 	public Result execute(Arguments arguments, Session session, CommandLine cl)
 			throws ThinklabClientException {
 
-		if (session == null)
-			cl.say("not connected");
-		
 		/*
-		 * TODO use --keep option to save session for later reconnect, or cleanup
+		 * 
 		 */
 		
-		return Result.ok(null).info("disconnected from " + session.getServer());
+		return Result.ok(session);
 	}
 
 }

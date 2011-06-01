@@ -1,27 +1,23 @@
 package org.integratedmodelling.thinklab.client.commands;
 
-import org.integratedmodelling.thinklab.client.CommandHandler;
+import org.integratedmodelling.thinklab.client.RemoteCommandHandler;
 import org.integratedmodelling.thinklab.client.Result;
 import org.integratedmodelling.thinklab.client.Session;
 import org.integratedmodelling.thinklab.client.annotations.Command;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.shell.CommandLine;
 
-@Command(id="disconnect")
-public class Disconnect extends CommandHandler {
+@Command(id="check")
+public class Check extends RemoteCommandHandler {
 
 	@Override
-	public Result execute(Arguments arguments, Session session, CommandLine cl)
+	public Result runRemote(Arguments arguments, Session session, CommandLine cl)
 			throws ThinklabClientException {
 
-		if (session == null)
-			cl.say("not connected");
+		Result ret = session.send("check", false, "taskid",
+				arguments.getArguments().get(0));
 		
-		/*
-		 * TODO use --keep option to save session for later reconnect, or cleanup
-		 */
-		
-		return Result.ok(null).info("disconnected from " + session.getServer());
+		return ret;
 	}
 
 }

@@ -1,5 +1,7 @@
 package org.integratedmodelling.thinklab.client.commands;
 
+import java.net.URL;
+
 import org.integratedmodelling.thinklab.client.CommandHandler;
 import org.integratedmodelling.thinklab.client.Configuration;
 import org.integratedmodelling.thinklab.client.Result;
@@ -28,7 +30,28 @@ public class Connect extends CommandHandler {
 		
 		String user = null;
 		String password = null;
+
+		/*
+		 * take user from URL instead of processing it at server side.
+		 */
+		try {
+			URL serv = new URL(server);
+			String ss = serv.getUserInfo();
+			if (ss != null && !ss.isEmpty()) {
+				String[] ui = ss.split(":");
+			
+				if (ui.length > 0)
+					user = ui[0];
+				if (ui.length > 1)
+					password = ui[1];
+			}
+		} catch (Exception e) {
+			throw new ThinklabClientException(e);
+		}
 		
+		/*
+		 * any user/password indicated explicitly supersedes the URL
+		 */
 		if (arguments.getArguments().size() >= 2) {
 			user = expect(arguments, 1);
 		}

@@ -7,7 +7,6 @@ import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientExceptio
 import org.integratedmodelling.thinklab.client.shell.CommandLine;
 import org.integratedmodelling.thinklab.client.utils.Pair;
 
-import uk.co.flamingpenguin.jewel.cli.CliFactory;
 import uk.co.flamingpenguin.jewel.cli.Option;
 
 public abstract class RemoteCommandHandler extends CommandHandler {
@@ -17,7 +16,7 @@ public abstract class RemoteCommandHandler extends CommandHandler {
 	public interface Arguments extends CommandHandler.Arguments {
 		
 		@Option(description="return immediately, don't wait for completion of long-running command")
-		boolean isAsync();
+		boolean isBackground();
 	}
 	
 	@Override
@@ -127,7 +126,17 @@ public abstract class RemoteCommandHandler extends CommandHandler {
 		
 		Arguments args = (Arguments)arguments;
 		
-		this._asynchronous = args.isAsync();
+		/*
+		 * adding an & at the end sends the task to the background.
+		 */
+		if (arguments.getArguments().size() > 0 && 
+				arguments.getArguments().get(arguments.getArguments().size()-1).equals("&")) {
+			this._asynchronous = true;
+			arguments.getArguments().remove(arguments.getArguments().size()-1);
+		} else {	
+			this._asynchronous = args.isBackground();
+		}
+
 		this._session = session;
 		this._cl = cl;
 

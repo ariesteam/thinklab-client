@@ -42,10 +42,8 @@ public class CommandManager {
 				}
 			}
 		} else {
-			
-			/*
-			 * send to REST server connected if any
-			 */
+
+			throw new ThinklabClientException("command " + s + " unknown");
 		}
 		
 		

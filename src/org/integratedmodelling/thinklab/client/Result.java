@@ -86,6 +86,8 @@ public class Result {
 				if (js != null && js.has("error")) {
 					ret += ": " + js.getString("error");
 				}
+			} else if (_status == WAIT) {
+				ret = "[" + js.getString("taskid") + "]";
 			}
 		} catch (JSONException e) {
 		}
