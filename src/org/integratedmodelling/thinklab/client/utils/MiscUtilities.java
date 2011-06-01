@@ -134,8 +134,8 @@ import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientExceptio
  */
 public class MiscUtilities{    
 	
-	public static void saveStreamToFile(InputStream content, File fname) throws ThinklabClientException {
-	    writeToFile(fname.toString(), content, false);		
+	public static int saveStreamToFile(InputStream content, File fname) throws ThinklabClientException {
+	    return writeToFile(fname.toString(), content, false);		
 	}
 	
 	public static String convertStreamToString(InputStream is)
@@ -394,7 +394,7 @@ public class MiscUtilities{
 	 * @refactored 2002-05-02 by Alexander Feldman - moved from OMDBlob.
 	 * 
 	 */
-	public static void writeToFile(String fileName, InputStream iStream,
+	public static int writeToFile(String fileName, InputStream iStream,
 			boolean createDir) throws ThinklabClientException {
 		if (fileName == null) {
 			throw new ThinklabClientException("writeToFile: filename is null");
@@ -418,7 +418,7 @@ public class MiscUtilities{
 		}
 
 		// Save InputStream to the file.
-		BufferedOutputStream fOut = null;
+		BufferedOutputStream fOut = null; int bytes = 0;
 		try {
 			try {
 				fOut = new BufferedOutputStream(new FileOutputStream(theFile));
@@ -427,6 +427,7 @@ public class MiscUtilities{
 				if (iStream != null) {
 					while ((bytesRead = iStream.read(buffer)) != -1) {
 						fOut.write(buffer, 0, bytesRead);
+						bytes += bytesRead;
 					}
 				}
 			} catch (Exception e) {
@@ -440,6 +441,8 @@ public class MiscUtilities{
 		} catch (Exception e) {
 			throw new ThinklabClientException(e);
 		}
+		
+		return bytes;
 	}
 
 	  /**

@@ -14,6 +14,7 @@ import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientExceptio
 import org.integratedmodelling.thinklab.client.listeners.ProgressListener;
 import org.integratedmodelling.thinklab.client.utils.Escape;
 import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
+import org.integratedmodelling.thinklab.client.utils.Pair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,7 +73,6 @@ public class Session {
 			this.args = convert(args);
 			this.opts = convert(opts);
 		}
-		
 	}
 	
 	public void scanCommands() throws ThinklabClientException {
@@ -243,12 +243,13 @@ public class Session {
 	 * 
 	 * @param handle
 	 * @param fname
-	 * @return the final file name downloaded
+	 * @return the final file name downloaded and its size
 	 */
-	public File download(String handle, File fname, ProgressListener listener) throws ThinklabClientException {
+	public Pair<File, Integer> download(String handle, File fname, ProgressListener listener) throws ThinklabClientException {
 
 		String hext = MiscUtilities.getFileExtension(handle);
 		String fext = fname == null ? "" : MiscUtilities.getFileExtension(fname.toString());
+		int bytes = 0;
 		
 		if (fname == null) {
 			// download to session subdir to minimize conflicts
@@ -286,11 +287,12 @@ public class Session {
 						"upload of " + fname + " failed: status code = " + 
 						response.getStatusLine().getStatusCode());
 			
-			MiscUtilities.saveStreamToFile(response.getEntity().getContent(), fname);
+			bytes = MiscUtilities.saveStreamToFile(response.getEntity().getContent(), fname);
+			
 		} catch (Exception e) {
 			throw new ThinklabClientException(e);
 		}
-		return fname;
+		return new Pair<File, Integer>(fname, bytes);
 	}
 	
 	/**

@@ -106,6 +106,16 @@ public class Result {
 		return this;
 	}
 
+	public Result put(String var, Object val) {
+
+		try {
+			json().put(var, val);
+		} catch (JSONException e) {
+			// come on
+		}
+		return this;
+	}
+	
 	public Object getResult() {
 		return (_result == null || JSONObject.NULL.equals(_result)) ? null : _result;
 

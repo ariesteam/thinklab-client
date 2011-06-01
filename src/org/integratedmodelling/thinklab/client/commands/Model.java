@@ -48,7 +48,7 @@ public class Model extends RemoteCommandHandler {
 			opts.add("true");
 		}
 		if (args.isOutput()) {
-			opts.add("ncoutput");
+			opts.add("output");
 			opts.add(args.getOutput());
 		}
 		

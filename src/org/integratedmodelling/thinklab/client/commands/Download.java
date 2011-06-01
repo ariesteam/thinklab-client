@@ -8,6 +8,7 @@ import org.integratedmodelling.thinklab.client.Session;
 import org.integratedmodelling.thinklab.client.annotations.Command;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.shell.CommandLine;
+import org.integratedmodelling.thinklab.client.utils.Pair;
 
 @Command(id="get")
 public class Download extends CommandHandler {
@@ -24,9 +25,11 @@ public class Download extends CommandHandler {
 		if (arguments.getArguments().size() > 1)
 			dest = new File(expect(arguments,1));
 		
-		File ss = session.download(handle, dest, null);
+		Pair<File, Integer> ss = session.download(handle, dest, null);
 		
-		return Result.ok(session).setResult(ss.toString());
+		return Result.ok(session).
+				put("size", ss.getSecond()).
+				setResult(ss.getFirst().toString());
 	}
 
 }

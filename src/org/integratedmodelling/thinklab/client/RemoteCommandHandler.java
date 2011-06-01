@@ -42,11 +42,10 @@ public abstract class RemoteCommandHandler extends CommandHandler {
 		@Override
 		public void onWait(String command, String... arguments) {
 			if (!wasDelayed)
-				_cl.append("waiting for server...");
+				_cl.append("server computing...");
 			wasDelayed = true;
 			_cl.append(".");
 		}
-		
 	}
 	
 	protected boolean _asynchronous = false;
@@ -140,8 +139,15 @@ public abstract class RemoteCommandHandler extends CommandHandler {
 		if (result.getStatus() == Result.OK) {
 			
 			for (Pair<String,String> df : result.getDownloads()) {
-				cl.say("downloading result file " + df.getFirst());
-				session.download(df.getSecond(), new File(df.getFirst()), null);
+				cl.append("downloading file " + df.getFirst() + "... ");
+				try {
+					Pair<File, Integer> res = 
+						session.download(df.getSecond(), new File(df.getFirst()), null);
+					cl.say("done (" + res.getSecond()/1024 + "k)");
+				} catch (ThinklabClientException e) {
+					cl.say("failed");
+					throw e;
+				}
 			}
 		}
 		
