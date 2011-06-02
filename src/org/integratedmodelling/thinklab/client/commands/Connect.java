@@ -38,7 +38,8 @@ public class Connect extends CommandHandler {
 			URL serv = new URL(server);
 			String ss = serv.getUserInfo();
 			if (ss != null && !ss.isEmpty()) {
-				String[] ui = ss.split(":");
+				
+				String[] ui = ss.split("\\:");
 			
 				if (ui.length > 0)
 					user = ui[0];
@@ -58,7 +59,7 @@ public class Connect extends CommandHandler {
 
 		if (arguments.getArguments().size() >= 3) {
 			password = expect(arguments, 2);
-		} else if (user != null){
+		} else if (user != null && password == null){
 			password = cl.ask("password for " + user + ": ");
 		}
 		

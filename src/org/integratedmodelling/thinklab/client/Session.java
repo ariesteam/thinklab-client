@@ -12,6 +12,7 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.listeners.ProgressListener;
+import org.integratedmodelling.thinklab.client.project.ThinklabProject;
 import org.integratedmodelling.thinklab.client.utils.Escape;
 import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
 import org.integratedmodelling.thinklab.client.utils.Pair;
@@ -98,6 +99,7 @@ public class Session {
 	
 	private HashMap<String, RemoteCommand> _commands = 
 		new HashMap<String, Session.RemoteCommand>();
+	private ThinklabProject _currentProject;
 	
 	private void initialize() throws ThinklabClientException {
 	
@@ -343,4 +345,13 @@ public class Session {
 	public String getServer() {
 		return _server;
 	}
+
+	public void setCurrentProject(ThinklabProject project) {
+		this._currentProject = project;
+	}
+
+	public ThinklabProject getCurrentProject() {
+		return this._currentProject;
+	}
+
 }

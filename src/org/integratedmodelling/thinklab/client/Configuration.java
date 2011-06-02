@@ -21,6 +21,12 @@ public class Configuration {
 		return ret;
 	}
 	
+	public static File getTemporaryPath() {
+		File ret = new File(getConfigPath() + File.separator + "tmp"); 
+		ret.mkdirs();
+		return ret;
+	}
+
 	public static String getVersion() {
 		return "1.0alpha";
 	}
@@ -48,5 +54,25 @@ public class Configuration {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	public static File getProjectDirectory() {
+
+		String configured = getProperties().getProperty("project.directory");
+		File ret = null;
+		if (configured == null) {
+			ret = new File(getConfigPath() + File.separator + "projects"); 
+		} else {
+			ret = new File(configured);
+		}
+		ret.mkdirs();
+		return ret;
+
+	}
+	
+	public static File getProjectDirectory(String plugin) {
+		File ret = new File(getProjectDirectory() + File.separator + plugin);
+		ret.mkdirs();
+		return ret;
 	}
 }
