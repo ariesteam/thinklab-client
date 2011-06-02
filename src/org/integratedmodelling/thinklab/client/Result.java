@@ -107,6 +107,16 @@ public class Result {
 		}
 		return this;
 	}
+	
+	public Result error(String message) {
+
+		try {
+			json().put("error", message);
+		} catch (JSONException e) {
+			// come on
+		}
+		return this;
+	}
 
 	public Result put(String var, Object val) {
 

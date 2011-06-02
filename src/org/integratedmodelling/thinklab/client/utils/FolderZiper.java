@@ -37,7 +37,11 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
@@ -176,38 +180,84 @@ public class FolderZiper {
 		}
 	}
 
-	/**
-	 * Uncompress the passed zip file into the passed directory.
-	 * 
-	 * @param zipfile
-	 * @param outputDir
-	 * @throws ThinklabClientException
-	 */
-	static public void unzip(File zipfile, File outputDir) throws ThinklabClientException {
-		
+	public static void unzip(String inputZip, String destinationDirectory)
+			throws ThinklabClientException {
+
+		int BUFFER = 2048;
+		List<String> zipFiles = new ArrayList<String>();
+
+		File sourceZipFile = new File(inputZip);
+		File unzipDestinationDirectory = new File(destinationDirectory);
+		unzipDestinationDirectory.mkdir();
+
+		ZipFile zipFile;
 		try {
-		   ZipFile zipFile = new ZipFile(zipfile);
-		    Enumeration<?> enumeration = zipFile.entries();
-		    while (enumeration.hasMoreElements()) {
-		      ZipEntry zipEntry = (ZipEntry) enumeration.nextElement();
-		      BufferedInputStream bis = new BufferedInputStream(zipFile.getInputStream(zipEntry));
-		      int size;
-		      byte[] buffer = new byte[2048];
-		      BufferedOutputStream bos;
-				bos = new BufferedOutputStream(
-				         new FileOutputStream(
-				    		  outputDir + File.separator + zipEntry.getName()),
-				      	      buffer.length);
-		      while ((size = bis.read(buffer, 0, buffer.length)) != -1) {
-		        bos.write(buffer, 0, size);
-		      }
-		      bos.flush();
-		      bos.close();
-		      bis.close();
-		    }
-		} catch (Exception e) {
+			zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);
+		} catch (IOException e1) {
+			throw new ThinklabClientException(e1);
+		}
+
+		// Create an enumeration of the entries in the zip file
+		Enumeration<?> zipFileEntries = zipFile.entries();
+
+		// Process each entry
+		while (zipFileEntries.hasMoreElements()) {
+			// grab a zip file entry
+			ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
+
+			String currentEntry = entry.getName();
+			File destFile = new File(unzipDestinationDirectory, currentEntry);
+
+			if (currentEntry.endsWith(".zip")) {
+				zipFiles.add(destFile.getAbsolutePath());
+			}
+
+			// grab file's parent directory structure
+			File destinationParent = destFile.getParentFile();
+
+			// create the parent directory structure if needed
+			destinationParent.mkdirs();
+
+			try {
+				// extract file if not a directory
+				if (!entry.isDirectory()) {
+					BufferedInputStream is = new BufferedInputStream(
+							zipFile.getInputStream(entry));
+					int currentByte;
+					// establish buffer for writing file
+					byte data[] = new byte[BUFFER];
+
+					// write the current file to disk
+					FileOutputStream fos = new FileOutputStream(destFile);
+					BufferedOutputStream dest = new BufferedOutputStream(fos,
+							BUFFER);
+
+					// read and write until last byte is encountered
+					while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
+						dest.write(data, 0, currentByte);
+					}
+					dest.flush();
+					dest.close();
+					is.close();
+				}
+			} catch (IOException ioe) {
+				throw new ThinklabClientException(ioe);
+			}
+		}
+		try {
+			zipFile.close();
+		} catch (IOException e) {
 			throw new ThinklabClientException(e);
 		}
+
+		for (Iterator<String> iter = zipFiles.iterator(); iter.hasNext();) {
+			String zipName = iter.next();
+			unzip(zipName,
+					destinationDirectory + File.separatorChar
+							+ zipName.substring(0, zipName.lastIndexOf(".zip")));
+		}
+
 	}
+
 }
 

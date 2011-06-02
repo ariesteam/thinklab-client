@@ -145,8 +145,8 @@ public class ThinklabProject {
 			out.print( 
 				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\r\n" + 
 				"<!DOCTYPE plugin PUBLIC \"-//JPF//Java Plug-in Manifest 1.0\" \"http://jpf.sourceforge.net/plugin_1_0.dtd\">\r\n" + 
-				"<plugin id=\"__ID__\" version=\"0.8.1.20110428103733\">\r\n" + 
-				"   <requires>\r\n".replaceAll("__ID__", _id));
+				"<plugin id=\"__ID__\" version=\"0.8.1.20110428103733\">\r\n".replaceAll("__ID__", _id) + 
+				"   <requires>\r\n");
 
 			for (String s : dependencies) {
 				out.print(
@@ -165,8 +165,16 @@ public class ThinklabProject {
 			this._properties = new Properties();
 			
 			/*
-			 * insert default loaders
+			 * insert directories for the default loaders. Not really necessary, but 
+			 * nice as a mnemonic if you ever look at the dir.
 			 */
+			new File(pluginDir + File.separator + "agents").mkdirs();
+			new File(pluginDir + File.separator + "annotations").mkdirs();
+			new File(pluginDir + File.separator + "config").mkdirs();
+			new File(pluginDir + File.separator + "contexts").mkdirs();
+			new File(pluginDir + File.separator + "models").mkdirs();
+			new File(pluginDir + File.separator + "ontologies").mkdirs();
+			new File(pluginDir + File.separator + "scenarios").mkdirs();
 			
 			saveProperties();
 			
@@ -204,4 +212,20 @@ public class ThinklabProject {
 		return ret;
 	}
 
+	public File getPath() {
+		return Configuration.getProjectDirectory(_id);
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		return o instanceof ThinklabProject && ((ThinklabProject)o).getId().equals(_id);
+	}
+
+	@Override
+	public int hashCode() {
+		return _id.hashCode();
+	}
+
+	
+	
 }

@@ -10,13 +10,19 @@ import org.integratedmodelling.thinklab.client.annotations.Command;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.project.ThinklabProject;
 import org.integratedmodelling.thinklab.client.shell.CommandLine;
+import org.integratedmodelling.thinklab.client.utils.FolderZiper;
 import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
+import org.integratedmodelling.thinklab.client.utils.Pair;
+
+import uk.co.flamingpenguin.jewel.cli.Option;
 
 @Command(id="project")
 public class Project extends CommandHandler {
 
 	interface Args extends CommandHandler.Arguments {
 		
+		@Option
+		public boolean isForce();
 	}
 	
 	@Override
@@ -115,10 +121,61 @@ public class Project extends CommandHandler {
 
 		} else if (cmd.equals("import")) {
 			
-			/*
-			 * TODO import project from server; ask for confirmation/save/rename if
-			 * already existing.
-			 */
+			String pid = expect(args,1);
+			boolean ok = true;
+			
+			if (ThinklabProject.exists(pid)) {
+				if (!args.isForce() && !cl.ask("do you want to overwrite project " +
+					pid + 
+					" from the local repository? [yes|no] ").equals("yes")) {
+					ok = false;
+				}
+			}
+			
+			if (ok) {
+				Result ret = session.send("project", false, "cmd", "pack", "plugin", pid);
+				String handle = (String)ret.get("handle");
+				if (handle != null) {
+				
+					cl.append("downloading... ");
+					Pair<File, Integer> zip = session.download(handle, null, null);
+					cl.say("done (" + zip.getSecond()/1024 + "k)");
+				
+					FolderZiper.unzip(zip.getFirst().toString(), 
+							Configuration.getProjectDirectory().toString());
+				
+					session.setCurrentProject(ThinklabProject.load(pid));
+					info = "project " + pid + " imported from " + session.getName() + " and loaded";
+				
+				} else {
+					info = "no project retrieved";
+				}
+			}	
+				
+		} else if (cmd.equals("remove")) {
+			
+			String pid = null;
+			if (current == null) {
+				pid = expect(args, 1);
+			} else {
+				pid = current.getId();
+			}
+			
+			ThinklabProject proj = ThinklabProject.getProject(pid, null);
+			if (proj == null) {
+				return Result.fail(session).error("project " + pid + " does not exist on the client");
+			}
+				
+			if (args.isForce() || cl.ask("do you want to remove project " +
+					pid + 
+					" from the local repository? [yes|no] ").equals("yes")) {
+				
+				MiscUtilities.deleteDirectory(proj.getPath());
+				cl.say("project " + pid + " removed from disk");				
+				if (current != null && current.equals(proj))
+					session.setCurrentProject(current = null);
+			}
+			
 		}
 		
 		return Result.ok(session).info(info);
