@@ -29,6 +29,7 @@ public class Project extends CommandHandler {
 			throws ThinklabClientException {
 
 		Args args = (Args)arguments;
+		
 		ThinklabProject current = session.getCurrentProject();
 		String info = "";
 		
@@ -86,10 +87,14 @@ public class Project extends CommandHandler {
 					"cmd", "deploy", 
 					"handle", handle, 
 					"plugin", current.getId());
-			cl.say("done");
 		
-			info = "project " + current.getId() + " deployed to " + session.getName();
-
+			if (result.getStatus() == Result.OK) {
+				cl.say("done");
+				info = "project " + current.getId() + " deployed to " + session.getName();
+			} else {
+				cl.say("failed");
+				return result;
+			}
 			
 		} else if (cmd.equals("undeploy")) {
 
@@ -99,9 +104,14 @@ public class Project extends CommandHandler {
 			Result result = session.send("project", false, 
 					"cmd", "undeploy", 
 					"plugin", current.getId());
-			cl.say("done");
 
-			info = "project " + current.getId() + " removed from " + session.getName();
+			if (result.getStatus() == Result.OK) {
+				cl.say("done");
+				info = "project " + current.getId() + " removed from " + session.getName();
+			} else {
+				cl.say("failed");
+				return result;
+			}
 
 		} else if (cmd.equals("import")) {
 			
