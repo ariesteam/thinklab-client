@@ -2,7 +2,6 @@ package org.integratedmodelling.thinklab.client.project;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -55,19 +54,19 @@ public class ThinklabProject {
 			return ret;
 		}
 
-	public static ThinklabProject getProject(String id, String[] dependencies) 
-		throws ThinklabClientException {
-		
-		ThinklabProject ret = new ThinklabProject(id);
-
-		if (!ret.exists()) {
-			ret.create(dependencies);
-		} else {
-			ret.load();
-		}
-		
-		return ret;
-	}
+//	public static ThinklabProject getProject(String id, String[] dependencies) 
+//		throws ThinklabClientException {
+//		
+//		ThinklabProject ret = new ThinklabProject(id);
+//
+//		if (!ret.exists()) {
+//			ret.create(dependencies);
+//		} else {
+//			ret.load();
+//		}
+//		
+//		return ret;
+//	}
 	
 	public static ThinklabProject create(String id) throws ThinklabClientException {
 	

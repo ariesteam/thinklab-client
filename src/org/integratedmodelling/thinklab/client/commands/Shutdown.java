@@ -37,7 +37,7 @@ public class Shutdown extends CommandHandler {
 	public Result execute(Arguments arguments, Session session, CommandLine cl)
 			throws ThinklabClientException {
 		
-		if (session == null)
+		if (!session.isConnected())
 			throw new ThinklabClientException("remote command: not connected to a server");
 
 		RArgs args = (RArgs) arguments;		
@@ -84,9 +84,8 @@ public class Shutdown extends CommandHandler {
 		 * TODO cleanup session
 		 */
 		
-		/*
-		 * disconnect and return
-		 */
+		session.disconnect();
+		
 		return ret.setSession(null);
 	}
 

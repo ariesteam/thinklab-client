@@ -66,11 +66,11 @@ public class Connect extends CommandHandler {
 		/*
 		 * establish session with server
 		 */
-		session = new Session(server, remote, user, password);
+		session.connect(server, remote, user, password);
 		
 		return Result.ok(session).info(
-				"connected to " + session.getServer() + "\n" +
-				(user == null ? "anonymous" : user) + " session established");
+				"connected to " + session.getServer() + " as " + 
+				(user == null ? "anonymous" : user));
 	}
 
 }

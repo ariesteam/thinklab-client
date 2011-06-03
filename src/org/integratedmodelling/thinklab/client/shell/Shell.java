@@ -119,12 +119,12 @@ public class Shell implements CommandLine {
 	
 	Font inputFont = new Font("Courier", Font.BOLD, 12);
 	Font outputFont = new Font("Courier", Font.PLAIN, 12);
-	Session currentSession = null;
+	Session currentSession = new Session();
 	
 	protected String prompt() {
-		return currentSession == null ?
-				">" :
-				currentSession.getName() + ">";
+		return currentSession.isConnected() ?
+				currentSession.getName() + ">" :
+				">";
 	}
 	
 	/* (non-Javadoc)

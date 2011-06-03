@@ -14,14 +14,17 @@ public class Disconnect extends CommandHandler {
 	public Result execute(Arguments arguments, Session session, CommandLine cl)
 			throws ThinklabClientException {
 
-		if (session == null)
+		if (!session.isConnected())
 			cl.say("not connected");
 		
 		/*
 		 * TODO use --keep option to save session for later reconnect, or cleanup
 		 */
+		String serv = session.getServer();
 		
-		return Result.ok(null).info("disconnected from " + session.getServer());
+		session.disconnect();
+		
+		return Result.ok(session).info("disconnected from " + serv);
 	}
 
 }

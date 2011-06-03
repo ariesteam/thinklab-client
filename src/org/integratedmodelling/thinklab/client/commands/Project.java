@@ -23,6 +23,9 @@ public class Project extends CommandHandler {
 		
 		@Option
 		public boolean isForce();
+		
+		@Option
+		public boolean isRemote();
 	}
 	
 	@Override
@@ -35,7 +38,7 @@ public class Project extends CommandHandler {
 			throws ThinklabClientException {
 
 		Args args = (Args)arguments;
-		
+				
 		ThinklabProject current = session.getCurrentProject();
 		String info = "";
 		
@@ -50,7 +53,7 @@ public class Project extends CommandHandler {
 				Configuration.getProjectDirectory();
 		
 		} else if (cmd.equals("load")) {
-			
+
 			String projectId = expect(args,1);
 			session.setCurrentProject(ThinklabProject.load(projectId));
 			info = "project " + projectId + " loaded";
@@ -80,7 +83,10 @@ public class Project extends CommandHandler {
 			}
  			
 		} else if (cmd.equals("deploy")) {
-			
+
+			if (!session.isConnected())
+				return Result.fail(session).error("project: not connected to a server");
+
 			checkCurrent(current);
 			File zip = current.getZipArchive();
 			
@@ -104,6 +110,9 @@ public class Project extends CommandHandler {
 			
 		} else if (cmd.equals("undeploy")) {
 
+			if (!session.isConnected())
+				return Result.fail(session).error("project: not connected to a server");
+
 			checkCurrent(current);
 
 			cl.append("remote undeploy... ");
@@ -121,6 +130,9 @@ public class Project extends CommandHandler {
 
 		} else if (cmd.equals("import")) {
 			
+			if (!session.isConnected())
+				return Result.fail(session).error("project: not connected to a server");
+
 			String pid = expect(args,1);
 			boolean ok = true;
 			
@@ -141,8 +153,7 @@ public class Project extends CommandHandler {
 					Pair<File, Integer> zip = session.download(handle, null, null);
 					cl.say("done (" + zip.getSecond()/1024 + "k)");
 				
-					FolderZiper.unzip(zip.getFirst().toString(), 
-							Configuration.getProjectDirectory().toString());
+					FolderZiper.unzip(zip.getFirst(), Configuration.getProjectDirectory());
 				
 					session.setCurrentProject(ThinklabProject.load(pid));
 					info = "project " + pid + " imported from " + session.getName() + " and loaded";
@@ -152,7 +163,7 @@ public class Project extends CommandHandler {
 				}
 			}	
 				
-		} else if (cmd.equals("remove")) {
+		} else if (cmd.equals("remove") || cmd.equals("delete")) {
 			
 			String pid = null;
 			if (current == null) {
@@ -161,7 +172,7 @@ public class Project extends CommandHandler {
 				pid = current.getId();
 			}
 			
-			ThinklabProject proj = ThinklabProject.getProject(pid, null);
+			ThinklabProject proj = ThinklabProject.load(pid);
 			if (proj == null) {
 				return Result.fail(session).error("project " + pid + " does not exist on the client");
 			}
@@ -170,7 +181,7 @@ public class Project extends CommandHandler {
 					pid + 
 					" from the local repository? [yes|no] ").equals("yes")) {
 				
-				MiscUtilities.deleteDirectory(proj.getPath());
+				MiscUtilities.recursiveDelete(proj.getPath());
 				cl.say("project " + pid + " removed from disk");				
 				if (current != null && current.equals(proj))
 					session.setCurrentProject(current = null);

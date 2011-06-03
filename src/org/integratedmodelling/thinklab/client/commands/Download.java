@@ -17,7 +17,7 @@ public class Download extends CommandHandler {
 	public Result execute(Arguments arguments, Session session, CommandLine cl)
 			throws ThinklabClientException {
 
-		if (session == null)
+		if (!session.isConnected())
 			throw new ThinklabClientException("download: not connected to a server");
 		
 		String handle = expect(arguments, 0);			

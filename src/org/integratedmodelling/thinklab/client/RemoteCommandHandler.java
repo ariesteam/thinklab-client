@@ -65,12 +65,12 @@ public abstract class RemoteCommandHandler extends CommandHandler {
 		RemoteCommand rc = _session.getRemoteCommandDeclaration(command);
 		
 		if (rc == null)
-			throw new ThinklabClientException("command " + rc + " unknown to server " + _session.getName());
+			throw new ThinklabClientException("command " + command + " unknown to server " + _session.getName());
 		
 		int nargs = rc.args == null ? 0 : rc.args.length;
 		
 		if (nargs < arguments.getArguments().size()) {
-			throw new ThinklabClientException("remote command " + rc + " admits less arguments than the passed " 
+			throw new ThinklabClientException("remote command " + command + " admits less arguments than the passed " 
 						+ arguments.getArguments().size());
 		}
 		
@@ -121,7 +121,7 @@ public abstract class RemoteCommandHandler extends CommandHandler {
 	@Override
 	public final Result execute(CommandHandler.Arguments arguments, Session session, CommandLine cl) throws ThinklabClientException {
 		
-		if (session == null)
+		if (!session.isConnected())
 			throw new ThinklabClientException("remote command: not connected to a server");
 		
 		Arguments args = (Arguments)arguments;

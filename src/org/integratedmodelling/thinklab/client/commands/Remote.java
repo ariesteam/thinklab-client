@@ -26,10 +26,12 @@ public class Remote extends CommandHandler {
 			Configuration.getProperties().setProperty("server." + op, url);
 			Configuration.saveProperties();
 			
-		} else if ("remove".equals(cmd)) {
+		} else if ("remove".equals(cmd) || "delete".equals(cmd)) {
 
-			String op  = expect(arg, 1);
-			Configuration.getProperties().remove("server." + op);
+			for (int i = 1; i < arg.getArguments().size(); i++) {
+				String op  = expect(arg, i);
+				Configuration.getProperties().remove("server." + op);
+			}
 			Configuration.saveProperties();
 			
 		} else if ("list".equals(cmd)) {

@@ -265,6 +265,7 @@ public class MiscUtilities{
 				if (files[i].isDirectory()) {
 					deleteDirectory(files[i]);
 				} else {
+					files[i].setWritable(true);
 					files[i].delete();
 				}
 			}
@@ -1814,6 +1815,7 @@ loop:		for(;;)
 	        } 
 	    } 
 	 
+	    fileOrDir.setWritable(true);
 	    return fileOrDir.delete(); 
 	}
 

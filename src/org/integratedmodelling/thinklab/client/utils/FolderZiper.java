@@ -180,14 +180,12 @@ public class FolderZiper {
 		}
 	}
 
-	public static void unzip(String inputZip, String destinationDirectory)
+	public static void unzip(File sourceZipFile, File unzipDestinationDirectory)
 			throws ThinklabClientException {
 
 		int BUFFER = 2048;
 		List<String> zipFiles = new ArrayList<String>();
 
-		File sourceZipFile = new File(inputZip);
-		File unzipDestinationDirectory = new File(destinationDirectory);
 		unzipDestinationDirectory.mkdir();
 
 		ZipFile zipFile;
@@ -252,9 +250,9 @@ public class FolderZiper {
 
 		for (Iterator<String> iter = zipFiles.iterator(); iter.hasNext();) {
 			String zipName = iter.next();
-			unzip(zipName,
-					destinationDirectory + File.separatorChar
-							+ zipName.substring(0, zipName.lastIndexOf(".zip")));
+			unzip(new File(zipName),
+					new File(unzipDestinationDirectory + File.separator
+							+ zipName.substring(0, zipName.lastIndexOf(".zip"))));
 		}
 
 	}

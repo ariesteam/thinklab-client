@@ -36,6 +36,7 @@ public class Session {
 	private String _server = "http://127.0.0.1:8182";
 	private String _id = null;
 	private String _name = null;
+	private boolean _connected = false;
 
 	private int delay = 4000;
 	
@@ -93,6 +94,10 @@ public class Session {
 		
 	}
 	
+	public boolean isConnected() {
+		return _connected;
+	}
+	
 	public RemoteCommand getRemoteCommandDeclaration(String command) {
 		return _commands.get(command);
 	}
@@ -114,7 +119,7 @@ public class Session {
 		scanCommands();
 	}
 	
-	public Session(String url, String name, String user, String password) throws ThinklabClientException {
+	public void connect(String url, String name, String user, String password) throws ThinklabClientException {
 
 		_server = url;
 		_name = name;
@@ -133,9 +138,13 @@ public class Session {
 			throw new ThinklabClientException(auth.print());
 		
 		this._id = auth.get("session").toString();
+		this._connected = true;
+	}
+	
+	public Session() {
 	}
 
-	public Session(String url, String user, String password) throws ThinklabClientException {
+	public void connect(String url, String user, String password) throws ThinklabClientException {
 
 		initialize();
 
@@ -144,6 +153,7 @@ public class Session {
 		 */
 		Result auth = send("auth", false, "user", user, "password", password);
 		this._id = auth.get("session").toString();
+		this._connected = true;
 	}
 	
 	/**
@@ -352,6 +362,13 @@ public class Session {
 
 	public ThinklabProject getCurrentProject() {
 		return this._currentProject;
+	}
+
+	public void disconnect() {
+
+		this._server = null;
+		this._name = null;
+		this._connected = false;
 	}
 
 }
