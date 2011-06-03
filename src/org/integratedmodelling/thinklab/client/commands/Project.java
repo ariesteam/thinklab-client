@@ -72,13 +72,31 @@ public class Project extends CommandHandler {
 			
 		} else if (cmd.equals("list")) {
 			
-			for (File f : Configuration.getProjectDirectory().listFiles()) {
-				if (f.isDirectory() && 
-					ThinklabProject.exists(MiscUtilities.getFileName(f.toString()))) {
-					String pname = MiscUtilities.getFileName(f.toString());
-					cl.say(
-						(current != null && current.getId().equals(pname) ? " * " : "   ") + 
-						pname);
+			if (args.isRemote()) {
+				
+				if (!session.isConnected())
+					return Result.fail(session).error("project: not connected to a server");
+
+				Result res = session.send("list", true, "arg", "projects");
+				if (res.getStatus() == Result.OK) {
+					cl.say(res.size() + " projects on " + session.getName());
+					for (int i = 0; i < res.size(); i++) {
+						cl.say("   " + res.getResult(i));
+					}
+				} else {
+					return res;
+				}
+				
+			} else {
+			
+				for (File f : Configuration.getProjectDirectory().listFiles()) {
+					if (f.isDirectory() && 
+							ThinklabProject.exists(MiscUtilities.getFileName(f.toString()))) {
+						String pname = MiscUtilities.getFileName(f.toString());
+						cl.say(
+								(current != null && current.getId().equals(pname) ? " * " : "   ") + 
+								pname);
+					}
 				}
 			}
  			
@@ -186,7 +204,6 @@ public class Project extends CommandHandler {
 				if (current != null && current.equals(proj))
 					session.setCurrentProject(current = null);
 			}
-			
 		}
 		
 		return Result.ok(session).info(info);

@@ -49,9 +49,9 @@ public class Result {
 		try {
 
 			_status = js.getInt("status");
-			if (js.has("result"))
+			if (js.has("result")) {
 				_result = js.get("result");
-		
+			}
 		} catch (JSONException e) {
 			throw new ThinklabClientException(e);
 		}
@@ -133,7 +133,7 @@ public class Result {
 
 	}
 
-	public int resultSize() throws ThinklabClientException {
+	public int size() throws ThinklabClientException {
 		
 		return (_result == null || JSONObject.NULL.equals(_result)) ? 
 				0 : 

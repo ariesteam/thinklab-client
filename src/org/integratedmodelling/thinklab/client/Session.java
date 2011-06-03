@@ -83,7 +83,7 @@ public class Session {
 		
 		Result cmds = send("getCommands", false);
 		
-		for (int i = 0; i < cmds.resultSize(); i++) {
+		for (int i = 0; i < cmds.size(); i++) {
 			String id = (String)cmds.getResult(i,0);
 			String ds = (String)cmds.getResult(i,1);
 			JSONArray args = (JSONArray)cmds.getResult(i,2);
