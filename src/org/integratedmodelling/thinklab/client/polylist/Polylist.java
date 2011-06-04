@@ -40,14 +40,13 @@ import java.io.InputStream;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
+import org.integratedmodelling.thinklab.client.utils.Escape;
 import org.integratedmodelling.thinklab.client.utils.MalformedListException;
 
 /**   
@@ -150,6 +149,32 @@ public class Polylist {
 		return prettyPrintInternal(list, indent, 2);
 	}
 	
+	private static boolean validateNumber(Object s) {
+		
+		if (s == null)
+			return false;
+		
+		if (s instanceof Number)
+			return true;
+		
+		try {
+			Double.parseDouble(s.toString());
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		return true;
+	}
+	
+	private static boolean validateType(Object s) {
+	
+		if (s == null)
+			return false;
+		String[] ss = s.toString().split(":");
+		if (ss.length != 2 || ss[0].trim().equals("") || ss[1].trim().equals(""))
+			return false;
+		return true;
+	}
+	
 	private static String prettyPrintInternal(Polylist list, int indentLevel, int indentAmount) {
 
 		String ret = "";
@@ -165,25 +190,27 @@ public class Polylist {
 
 		ret += inds + "(";
 		
+		int i = 0;
 		for (Object o : list.array()) {
 			
 			if (o instanceof Polylist) {
 				ret += "\n" + prettyPrintInternal((Polylist)o, indentLevel+1, indentAmount);
 			} else {
 				String sep = " ";
-				String z = o == null ? "*null*" : o.toString();
-				if (z.contains(" ")) {
-					z = "'" + z + "'";
-				}
-				if (z.contains("\n")) {
-					z = "'" + z.replaceAll("\n", inds + "\n") + "'";
-					sep = "\n";
-				}
+				String z = o == null ? "nil" : o.toString();
+				z = Escape.forDoubleQuotedString(z, false);
 				
+				// double quote anything that is not a number, doesn't look like one, contains spaces
+				// in its string representation, or is not a first element that looks like a semantic type.
+				if (z.contains(" ") || !validateNumber(o) && !(i == 0 && validateType(z))) {
+					z = "\"" + z + "\"";
+				}
+
 				if (wrote) ret += sep;
 				ret += z;
 				wrote = true;
 			}
+			i++;
 		}
 		
 		ret += ")";
