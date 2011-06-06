@@ -48,6 +48,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -63,6 +64,8 @@ import org.integratedmodelling.thinklab.client.Session;
 import org.integratedmodelling.thinklab.client.annotations.Command;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
+import org.integratedmodelling.thinklab.client.utils.Path;
+import org.integratedmodelling.thinklab.client.utils.ShellCommand;
 
 import bsh.util.JConsole;
 
@@ -113,6 +116,10 @@ import bsh.util.JConsole;
  * @author Ferdinando Villa
  */
 public class Shell implements CommandLine {
+	
+	private static final String RUNTIME_PROPERTY_PREFIX = "runtime.path.";
+	private static ArrayList<String> _shell =
+		new ArrayList<String>();
 	
 	JConsole console = null;
 	File historyFile = null;
@@ -188,6 +195,18 @@ public class Shell implements CommandLine {
 				if (annotation instanceof Command) {
 					CommandManager.registerCommand(((Command)annotation).id(), (Class<? extends CommandHandler>) cls);
 				}
+			}
+		}
+		
+		/*
+		 * compile a list of executables we want to support in the shell
+		 */
+		for (Object o : Configuration.getProperties().keySet()) {
+			if (o.toString().startsWith(RUNTIME_PROPERTY_PREFIX)) {
+				
+				String exec = Path.getLast(o.toString(), '.');
+				_shell.add(exec);
+				
 			}
 		}
 	}
@@ -274,7 +293,7 @@ public class Shell implements CommandLine {
 		String input = "";
 		
 		/* define commands from user input */
-		while(true) {
+		while (true) {
 			
 			console.print(prompt() + " ");
 			console.setStyle(inputFont);
@@ -283,11 +302,48 @@ public class Shell implements CommandLine {
 			
 			console.setStyle(outputFont);
 			
+			String shellc = null;
+			String shs = null;
+			
+			for (String s : _shell) {
+				if (input.startsWith(s)) {
+					shs = s;
+					shellc = Configuration.getProperties().
+						getProperty(RUNTIME_PROPERTY_PREFIX + s);
+				}
+			}
+			
 			if ("exit".equals(input)) {
 				
 				console.println("shell terminated");
 				System.exit(0);
 				break;
+				
+			} else if (shellc != null) {
+				
+				File dir = Configuration.getProjectDirectory();
+				if (currentSession != null && currentSession.getCurrentProject() != null)
+					dir = Configuration.getProjectDirectory(currentSession.getCurrentProject().getId());
+
+				/*
+				 * remove git, substitute with path
+				 */
+				input = input.substring(shs.length()).trim();
+				String[] argz = input.split("\\ ");
+				String[] args = new String[argz.length + 1];
+				for (int i = 0; i < args.length; i++) {
+					args[i] = 
+						(i == 0) ?
+							shellc:
+							argz[i - 1];
+				}
+				
+				ShellCommand.Result res = ShellCommand.exec(args, true, dir);
+				
+				shs = null;
+				shellc = null;
+				
+				console.print(res.error + res.output);
 				
 			} else if (input.startsWith("!")) {
 				

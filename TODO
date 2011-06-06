@@ -1,0 +1,50 @@
+-- hook system for server script; 
+
+   support multiple hooks
+   hooks for restart, set memory max, upgrade <branch, --version - default latest>
+
+-- storyline command
+
+	create storylines on server (temp dir), download to client
+	
+	decide what to do with visualizations
+		ideally: create a simple web visualization and send the link (directly as a REST service)
+		options to choose visualization format (download anything non-web as a zip)
+
+-- observe command
+
+-- kbox command (w/load namespaces)
+
+	kbox {list|import|reset|create|delete|export|info} <kbox> [parameters ...]
+	accept wildcards for namespaces (Collection<String> getNamespaceList(inputString))
+
+-- run command working for scripts (both server side and client side)
+
+	eventually: shell should become a programmable bash-like shell
+	            variable setting, exporting, substitution
+	
+-- coverage command
+
+	fix bugs on server
+	add export/import options from/to shapefiles
+	
+-- list command improvements
+
+	specific listing returning collections as it should
+	parameterization for list format (--canonical, --source, --tree, --with-dependencies, --sort [observable|...] ...)
+	server improvements to list ontologies, concepts, etc
+	wildcards for namespaces
+	
+-- gazetteer command
+
+	gazetteer {list|create|import|delete|reset|export|info} <gazetteer> [parameters ...]
+	
+-- help system listing commands, arguments with descriptions and subcommands for subsystems
+
+-- user admin command 
+
+   add|remove <user>
+   set <password|role|<var>> <user> <value>
+   
+-- text-only shell
+
