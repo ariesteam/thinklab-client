@@ -37,8 +37,11 @@ public class Session {
 	private String _id = null;
 	private String _name = null;
 	private boolean _connected = false;
+	
 
 	private int delay = 4000;
+	private String _curDir = File.separator;
+	private File _currentDirectory = Configuration.getProjectDirectory();
 	
 	public interface Listener {
 		
@@ -356,8 +359,13 @@ public class Session {
 		return _server;
 	}
 
-	public void setCurrentProject(ThinklabProject project) {
+	public void setCurrentProject(ThinklabProject project) throws ThinklabClientException {
 		this._currentProject = project;
+		/*
+		 * reset current dir
+		 */
+		_currentDirectory = Configuration.getProjectDirectory();
+		setCurrentDirectory(project.getId());
 	}
 
 	public ThinklabProject getCurrentProject() {
@@ -369,6 +377,36 @@ public class Session {
 		this._server = null;
 		this._name = null;
 		this._connected = false;
+	}
+
+	public void setCurrentDirectory(String dir) throws ThinklabClientException {
+		
+		if (dir == null) {
+			this._currentDirectory = 
+				_currentProject == null ?
+					Configuration.getProjectDirectory() :
+					Configuration.getProjectDirectory(_currentProject.getId());
+			this._curDir = File.separator;
+			return;
+		}
+		
+		File dr = new File(this._currentDirectory, dir);
+		if (! (dr.exists() && dr.isDirectory())) {
+			throw new ThinklabClientException("directory " + dir + " does not exist");
+		}
+		this._currentDirectory = dr;
+		this._curDir = MiscUtilities.getFileName(dr.toString());
+	}
+	
+	/**
+	 * Return current directory for display or for use
+	 * @param b if true, return the display name (starting at $THINKLAB_PROJECT_DIR);
+	 * otherwise, return the actual full path.
+	 * 
+	 * @return
+	 */
+	public String getCurrentDirectory(boolean display) {
+		return display ? _curDir : _currentDirectory.toString();
 	}
 
 }

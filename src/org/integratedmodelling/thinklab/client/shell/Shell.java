@@ -314,17 +314,11 @@ public class Shell implements CommandLine {
 			}
 			
 			if ("exit".equals(input)) {
-				
-				console.println("shell terminated");
 				System.exit(0);
 				break;
 				
 			} else if (shellc != null) {
 				
-				File dir = Configuration.getProjectDirectory();
-				if (currentSession != null && currentSession.getCurrentProject() != null)
-					dir = Configuration.getProjectDirectory(currentSession.getCurrentProject().getId());
-
 				/*
 				 * remove git, substitute with path
 				 */
@@ -338,7 +332,9 @@ public class Shell implements CommandLine {
 							argz[i - 1];
 				}
 				
-				ShellCommand.Result res = ShellCommand.exec(args, true, dir);
+				ShellCommand.Result res = 
+					ShellCommand.exec(args, true, 
+							new File(currentSession.getCurrentDirectory(false)));
 				
 				shs = null;
 				shellc = null;

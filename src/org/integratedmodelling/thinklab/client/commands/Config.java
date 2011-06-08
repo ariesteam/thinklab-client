@@ -40,6 +40,22 @@ public class Config extends CommandHandler {
 			return session.send("config", true, expect(args,0), expect(args,1), "keep", keep);
 		}
 			
+		if (args.getArguments() == null || args.getArguments().size() == 0) {
+			
+			/*
+			 * print configuration
+			 */
+			for (Object s : Configuration.getProperties().keySet()) {
+				
+				String k = (String)s;
+				String p = Configuration.getProperties().getProperty(k);
+				
+				cl.say("  " + k + "\t" + p);
+			}
+			
+			return Result.ok(session);
+		}
+		
 		String var = expect(args, 0);
 		String val = expect(args, 1);
 		Configuration.getProperties().setProperty(var, val);

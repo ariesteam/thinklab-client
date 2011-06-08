@@ -1,11 +1,13 @@
 package org.integratedmodelling.thinklab.client;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 
 import org.integratedmodelling.thinklab.client.CommandHandler.Arguments;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.shell.CommandLine;
+import org.integratedmodelling.thinklab.client.utils.StringUtils;
 
 import uk.co.flamingpenguin.jewel.cli.ArgumentValidationException;
 import uk.co.flamingpenguin.jewel.cli.CliFactory;
@@ -21,7 +23,9 @@ public class CommandManager {
 	
 	public static Result execute(String s, Session session, CommandLine cl) throws ThinklabClientException {
 		
-		String[] ss = s.trim().split("\\ ");
+		Collection<String> sss = StringUtils.tokenize(s);
+		String[] ss = sss.toArray(new String[sss.size()]);
+		
 		Result ret = null;
 		
 		Class<? extends CommandHandler> cmdcl = _commands.get(ss[0]);
