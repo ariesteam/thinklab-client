@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
+import org.integratedmodelling.thinklab.client.polylist.Polylist;
 import org.integratedmodelling.thinklab.client.utils.Pair;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,6 +27,8 @@ public class Result {
 	public Object _result = null;
 	
 	private Session _session;
+
+	private int _type;
 	
 	protected JSONObject json() {
 		if (js == null)
@@ -49,10 +52,18 @@ public class Result {
 		try {
 
 			_status = js.getInt("status");
-			if (js.has("result")) {
-				_result = js.get("result");
+			_type   = 0;
+			if (js.has("type")) {
+				_type = js.getInt("type");
 			}
-		} catch (JSONException e) {
+			if (js.has("result")) {
+				if (_type == 10) {
+					_result = Polylist.parse(js.getString("result"));
+				} else {
+					_result = js.get("result");
+				}
+			}
+		} catch (Exception e) {
 			throw new ThinklabClientException(e);
 		}
 	}
@@ -130,7 +141,6 @@ public class Result {
 	
 	public Object getResult() {
 		return (_result == null || JSONObject.NULL.equals(_result)) ? null : _result;
-
 	}
 
 	public int size() throws ThinklabClientException {

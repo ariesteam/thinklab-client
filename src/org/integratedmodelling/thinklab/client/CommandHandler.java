@@ -18,10 +18,18 @@ public abstract class CommandHandler {
 		@Option(helpRequest = true) 
 		boolean getHelp();
 	}
+
+	public String arg(Arguments args, int n) throws ThinklabClientException {
+
+		if (args.getArguments() != null && args.getArguments().size() > n) {
+			return args.getArguments().get(n);
+		}
+		return null;
+	}
 	
 	public String expect(Arguments args, int n) throws ThinklabClientException {
 
-		if (args.getArguments().size() < n+1) {
+		if (args.getArguments() == null || args.getArguments().size() < n+1) {
 			throw new ThinklabClientException("not enough arguments passed to command");
 		}
 		return args.getArguments().get(n);

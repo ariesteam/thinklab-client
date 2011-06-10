@@ -116,7 +116,8 @@ public class List extends CommandHandler {
 		cl.say(res.size() + " " + arguments.getArguments().get(0) + " on " 
 				+ session.getName());
 		for (int i = 0; i < res.size(); i++) {
-			cl.say("   " + res.getResult(i));
+			String pref = /*res.getResult(i).toString().startsWith(" ") ? "" : "  "*/ "";
+			cl.say(pref + res.getResult(i));
 		}
 		return Result.ok(session);
 	}
