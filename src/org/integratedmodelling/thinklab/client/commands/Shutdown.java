@@ -83,10 +83,10 @@ public class Shutdown extends CommandHandler {
 		/*
 		 * TODO cleanup session
 		 */
+		if (ret.getStatus() == Result.OK)
+			session.disconnect();
 		
-		session.disconnect();
-		
-		return ret.setSession(null);
+		return ret.setSession(session);
 	}
 
 }
