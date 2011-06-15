@@ -44,23 +44,32 @@ public class Shutdown extends CommandHandler {
 		ArrayList<String> arg = new ArrayList<String>();
 		
 		String s = null;
-		if (args.isUpdate())
+		String bname = "dev";
+
+		if (args.isUpdate()) {
+			
+			if (args.getUpdate() != null) {
+				bname = args.getUpdate();
+			}
+			
 			s = cl.ask("please confirm attempt to update remote " 
 					+ session.getName() + " to branch " + 
-					args.getUpdate() + " [yes|no] ");
-		else if (args.isRestart())	
+					bname + " [yes|no] ");
+			
+		} else if (args.isRestart()) {
 			s = cl.ask("please confirm restart of remote server " 
 					+ session.getName() + " [yes|no] ");
-		else 
+		} else { 
 			s = cl.ask("please confirm shutdown of remote server " 
 					+ session.getName() + " [yes|no] ");
-
+		}
+		
 		if (s.equals("yes")) {
 			if (args.isUpdate()) {
 				arg.add("hook");
 				arg.add("update");
 				arg.add("hookarg1");
-				arg.add(args.getUpdate());
+				arg.add(bname);
 			} else if (args.isRestart()) {
 				arg.add("hook");
 				arg.add("restart");
