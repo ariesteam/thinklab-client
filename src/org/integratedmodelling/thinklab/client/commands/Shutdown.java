@@ -64,7 +64,7 @@ public class Shutdown extends CommandHandler {
 					+ session.getName() + " [yes|no] ");
 		}
 		
-		if (s.equals("yes")) {
+		if (s != null && s.equals("yes")) {
 			if (args.isUpdate()) {
 				arg.add("hook");
 				arg.add("update");
@@ -75,7 +75,7 @@ public class Shutdown extends CommandHandler {
 				arg.add("restart");
 			}
 		} else {
-			cl.say("command aborted");
+			cl.say("shutdown aborted");
 			return null;
 		}
 

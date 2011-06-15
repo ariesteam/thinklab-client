@@ -16,7 +16,10 @@ public class Configuration {
 	}
 
 	public static File getDownloadPath() {
-		File ret = new File(getConfigPath() + File.separator + "downloads"); 
+		File ret = new File(
+				getProperties().getProperty(
+					"download.directory", 
+					getConfigPath() + File.separator + "downloads")); 
 		ret.mkdirs();
 		return ret;
 	}
@@ -42,6 +45,15 @@ public class Configuration {
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
+			} else {
+				/*
+				 * create properties for defaults so that 
+				 * users can see what to change
+				 * TODO add more
+				 */
+				_properties.put("download.directory", getDownloadPath());
+				_properties.put("project.directory", getProjectDirectory());
+				saveProperties();
 			}
 		}
 		return _properties;
