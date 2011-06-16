@@ -1,0 +1,91 @@
+Thinklab client shell allows to use a remote thinklab server as the computing engine for local modeling projects.
+
+h1. Local administration and configuration
+
+Where things are, how things work.
+
+h2. User sessions
+
+h2. config command
+
+h3. Directories: cd/pwd/mkdir
+
+h3. Project and download directories
+
+h3. Local shell commands
+
+h2. Online help
+
+h1. Remote administration 
+
+h2. remote definition
+
+h3. server URLs
+
+h3. users and roles
+
+h2. connect/disconnect
+
+h2. status
+
+h2. pload
+
+h2. get/put
+
+h2. user
+
+h2. kbox
+
+h3. listing, resetting, creating and deleting a kbox
+
+h3. loading annotations in a kbox
+
+h2. list
+
+h2. shutdown, restart and upgrade
+
+h1. Project administration
+
+* Projects are locally stored and are deployed to the server on request. They need to be deployed before models can be run.
+* Deployment is reentrant, i.e. projects can be deployed and undeployed as many times as necessary.
+
+h2. Project content
+
+Standard locations:
+
+* **models** model namespaces
+* **agents** agent namespaces
+* **scenarios** scenario namespaces
+* **annotations** annotation namespaces
+* **ontologies** ontologies
+* **storylines** storyline trees
+
+h3. namespaces
+
+h2. project command
+
+h3. project creation and deletion
+
+h3. setting the current project
+
+h3. project import
+
+h3. project deployment
+
+Note on revision control system; use of git command from within the shell.
+
+h1. Modeling
+
+All model commands work like in the server. When a command generates a file on the server, this file is automatically downloaded to the designated download directory on the client. 
+
+h2. model
+
+h2. rank/measure/categorize
+
+h2. observe
+
+h2. coverage
+
+h2. Gazetteer subsystem
+
+h2. Storyline subsystem

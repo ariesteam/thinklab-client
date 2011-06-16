@@ -175,29 +175,12 @@ public class Shell implements CommandLine {
 	}
 	
 	public static void initialize() {
-				
-		for (Class<?> cls : 
-				MiscUtilities.findSubclasses(
-						CommandHandler.class, 
-						"org.integratedmodelling.thinklab.client.commands", 
-						Shell.class.getClassLoader())) {	
-			
-			/*
-			 * lookup annotation, ensure we can use the class
-			 */
-			if (cls.isInterface() || Modifier.isAbstract(cls.getModifiers()))
-				continue;
-			
-			/*
-			 * lookup implemented concept
-			 */
-			for (Annotation annotation : cls.getAnnotations()) {
-				if (annotation instanceof Command) {
-					CommandManager.registerCommand(((Command)annotation).id(), (Class<? extends CommandHandler>) cls);
-				}
-			}
-		}
-		
+
+		/*
+		 * register all commands
+		 */
+		CommandManager.initialize();
+
 		/*
 		 * compile a list of executables we want to support in the shell
 		 */
@@ -320,7 +303,7 @@ public class Shell implements CommandLine {
 			} else if (shellc != null) {
 				
 				/*
-				 * remove git, substitute with path
+				 * remove cmd, substitute with path
 				 */
 				input = input.substring(shs.length()).trim();
 				String[] argz = input.split("\\ ");

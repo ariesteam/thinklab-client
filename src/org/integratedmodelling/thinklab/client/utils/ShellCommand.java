@@ -15,6 +15,13 @@ public class ShellCommand {
 		public String output;
 		public String error;
 		public Exception exp;
+		
+		public String getOutput() {
+			return 
+				(error == null ? "" : error) +
+				(error != null && output != null ? " " : "") +
+				(output == null ? "" : output);
+		}
 	}
 	
 	static class StreamGobbler extends Thread {
@@ -97,5 +104,13 @@ public class ShellCommand {
 	        result.exitCode = -1;
 	    }
 	    return result;
+	}
+	
+	public static Result exec(String input, boolean waitForResult, File dir) {
+
+		input = input.trim();
+		String[] args = input.split("\\ ");
+
+		return ShellCommand.exec(args, waitForResult, dir);
 	}
 }

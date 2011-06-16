@@ -93,7 +93,7 @@ public class Result {
 					ret = js.getString("info");
 				}
 			} else if (_status == FAIL) {
-				ret = "ERROR";
+				ret = "** error **";
 				if (js != null && js.has("error")) {
 					ret += ": " + js.getString("error");
 				}

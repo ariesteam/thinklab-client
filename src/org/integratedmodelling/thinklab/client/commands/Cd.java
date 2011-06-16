@@ -15,7 +15,7 @@ public class Cd extends CommandHandler {
 			throws ThinklabClientException {
 		
 		session.setCurrentDirectory(
-				arguments.getArguments().size() == 0 ?
+				(arguments.getArguments() == null || arguments.getArguments().size() == 0) ?
 					null :
 					arguments.getArguments().get(0));
 		return Result.ok(session);
