@@ -1,11 +1,34 @@
--- hook system for server script; 
-
-   support multiple hooks
-   hooks for restart, set memory max, upgrade <branch, --version - default latest>
-
 -- storyline command
 
 	create storylines on server (temp dir), download to client
+More requests:
+
+1. default context (maybe more) for model commands - see email.
+
+2. Project load -> checkout
+
+3. list tasks (w/ number and command line that generated them; check by number or ID)
+
+4. session persistence - list sessions; [dis]connect --keep; [dis]connect --save
+
+5. enable absolute paths and relative with subdirs in -o commands 
+
+6. history command, pick command by number
+
+7. think about ways to share files (-o) from server - possibly a --keep option that allows a
+subsequent 'get' in a configured directory, non-session specific. Or possibly 
+just --persist <file>.
+
+8. Save current project (and context?) across invocations.
+
+-----
+
+Contexts should be read from NetCDF; --append|a to complement -o (if given and file exists,
+read context from it unless given on CL). 
+
+NetCDF should be source datasets for annotations in the GUI with WCS/WFS
+
+--------
 	
 	decide what to do with visualizations
 		ideally: create a simple web visualization and send the link (directly as a REST service)
