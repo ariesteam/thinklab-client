@@ -129,7 +129,7 @@ public abstract class RemoteCommandHandler extends CommandHandler {
 		/*
 		 * adding an & at the end sends the task to the background.
 		 */
-		if (arguments.getArguments().size() > 0 && 
+		if (arguments.getArguments() != null && arguments.getArguments().size() > 0 && 
 				arguments.getArguments().get(arguments.getArguments().size()-1).equals("&")) {
 			this._asynchronous = true;
 			arguments.getArguments().remove(arguments.getArguments().size()-1);

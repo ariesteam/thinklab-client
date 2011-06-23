@@ -116,14 +116,16 @@ public class List extends CommandHandler {
 		Result res = session.send("list", true, argu.toArray(new String[argu.size()]));
 
 		boolean isItem = res.get("is-item") != null && res.get("is-item").equals("true");
-		if (!isItem)
-			cl.say(res.size() + " " + arguments.getArguments().get(0) + " on " 
-				+ session.getName());
-		
+
 		for (int i = 0; i < res.size(); i++) {
 			String pref = /*res.getResult(i).toString().startsWith(" ") ? "" : "  "*/ "";
 			cl.say(pref + res.getResult(i));
 		}
+		
+		if (!isItem)
+			cl.say(res.size() + " " + arguments.getArguments().get(0) + " on " 
+				+ session.getName());
+		
 		return Result.ok(session);
 	}
 
