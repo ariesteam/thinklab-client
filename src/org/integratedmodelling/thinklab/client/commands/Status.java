@@ -31,24 +31,43 @@ public class Status extends RemoteCommandHandler {
 			throws ThinklabClientException {
 		
 		Result ret = session.send("", false);
-
+		Args args = (Args)arguments;
+		
 		/*
 		 * report all vars
 		 */
 		Date up = new Date(Long.parseLong(ret.get("boot.time").toString()));
-		Date lt = new Date(Long.parseLong(ret.get("local.time").toString()));
+		Date lt = new Date(Long.parseLong(ret.get("current.time").toString()));
 		
-		cl.say("   Running version " +
+		long mtot = Long.parseLong(ret.get("memory.total").toString())/(1024L*1024L);
+		long mfre = Long.parseLong(ret.get("memory.free").toString())/(1024L*1024L);
+		long mmax = Long.parseLong(ret.get("memory.max").toString())/(1024L*1024L);
+		
+		cl.say("   Server version " +
 				ret.get("thinklab.version") + 
 				" [" + ret.get("thinklab.branch") + "]");
-
-		cl.say("   Since: " + up + " (local time: " + lt + ")");
+		
+		cl.say("   Server time: " + lt);
+		cl.say("   Up since: " + up);
 		
 		cl.say("   CPUs: " + ret.get("processors"));
 		
-		cl.say("  " + ret.get("memory.free") + " free memory out of " + ret.get("memory.max") + 
-				" (total " + ret.get("memory.total") + ")");
+		cl.say("   " + mfre + "M free memory out of " + mtot  + 
+				"M (max " + mmax + "M)");
 		
+		if (args.isLog()) {
+			
+			/*
+			 * ask for log and print it if successful
+			 */
+			 Result rlog = session.send("log", false, "lines", args.getLog()+"");
+			 
+			 if (rlog.getStatus() == Result.OK) {
+				 
+			 }
+			 
+			 
+		}
 		
 		return ret;
 	}
