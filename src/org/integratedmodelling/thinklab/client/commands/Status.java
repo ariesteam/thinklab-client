@@ -63,7 +63,7 @@ public class Status extends RemoteCommandHandler {
 			 Result rlog = session.send("log", false, "lines", args.getLog()+"");
 			 
 			 if (rlog.getStatus() == Result.OK) {
-				 
+				 cl.say(rlog.getResult().toString());
 			 }
 			 
 			 
