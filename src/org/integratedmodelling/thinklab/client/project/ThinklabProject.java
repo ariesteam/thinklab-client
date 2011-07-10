@@ -53,20 +53,6 @@ public class ThinklabProject {
 			
 			return ret;
 		}
-
-//	public static ThinklabProject getProject(String id, String[] dependencies) 
-//		throws ThinklabClientException {
-//		
-//		ThinklabProject ret = new ThinklabProject(id);
-//
-//		if (!ret.exists()) {
-//			ret.create(dependencies);
-//		} else {
-//			ret.load();
-//		}
-//		
-//		return ret;
-//	}
 	
 	public static ThinklabProject create(String id) throws ThinklabClientException {
 	
