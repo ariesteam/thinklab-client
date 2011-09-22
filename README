@@ -1,1 +1,20 @@
 Thinklab REST API and command-line remote shell.
+
+Thinklab-client commands:
+
+config [prop val]
+project [--remote] list
+project (load | create | deploy | undeploy | checkout | import) <name>
+list [--source] [--dependencies] projects | remotes | models [wildcard] | namespaces | ontologies | concepts | scenarios
+list [--source] [--dependencies] (project | remote | model | namespace | ontology | concepts | scenarios) <name>
+remote add <name> <url>
+connect r1adm (opens a new prompt)
+disconnect
+shutdown [--restart | --update <branch>]
+status
+history
+!<command number in history>
+model [-d | -t | -v | -o <rel_path>] <model> <context> [&]
+measure|rank|categorize [-d | -t | -v | -o <rel_path] <concept> <context> [&]
+list tasks
+check <jobid>
