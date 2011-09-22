@@ -67,6 +67,7 @@ public class List extends CommandHandler {
 				}
 			}			
 			return Result.ok(session);
+			
 		} else if (expect(args,0).equals("remotes")) {
 			
 			for (Object o : Configuration.getProperties().keySet()) {
@@ -113,12 +114,18 @@ public class List extends CommandHandler {
 		}
 	
 		Result res = session.send("list", true, argu.toArray(new String[argu.size()]));
-		cl.say(res.size() + " " + arguments.getArguments().get(0) + " on " 
-				+ session.getName());
+
+		boolean isItem = res.get("is-item") != null && res.get("is-item").equals("true");
+
 		for (int i = 0; i < res.size(); i++) {
 			String pref = /*res.getResult(i).toString().startsWith(" ") ? "" : "  "*/ "";
 			cl.say(pref + res.getResult(i));
 		}
+		
+		if (!isItem)
+			cl.say(res.size() + " " + arguments.getArguments().get(0) + " on " 
+				+ session.getName());
+		
 		return Result.ok(session);
 	}
 

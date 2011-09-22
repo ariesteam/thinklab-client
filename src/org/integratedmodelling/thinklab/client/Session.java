@@ -220,6 +220,7 @@ public class Session {
 	private Result sendInternal(String command, String ... arguments) throws ThinklabClientException {
 		
 		String url = _server + "/" + command + "?session=" + _id;
+		Result ret = null;
 		
 		if (arguments != null && arguments.length > 0) {
 			for (int i = 0; i < arguments.length; i++)
@@ -241,11 +242,14 @@ public class Session {
 				throw new ThinklabClientException("server failure: not a Thinklab REST service");
 			
 			JSONObject js = new JSONObject(rep.getText());
-			return new Result(js);
+			ret = new Result(js);
+			ret.setSession(this);
 			
 		} catch (Exception e) {
 			throw new ThinklabClientException(e);
 		}
+		
+		return ret;
 	}
 	
 	/**

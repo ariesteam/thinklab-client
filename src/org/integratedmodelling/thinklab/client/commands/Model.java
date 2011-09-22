@@ -25,6 +25,14 @@ public class Model extends RemoteCommandHandler {
 		@Option(longName="output",shortName="o",description="download results as NetCDF")
 		String getOutput();
 		boolean isOutput();
+		
+		@Option(longName="publish",shortName="p",description="publish results as NetCDF into configured publish directory")
+		String getPublish();
+		boolean isPublish();
+		
+		@Option(longName="scenario",shortName="s",description="run specified scenario")
+		String getScenario();
+		boolean isScenario();
 	}
 	
 	@Override
@@ -50,6 +58,10 @@ public class Model extends RemoteCommandHandler {
 		if (args.isOutput()) {
 			opts.add("output");
 			opts.add(args.getOutput());
+		}
+		if (args.isScenario()) {
+			opts.add("scenario");
+			opts.add(args.getScenario());
 		}
 		
 		return send(

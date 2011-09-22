@@ -37,7 +37,11 @@ public class Config extends CommandHandler {
 				throw new ThinklabClientException("remote command: not connected to a server");
 			
 			String keep = args.isKeep() ? "true" : "false";
-			return session.send("config", true, expect(args,0), expect(args,1), "keep", keep);
+			return session.send("config", true, 
+					"plugin", expect(args,0), 
+					"variable", expect(args,1), 
+					"value", expect(args,2), 
+					"keep", keep);
 		}
 			
 		if (args.getArguments() == null || args.getArguments().size() == 0) {

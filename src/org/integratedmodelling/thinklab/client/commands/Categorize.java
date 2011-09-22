@@ -25,6 +25,10 @@ public class Categorize extends RemoteCommandHandler {
 		@Option(longName="output",shortName="o",description="download results as NetCDF")
 		String getOutput();
 		boolean isOutput();
+		
+		@Option(longName="publish",shortName="p",description="publish results as NetCDF into configured publish directory")
+		String getPublish();
+		boolean isPublish();
 	}
 	
 	@Override
