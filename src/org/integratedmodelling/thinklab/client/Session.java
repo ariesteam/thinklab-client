@@ -28,6 +28,10 @@ import org.restlet.resource.ClientResource;
  * successfully. It can be used to send commands to the server and holds local info on
  * authentication.
  * 
+ * No actual state is kept on the server (it's REST, baby) so no need to disconnect at the
+ * end, but a disconnect() method is provided so that the same session can be reused or made
+ * local at will.
+ * 
  * @author ferdinando.villa
  *
  */

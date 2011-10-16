@@ -3,8 +3,8 @@ package org.integratedmodelling.thinklab.client;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.integratedmodelling.list.PolyList;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
-import org.integratedmodelling.thinklab.client.polylist.Polylist;
 import org.integratedmodelling.thinklab.client.utils.Pair;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,7 +58,7 @@ public class Result {
 			}
 			if (js.has("result")) {
 				if (_type == 10) {
-					_result = Polylist.parse(js.getString("result"));
+					_result = PolyList.parse(js.getString("result"));
 				} else {
 					_result = js.get("result");
 				}

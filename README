@@ -6,7 +6,7 @@ config [prop val]
 project [--remote] list
 project (load | create | deploy | undeploy | checkout | import) <name>
 list [--source] [--dependencies] projects | remotes | models [wildcard] | namespaces | ontologies | concepts | scenarios
-list [--source] [--dependencies] (project | remote | model | namespace | ontology | concepts | scenarios) <name>
+list [--source] [--dependencies] (project | remote | model | namespace | ontology | concept | scenario) <name>
 remote add <name> <url>
 connect r1adm (opens a new prompt)
 disconnect
