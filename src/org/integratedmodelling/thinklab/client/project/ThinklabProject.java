@@ -7,11 +7,14 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Properties;
 
+import org.integratedmodelling.exceptions.ThinklabIOException;
+import org.integratedmodelling.exceptions.ThinklabRuntimeException;
+import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.Configuration;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.utils.FolderZiper;
 
-public class ThinklabProject {
+public class ThinklabProject implements IProject {
 	
 	String _id = null;
 	Properties _properties = null;
@@ -209,6 +212,30 @@ public class ThinklabProject {
 	@Override
 	public int hashCode() {
 		return _id.hashCode();
+	}
+
+	@Override
+	public Properties getProperties() {
+		if (_properties == null) {
+			try {
+				_properties = getPluginProperties(getId());
+			} catch (ThinklabClientException e) {
+				throw new ThinklabRuntimeException(e);
+			}
+		}
+		return _properties;
+	}
+
+	@Override
+	public String[] getNamespaces() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public File getSourceFolder() {
+		String folder = getProperties().getProperty(IProject.SOURCE_FOLDER_PROPERTY, "src");
+		return new File(getPath() + File.separator + folder);
 	}
 
 	

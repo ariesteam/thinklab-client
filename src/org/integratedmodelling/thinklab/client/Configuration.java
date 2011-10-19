@@ -3,7 +3,11 @@ package org.integratedmodelling.thinklab.client;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Properties;
+
+import org.integratedmodelling.thinklab.client.utils.Path;
 
 public class Configuration {
 
@@ -87,4 +91,26 @@ public class Configuration {
 		ret.mkdirs();
 		return ret;
 	}
+	
+	/**
+	 * Return all servers configured in properties
+	 * @return
+	 */
+	public static Collection<ServerConfiguration> getRemotes() {
+		
+		ArrayList<ServerConfiguration> ret = new ArrayList<ServerConfiguration>();
+
+		for (Object o : getProperties().keySet()) {
+			String pk = o.toString();
+			if (pk.startsWith("server.")) {
+				String s = Path.getLast(pk, '.');
+				String h = Configuration.getProperties().getProperty(pk);
+				
+				ret.add(new ServerConfiguration(s,h));
+			}
+		}
+
+		return ret;
+	}
+	
 }

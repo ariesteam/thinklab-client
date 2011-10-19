@@ -1,5 +1,6 @@
 package org.integratedmodelling.thinklab.client.modelling;
 
+import java.io.File;
 import java.util.Collection;
 
 import org.integratedmodelling.exceptions.ThinklabException;
@@ -111,6 +112,12 @@ public class ModelManager implements IModelManager {
 	@Override
 	public IContext run(IModel arg0, IKBox arg1, ISession arg2, IContext arg3)
 			throws ThinklabException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<INamespace> load(File sourceFolder) throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
 	}
