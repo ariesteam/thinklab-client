@@ -5,22 +5,34 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Collection;
 import java.util.Properties;
 
+import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabIOException;
 import org.integratedmodelling.exceptions.ThinklabRuntimeException;
+import org.integratedmodelling.thinklab.api.modelling.INamespace;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.Configuration;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
+import org.integratedmodelling.thinklab.client.modelling.ModelManager;
 import org.integratedmodelling.thinklab.client.utils.FolderZiper;
+import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
 
 public class ThinklabProject implements IProject {
 	
 	String _id = null;
 	Properties _properties = null;
+	private Collection<INamespace> namespaces;
 	
 	public ThinklabProject(String pluginId) {		
 		_id = pluginId;
+	}
+	
+	
+	public ThinklabProject(File dir) throws ThinklabClientException {		
+		_id = MiscUtilities.getFileName(dir.toString());
+		load();
 	}
 	
 	/**
@@ -68,6 +80,24 @@ public class ThinklabProject implements IProject {
 		return ret;	
 	}
 	
+	public File createNamespace(String ns) {
+		
+		File ret = null;
+		
+		/*
+		 * create dir structure
+		 * create TQL file
+		 * load it
+		 */
+		File path = 
+			new File(getSourceFolder() + File.separator +	ns.replaceAll(".", File.separator));
+		
+		
+		
+		
+		return ret;
+	}
+	
 	public static ThinklabProject load(String id) throws ThinklabClientException {
 	
 		ThinklabProject ret = new ThinklabProject(id);
@@ -80,7 +110,17 @@ public class ThinklabProject implements IProject {
 	}
 	
 	private void load() throws ThinklabClientException {
+		
 		_properties = getPluginProperties(_id);
+		
+		/*
+		 * TODO read source folder; list namespaces
+		 */
+		try {
+			this.namespaces = ModelManager.get().load(getSourceFolder());
+		} catch (ThinklabException e) {
+			throw new ThinklabClientException(e);
+		}
 	}
 
 	private void create(String[] dependencies) throws ThinklabClientException {
@@ -114,6 +154,12 @@ public class ThinklabProject implements IProject {
 		return f.exists();
 	}
 	
+	public static boolean exists(File dir) {
+		
+		File f = 
+			new File(dir + File.separator + "THINKLAB-INF");
+		return f.exists();
+	}
 	
 	public static boolean exists(String id) {
 		
@@ -227,9 +273,8 @@ public class ThinklabProject implements IProject {
 	}
 
 	@Override
-	public String[] getNamespaces() {
-		// TODO Auto-generated method stub
-		return null;
+	public Collection<INamespace> getNamespaces() {
+		return namespaces;
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package org.integratedmodelling.thinklab.client.exceptions;
 
-public class ThinklabClientException extends Exception {
+import org.integratedmodelling.exceptions.ThinklabException;
+
+public class ThinklabClientException extends ThinklabException {
 
 	private static final long serialVersionUID = -832931808856847295L;
 

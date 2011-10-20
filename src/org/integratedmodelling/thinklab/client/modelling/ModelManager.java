@@ -24,6 +24,15 @@ import org.integratedmodelling.thinklab.api.runtime.ISession;
  */
 public class ModelManager implements IModelManager {
 
+	private static ModelManager _this = null;
+	
+	public static ModelManager get() {
+		if (_this == null) {
+			_this = new ModelManager();
+		}
+		return _this;
+	}
+	
 	@Override
 	public IAgentModel getAgentModel(String arg0) {
 		// TODO Auto-generated method stub
