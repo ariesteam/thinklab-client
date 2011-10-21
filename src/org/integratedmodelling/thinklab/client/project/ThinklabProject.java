@@ -2,9 +2,11 @@ package org.integratedmodelling.thinklab.client.project;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Properties;
 
@@ -80,20 +82,22 @@ public class ThinklabProject implements IProject {
 		return ret;	
 	}
 	
-	public File createNamespace(String ns) {
+	public File createNamespace(String ns) throws ThinklabException {
 		
-		File ret = null;
+		File ret = new File(getSourceFolder() + File.separator + 
+							ns.replaceAll(".", File.separator) + ".tql");
 		
-		/*
-		 * create dir structure
-		 * create TQL file
-		 * load it
-		 */
-		File path = 
-			new File(getSourceFolder() + File.separator +	ns.replaceAll(".", File.separator));
+		File dir = new File(MiscUtilities.getFilePath(ret.toString()));
 		
 		
-		
+		try {
+			dir.mkdirs();
+			PrintWriter out = new PrintWriter(ret);
+			out.println("namespace " + ns + ";\n");
+			out.close();
+		} catch (Exception e) {
+			throw new ThinklabClientException(e);
+		}
 		
 		return ret;
 	}
