@@ -2,11 +2,11 @@ package org.integratedmodelling.thinklab.client.project;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 
@@ -38,7 +38,7 @@ public class ThinklabProject implements IProject {
 	}
 	
 	/**
-	 * Get the content of THINKLAB-INF/thinklab.properties if the plugin contains that
+	 * Get the content of META-INF/thinklab.properties if the plugin contains that
 	 * directory, or null if it doesn't. Can be used to check if a plugin is a 
 	 * thinklab plugin based on the null return value.
 	 * 
@@ -55,7 +55,7 @@ public class ThinklabProject implements IProject {
 				new File(
 					Configuration.getProjectDirectory(plugin) + 
 					File.separator + 
-					"THINKLAB-INF" +
+					"META-INF" +
 					File.separator + 
 					"thinklab.properties");
 			
@@ -82,9 +82,16 @@ public class ThinklabProject implements IProject {
 		return ret;	
 	}
 	
+	/**
+	 * Create a namespace in the first sourcefolder.
+	 * 
+	 * @param ns
+	 * @return
+	 * @throws ThinklabException
+	 */
 	public File createNamespace(String ns) throws ThinklabException {
 		
-		File ret = new File(getSourceFolder() + File.separator + 
+		File ret = new File(getSourceFolders().iterator().next() + File.separator + 
 							ns.replaceAll(".", File.separator) + ".tql");
 		
 		File dir = new File(MiscUtilities.getFilePath(ret.toString()));
@@ -121,7 +128,9 @@ public class ThinklabProject implements IProject {
 		 * TODO read source folder; list namespaces
 		 */
 		try {
-			this.namespaces = ModelManager.get().load(getSourceFolder());
+			for (File sf : getSourceFolders()) {
+				this.namespaces = ModelManager.get().load(sf);
+			}
 		} catch (ThinklabException e) {
 			throw new ThinklabClientException(e);
 		}
@@ -169,7 +178,7 @@ public class ThinklabProject implements IProject {
 		
 		File f = 
 			new File(Configuration.getProjectDirectory() + 
-					File.separator + id + File.separator + "THINKLAB-INF");
+					File.separator + id + File.separator + "META-INF");
 		
 		return f.exists();
 	}
@@ -198,7 +207,7 @@ public class ThinklabProject implements IProject {
 		
 			fout.close();
 			
-			File td = new File(pluginDir + File.separator + "THINKLAB-INF");
+			File td = new File(pluginDir + File.separator + "META-INF");
 			td.mkdirs();
 			this._properties = new Properties();
 			
@@ -225,7 +234,7 @@ public class ThinklabProject implements IProject {
 		
 		File td = 
 			new File(Configuration.getProjectDirectory(_id) +
-				File.separator + "THINKLAB-INF" +
+				File.separator + "META-INF" +
 				File.separator + "thinklab.properties");
 		
 		try {
@@ -282,9 +291,20 @@ public class ThinklabProject implements IProject {
 	}
 
 	@Override
-	public File getSourceFolder() {
-		String folder = getProperties().getProperty(IProject.SOURCE_FOLDER_PROPERTY, "src");
-		return new File(getPath() + File.separator + folder);
+	public Collection<File> getSourceFolders() {
+		String[] folders = getProperties().getProperty(IProject.SOURCE_FOLDER_PROPERTY, "src").split(",");
+		ArrayList<File> ret = new ArrayList<File>();
+		for (String f : folders) {
+			ret.add(new File(getPath() + File.separator + f));
+		} 
+		return ret;
+	}
+
+
+	@Override
+	public String getOntologyNamespacePrefix() {
+		return getProperties().getProperty(
+				IProject.ONTOLOGY_NAMESPACE_PREFIX_PROPERTY, "http://www.integratedmodelling.org/ns");
 	}
 
 	
