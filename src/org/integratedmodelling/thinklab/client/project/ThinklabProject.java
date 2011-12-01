@@ -123,16 +123,10 @@ public class ThinklabProject implements IProject {
 	private void load() throws ThinklabClientException {
 		
 		_properties = getPluginProperties(_id);
-		
-		/*
-		 * TODO read source folder; list namespaces
-		 */
 		try {
-			for (File sf : getSourceFolders()) {
-				this.namespaces = ModelManager.get().load(sf);
-			}
+			this.namespaces = ModelManager.get().load(this);
 		} catch (ThinklabException e) {
-			throw new ThinklabClientException(e);
+			throw new ThinklabClientException(e.getMessage());
 		}
 	}
 
@@ -162,7 +156,7 @@ public class ThinklabProject implements IProject {
 	public boolean exists() {
 		File f = 
 			new File(Configuration.getProjectDirectory() + 
-					File.separator + _id + File.separator + "THINKLAB-INF");
+					File.separator + _id + File.separator + "META-INF");
 		
 		return f.exists();
 	}
@@ -170,7 +164,7 @@ public class ThinklabProject implements IProject {
 	public static boolean exists(File dir) {
 		
 		File f = 
-			new File(dir + File.separator + "THINKLAB-INF");
+			new File(dir + File.separator + "META-INF");
 		return f.exists();
 	}
 	
@@ -178,7 +172,7 @@ public class ThinklabProject implements IProject {
 		
 		File f = 
 			new File(Configuration.getProjectDirectory() + 
-					File.separator + id + File.separator + "META-INF");
+					File.separator + id + File.separator + "META-INF" + File.separator + "thinklab.properties");
 		
 		return f.exists();
 	}

@@ -21,6 +21,6 @@
 	<classpathentry kind="lib" path="lib/org.apache.httpmime.jar"/>
 	<classpathentry kind="lib" path="lib/org.apache.james.mime4j.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="lib/thinklab-api.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/thinklab-api"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

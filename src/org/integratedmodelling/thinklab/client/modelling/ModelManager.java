@@ -13,6 +13,7 @@ import org.integratedmodelling.thinklab.api.modelling.INamespace;
 import org.integratedmodelling.thinklab.api.modelling.IScenario;
 import org.integratedmodelling.thinklab.api.modelling.factories.IModelManager;
 import org.integratedmodelling.thinklab.api.modelling.observation.IContext;
+import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.api.runtime.ISession;
 
 /**
@@ -126,7 +127,8 @@ public class ModelManager implements IModelManager {
 	}
 
 	@Override
-	public Collection<INamespace> load(File sourceFolder) throws ThinklabException {
+	public Collection<INamespace> load(IProject project)
+			throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
 	}
