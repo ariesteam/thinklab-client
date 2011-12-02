@@ -84,15 +84,16 @@ public class ThinklabProject implements IProject {
 	
 	/**
 	 * Create a namespace in the first sourcefolder.
+	 * @param p 
 	 * 
 	 * @param ns
 	 * @return
 	 * @throws ThinklabException
 	 */
-	public File createNamespace(String ns) throws ThinklabException {
-		
+	public File createNamespace(IProject p, String ns) throws ThinklabException {
+				
 		File ret = new File(getSourceFolders().iterator().next() + File.separator + 
-							ns.replaceAll(".", File.separator) + ".tql");
+							ns.replace('.', File.separatorChar) + ".tql");
 		
 		File dir = new File(MiscUtilities.getFilePath(ret.toString()));
 		
@@ -293,7 +294,6 @@ public class ThinklabProject implements IProject {
 		} 
 		return ret;
 	}
-
 
 	@Override
 	public String getOntologyNamespacePrefix() {
