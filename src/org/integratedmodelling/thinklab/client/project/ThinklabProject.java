@@ -6,13 +6,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Properties;
 
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabIOException;
 import org.integratedmodelling.exceptions.ThinklabRuntimeException;
+import org.integratedmodelling.exceptions.ThinklabValidationException;
+import org.integratedmodelling.thinklab.api.knowledge.IOntology;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.Configuration;
@@ -25,12 +29,11 @@ public class ThinklabProject implements IProject {
 	
 	String _id = null;
 	Properties _properties = null;
-	private Collection<INamespace> namespaces;
+	private ArrayList<INamespace> namespaces = new ArrayList<INamespace>();
 	
 	public ThinklabProject(String pluginId) {		
 		_id = pluginId;
 	}
-	
 	
 	public ThinklabProject(File dir) throws ThinklabClientException {		
 		_id = MiscUtilities.getFileName(dir.toString());
@@ -94,8 +97,6 @@ public class ThinklabProject implements IProject {
 				
 		File ret = new File(getSourceFolders().iterator().next() + File.separator + 
 							ns.replace('.', File.separatorChar) + ".tql");
-		
-		System.out.println("porco dio " + ret);
 		File dir = new File(MiscUtilities.getFilePath(ret.toString()));
 		
 		try {
@@ -122,14 +123,14 @@ public class ThinklabProject implements IProject {
 		return ret;	
 	}
 	
-	private void load() throws ThinklabClientException {
-		
-		_properties = getPluginProperties(_id);
-		try {
-			this.namespaces = ModelManager.get().load(this);
-		} catch (ThinklabException e) {
-			throw new ThinklabClientException(e.getMessage());
-		}
+	/**
+	 * Re-read all resources.
+	 * 
+	 * @throws ThinklabClientException
+	 */
+	public void refresh() throws ThinklabClientException {
+		namespaces.clear();
+		load();
 	}
 
 	private void create(String[] dependencies) throws ThinklabClientException {
@@ -206,18 +207,14 @@ public class ThinklabProject implements IProject {
 			File td = new File(pluginDir + File.separator + "META-INF");
 			td.mkdirs();
 			this._properties = new Properties();
+
 			
 			/*
-			 * insert directories for the default loaders. Not really necessary, but 
-			 * nice as a mnemonic if you ever look at the dir.
+			 * create the default source folder 
+			 * TODO also create an empty plugin configuration file.
 			 */
-			new File(pluginDir + File.separator + "agents").mkdirs();
-			new File(pluginDir + File.separator + "annotations").mkdirs();
-			new File(pluginDir + File.separator + "config").mkdirs();
-			new File(pluginDir + File.separator + "contexts").mkdirs();
-			new File(pluginDir + File.separator + "models").mkdirs();
-			new File(pluginDir + File.separator + "ontologies").mkdirs();
-			new File(pluginDir + File.separator + "scenarios").mkdirs();
+			this._properties.put(IProject.SOURCE_FOLDER_PROPERTY, "src");
+			new File(pluginDir + File.separator + "src").mkdirs();
 			
 			saveProperties();
 			
@@ -311,6 +308,93 @@ public class ThinklabProject implements IProject {
 				IProject.ONTOLOGY_NAMESPACE_PREFIX_PROPERTY, "http://www.integratedmodelling.org/ns");
 	}
 
+	public Collection<INamespace> load()
+			throws ThinklabClientException {
 	
+		_properties = getPluginProperties(_id);
+
+		ArrayList<INamespace> ret = new ArrayList<INamespace>();
+		HashSet<File> read = new HashSet<File>();
+		
+		for (File dir : this.getSourceFolders()) {
+		
+			if (!dir.isDirectory() || !dir.canRead()) {
+				throw new ThinklabClientException("source directory " + dir + " is unreadable");
+			}	 
+		
+			loadInternal(dir, read, ret, "", this);
+		}
+		
+		return ret;
+	}
+
+	private void loadInternal(File f, HashSet<File> read, ArrayList<INamespace> ret, String path,
+			IProject project) throws ThinklabClientException {
+
+		if (f. isDirectory()) {
+			
+			String pth = path + "." + MiscUtilities.getFileBaseName(f.toString());
+
+			for (File fl : f.listFiles()) {
+				loadInternal(fl, read, ret, pth, project);
+			}
+			
+		} else if (f.toString().endsWith(".owl")) {
+			try {
+				ProjectFactory.refreshOntology(
+						f.toURI().toURL(), 
+						MiscUtilities.getFileBaseName(f.toString()), false);
+			} catch (MalformedURLException e) {
+				throw new ThinklabClientException(e);
+			}
+			
+			/*
+			 * TODO validate ontology URL vs. namespace path
+			 */
+			IOntology o = 
+					ProjectFactory.requireOntology(
+							MiscUtilities.getFileBaseName(f.toString()));
+			String uri = 
+					project.getOntologyNamespacePrefix() + "/" + path.replaceAll(".", "/") + 
+					MiscUtilities.getFileBaseName(f.toString());
+					
+			if (!o.getURI().equals(uri)) {
+				throw new ThinklabClientException(
+						"illegal ontology namespace in " + f + 
+						": file path requires " + uri + ", " +
+						o.getURI() + " found");
+			}
+			
+			/*
+			 * TODO add namespace and project to ontology metadata
+			 */
+			
+			/*
+			 * TODO if auto sync is requested and configured, upload newer ontologies 
+			 * to location matching URI
+			 */
+			
+		} else if (f.toString().endsWith(".tcl") || f.toString().endsWith(".clj")) {
+
+			INamespace ns;
+			try {
+				ns = ModelManager.get().loadFile(f.toString());
+			} catch (ThinklabException e) {
+				throw new ThinklabClientException(e);
+			}
+
+			/*
+			 * validate namespace vs. file path
+			 */
+			if (!ns.getNamespace().equals(path))
+				throw new ThinklabClientException(
+						"illegal namespace declaration in " + f + 
+						": file path requires " + path + ", " +
+						ns.getNamespace() + " found");
+					
+			ret.add(ns);
+		}
+		
+	}
 	
 }
