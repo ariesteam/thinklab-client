@@ -87,16 +87,16 @@ public class ThinklabProject implements IProject {
 	 * @param p 
 	 * 
 	 * @param ns
-	 * @return
+	 * @return file path relative to project directory
 	 * @throws ThinklabException
 	 */
-	public File createNamespace(IProject p, String ns) throws ThinklabException {
+	public String createNamespace(IProject p, String ns) throws ThinklabException {
 				
 		File ret = new File(getSourceFolders().iterator().next() + File.separator + 
 							ns.replace('.', File.separatorChar) + ".tql");
 		
+		System.out.println("porco dio " + ret);
 		File dir = new File(MiscUtilities.getFilePath(ret.toString()));
-		
 		
 		try {
 			dir.mkdirs();
@@ -107,7 +107,8 @@ public class ThinklabProject implements IProject {
 			throw new ThinklabClientException(e);
 		}
 		
-		return ret;
+		return getSourceFolderNames().iterator().next() + File.separator + 
+				ns.replace('.', File.separatorChar) + ".tql";
 	}
 	
 	public static ThinklabProject load(String id) throws ThinklabClientException {
@@ -291,6 +292,15 @@ public class ThinklabProject implements IProject {
 		ArrayList<File> ret = new ArrayList<File>();
 		for (String f : folders) {
 			ret.add(new File(getPath() + File.separator + f));
+		} 
+		return ret;
+	}
+	
+	public Collection<String> getSourceFolderNames() {
+		String[] folders = getProperties().getProperty(IProject.SOURCE_FOLDER_PROPERTY, "src").split(",");
+		ArrayList<String> ret = new ArrayList<String>();
+		for (String f : folders) {
+			ret.add(f);
 		} 
 		return ret;
 	}

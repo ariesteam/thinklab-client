@@ -1,12 +1,10 @@
 package org.integratedmodelling.thinklab.client.modelling;
 
-import java.io.File;
 import java.util.Collection;
 
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.thinklab.api.knowledge.storage.IKBox;
 import org.integratedmodelling.thinklab.api.modelling.IAgentModel;
-import org.integratedmodelling.thinklab.api.modelling.IAnnotation;
 import org.integratedmodelling.thinklab.api.modelling.IModel;
 import org.integratedmodelling.thinklab.api.modelling.IModelObject;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
@@ -36,12 +34,6 @@ public class ModelManager implements IModelManager {
 	
 	@Override
 	public IAgentModel getAgentModel(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IAnnotation getAnnotation(String arg0) {
 		// TODO Auto-generated method stub
 		return null;
 	}
