@@ -141,13 +141,9 @@ public class ModelManager implements IModelManager {
 		IModelParser parser = interpreters.get(extension);
 		INamespace ret = null;
 		
-		System.out.println("DIO POPO");
-		
 		if (parser == null) {
 			throw new ThinklabValidationException("don't know how to parse a " + extension + " model file");
 		}
-
-		System.out.println("DIO POERE");
 
 		try {
 			InputStream input = new FileInputStream(file);

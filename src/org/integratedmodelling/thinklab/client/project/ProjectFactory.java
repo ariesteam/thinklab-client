@@ -21,6 +21,7 @@ import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientExceptio
 public class ProjectFactory implements IProjectFactory, IKnowledgeManager {
 
 	private static ProjectFactory _this = null;
+	private boolean _initialized;
 	
 	ArrayList<IProject> _projects = new ArrayList<IProject>();
 	
@@ -30,7 +31,12 @@ public class ProjectFactory implements IProjectFactory, IKnowledgeManager {
 		return _this;
 	}
 	
-	public ProjectFactory() {
+	public ProjectFactory() {		
+	}
+
+	public synchronized void loadProjects() {
+
+		_projects.clear();
 		
 		/*
 		 * load all projects in configured directory
@@ -47,9 +53,20 @@ public class ProjectFactory implements IProjectFactory, IKnowledgeManager {
 		}
 	}
 	
+	public void initialize() {
+		
+		if (!_initialized) {
+			loadProjects();
+		}
+		_initialized = true;
+		
+	}
+	
 	@Override
 	public IProject createProject(String arg0) throws ThinklabException {
-		return ThinklabProject.create(arg0);
+		IProject ret = ThinklabProject.create(arg0);
+		loadProjects();
+		return ret;	
 	}
 
 	@Override
