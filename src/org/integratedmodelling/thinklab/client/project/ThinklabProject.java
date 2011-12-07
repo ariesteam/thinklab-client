@@ -313,7 +313,7 @@ public class ThinklabProject implements IProject {
 	
 		_properties = getPluginProperties(_id);
 
-		ArrayList<INamespace> ret = new ArrayList<INamespace>();
+		namespaces = new ArrayList<INamespace>();
 		HashSet<File> read = new HashSet<File>();
 		
 		for (File dir : this.getSourceFolders()) {
@@ -322,10 +322,10 @@ public class ThinklabProject implements IProject {
 				throw new ThinklabClientException("source directory " + dir + " is unreadable");
 			}	 
 		
-			loadInternal(dir, read, ret, "", this);
+			loadInternal(dir, read, namespaces, "", this);
 		}
 		
-		return ret;
+		return namespaces;
 	}
 
 	private void loadInternal(File f, HashSet<File> read, ArrayList<INamespace> ret, String path,
@@ -374,7 +374,7 @@ public class ThinklabProject implements IProject {
 			 * to location matching URI
 			 */
 			
-		} else if (f.toString().endsWith(".tcl") || f.toString().endsWith(".clj")) {
+		} else if (f.toString().endsWith(".tql") || f.toString().endsWith(".clj")) {
 
 			INamespace ns;
 			try {
