@@ -18,7 +18,7 @@ import org.integratedmodelling.thinklab.api.project.IProjectFactory;
 import org.integratedmodelling.thinklab.client.Configuration;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 
-public class ProjectFactory implements IProjectFactory, IKnowledgeManager {
+public class ProjectFactory implements IProjectFactory {
 
 	private static ProjectFactory _this = null;
 	private boolean _initialized;
@@ -89,55 +89,6 @@ public class ProjectFactory implements IProjectFactory, IKnowledgeManager {
 	}
 
 	public static void refreshOntology(URL url, String fileBaseName, boolean b) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public IProperty getProperty(String prop) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IConcept getConcept(String prop) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IConcept getConceptForClass(Class<?> cls) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Class<?> getClassForConcept(IConcept cls) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IConcept getLeastGeneralCommonConcept(IConcept... cc) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IValue validateLiteral(IConcept c, String literal)
-			throws ThinklabException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IKBox getDefaultKbox() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void loadKnowledge(IList list) {
 		// TODO Auto-generated method stub
 		
 	}
