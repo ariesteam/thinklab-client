@@ -134,14 +134,16 @@ public class ThinklabProject implements IProject {
 
 	private void create(String[] dependencies) throws ThinklabClientException {
 
+		/*
+		 * TODO these need to make sense. Probably the modelling plugin should
+		 * just contain dependencies for the commonly used ones, such as
+		 * space and time, and all other deps should be other project chosen
+		 * from the workspace.
+		 */
 		if (dependencies == null) {
 			String dps = Configuration.getProperties().getProperty(
 					"default.project.dependencies",
-					"org.integratedmodelling.thinklab.core" +
-						",org.integratedmodelling.thinklab.modelling" +
-						",org.integratedmodelling.thinklab.metadata" +
-						",org.integratedmodelling.thinklab.sql" +
-						",org.integratedmodelling.aries.core");
+					"org.integratedmodelling.thinklab.core");
 			
 			dependencies = dps.split(",");
 		}
