@@ -16,7 +16,7 @@ import org.integratedmodelling.exceptions.ThinklabValidationException;
 import org.integratedmodelling.lang.model.ModelObject;
 import org.integratedmodelling.lang.model.Namespace;
 import org.integratedmodelling.thinklab.api.knowledge.storage.IKBox;
-import org.integratedmodelling.thinklab.api.lang.ICompilationContext;
+import org.integratedmodelling.thinklab.api.lang.IResolver;
 import org.integratedmodelling.thinklab.api.lang.IModelParser;
 import org.integratedmodelling.thinklab.api.modelling.IAgentModel;
 import org.integratedmodelling.thinklab.api.modelling.IModel;
@@ -46,61 +46,51 @@ public class ModelManager implements IModelManager {
 	
 	private CContext _ccontext = null;
 	
-	class CContext implements ICompilationContext {
+	class CContext implements IResolver {
 
 		@Override
-		public void setId(String namespace) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public Namespace getNamespace() {
+		public String getDefaultNamespaceId() {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public void setDefaultNamespace() {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public HashMap<String, ModelObject> getSymbolTable() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public boolean onException(Throwable e) {
+		public boolean onException(Throwable e, int lineNumber)
+				throws ThinklabException {
 			// TODO Auto-generated method stub
 			return false;
 		}
 
 		@Override
-		public boolean onWarning(String warning) {
+		public boolean onWarning(String warning, int lineNumber) {
 			// TODO Auto-generated method stub
 			return false;
 		}
 
 		@Override
-		public boolean onInfo(String info) {
+		public boolean onInfo(String info, int lineNumber) {
 			// TODO Auto-generated method stub
 			return false;
 		}
 
 		@Override
-		public void dump(PrintStream out) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public Namespace resolveNamespace(String namespace, String reference)
+		public InputStream resolveNamespace(String namespace, String reference)
 				throws ThinklabException {
 			// TODO Auto-generated method stub
 			return null;
+		}
+
+		@Override
+		public void onNamespaceDeclared(String namespaceId, String resourceId,
+				Namespace namespace) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onNamespaceDefined(Namespace namespace) {
+			// TODO Auto-generated method stub
+			
 		}
 		
 	}
@@ -210,20 +200,14 @@ public class ModelManager implements IModelManager {
 			throw new ThinklabValidationException("don't know how to parse a " + extension + " model file");
 		}
 
-		try {
-			InputStream input = new FileInputStream(file);
-			ret = new ClientNamespace(parser.parse(input, getCompilationContext()));
-			input.close();
-		} catch (IOException e) {
-			throw new ThinklabIOException(e);
-		}
+		ret = new ClientNamespace(parser.parse(file, getCompilationContext()));
 		
 		namespaces.put(ret.getNamespace(), ret);
 		
 		return ret;
 	}
 
-	private ICompilationContext getCompilationContext() {
+	private IResolver getCompilationContext() {
 		if (_ccontext == null) {
 			_ccontext = new CContext();
 		}
