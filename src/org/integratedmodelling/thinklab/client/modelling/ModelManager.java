@@ -49,12 +49,6 @@ public class ModelManager implements IModelManager {
 	class CContext implements IResolver {
 
 		@Override
-		public String getDefaultNamespaceId() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
 		public boolean onException(Throwable e, int lineNumber)
 				throws ThinklabException {
 			// TODO Auto-generated method stub
