@@ -1,9 +1,6 @@
 package org.integratedmodelling.thinklab.client.modelling;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -11,13 +8,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 
 import org.integratedmodelling.exceptions.ThinklabException;
-import org.integratedmodelling.exceptions.ThinklabIOException;
 import org.integratedmodelling.exceptions.ThinklabValidationException;
-import org.integratedmodelling.lang.model.ModelObject;
 import org.integratedmodelling.lang.model.Namespace;
 import org.integratedmodelling.thinklab.api.knowledge.storage.IKBox;
-import org.integratedmodelling.thinklab.api.lang.IResolver;
 import org.integratedmodelling.thinklab.api.lang.IModelParser;
+import org.integratedmodelling.thinklab.api.lang.IResolver;
 import org.integratedmodelling.thinklab.api.modelling.IAgentModel;
 import org.integratedmodelling.thinklab.api.modelling.IModel;
 import org.integratedmodelling.thinklab.api.modelling.IModelObject;
@@ -83,6 +78,13 @@ public class ModelManager implements IModelManager {
 
 		@Override
 		public void onNamespaceDefined(Namespace namespace) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void validateNamespaceForResource(String resource,
+				String namespace) throws ThinklabException {
 			// TODO Auto-generated method stub
 			
 		}
@@ -184,7 +186,7 @@ public class ModelManager implements IModelManager {
 	}
 
 	@Override
-	public INamespace loadFile(String file) throws ThinklabException {
+	public INamespace loadFile(String file, IProject project) throws ThinklabException {
 		
 		String extension = MiscUtilities.getFileExtension(file);
 		IModelParser parser = interpreters.get(extension);

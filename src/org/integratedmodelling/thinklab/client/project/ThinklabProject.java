@@ -379,7 +379,7 @@ public class ThinklabProject implements IProject {
 
 			INamespace ns;
 			try {
-				ns = ModelManager.get().loadFile(f.toString());
+				ns = ModelManager.get().loadFile(f.toString(), this);
 			} catch (ThinklabException e) {
 				throw new ThinklabClientException(e);
 			}
