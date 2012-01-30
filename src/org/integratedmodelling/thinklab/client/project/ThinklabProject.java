@@ -30,6 +30,16 @@ public class ThinklabProject implements IProject {
 	Properties _properties = null;
 	private ArrayList<INamespace> namespaces = new ArrayList<INamespace>();
 	private ArrayList<IProject> dependencies = new ArrayList<IProject>();
+
+	/*
+	 * this is <= _errors.size()
+	 */
+	private int _namespacesInError = 0;
+	/*
+	 * these 2 are in sync
+	 */
+	private ArrayList<File> _resourcesInError = new ArrayList<File>();
+	private ArrayList<String> _errors = new ArrayList<String>();
 	
 	public ThinklabProject(String pluginId) {		
 		_id = pluginId;
@@ -38,6 +48,10 @@ public class ThinklabProject implements IProject {
 	public ThinklabProject(File dir) throws ThinklabClientException {		
 		_id = MiscUtilities.getFileName(dir.toString());
 		load();
+	}
+	
+	public boolean hasErrors() {
+		return _namespacesInError > 0;
 	}
 	
 	/**
@@ -349,7 +363,8 @@ public class ThinklabProject implements IProject {
 		for (File dir : this.getSourceFolders()) {
 		
 			if (!dir.isDirectory() || !dir.canRead()) {
-				throw new ThinklabClientException("source directory " + dir + " is unreadable");
+				_errors.add("source directory " + dir + " is unreadable");
+				_resourcesInError.add(dir);
 			}	 
 		
 			loadInternal(dir, read, namespaces, "", this);
@@ -424,11 +439,13 @@ public class ThinklabProject implements IProject {
 			INamespace ns;
 			try {
 				ns = ModelManager.get().loadFile(f.toString(), this);
+				ret.add(ns);
 			} catch (ThinklabException e) {
-				throw new ThinklabClientException(e);
+				_namespacesInError ++;
+				_resourcesInError.add(f);
+				_errors.add(e.getMessage());
 			}
 
-			ret.add(ns);
 		}
 		
 	}
@@ -463,6 +480,10 @@ public class ThinklabProject implements IProject {
 		}
 		
 		return null;
+	}
+
+	public Collection<String> getErrors() {
+		return _errors;
 	}
 	
 }

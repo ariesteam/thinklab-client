@@ -343,8 +343,11 @@ public class ModelManager implements IModelManager {
 		if (parser == null) {
 			throw new ThinklabValidationException("don't know how to parse a " + extension + " model file");
 		}
-
-		ret = new ClientNamespace(parser.parse(file, new CContext(project)));
+		
+		Namespace ns = parser.parse(file, new CContext(project));
+		ns.setProject(project);
+		
+		ret = new ClientNamespace(ns);
 		
 		namespaces.put(ret.getNamespace(), ret);
 		

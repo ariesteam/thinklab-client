@@ -35,6 +35,7 @@ public class ProjectFactory implements IProjectFactory {
 	public synchronized void loadProjects() {
 
 		_projects.clear();
+		_projectFiles.clear();
 		
 		/*
 		 * load all projects in configured directory
@@ -48,7 +49,19 @@ public class ProjectFactory implements IProjectFactory {
 			if (ThinklabProject.exists(f)) {
 					
 				try {
-					_projects.add(new ThinklabProject(f));
+					ThinklabProject proj = new ThinklabProject(f);
+
+					if (proj.hasErrors()) {
+						/*
+						 * FIXME
+						 * do something
+						 */
+						System.out.println("project " + proj.getId() + " has errors");
+						for (String s : proj.getErrors()) {
+							System.out.println("\t" + s);
+						}
+					}
+					_projects.add(proj);
 					_projectFiles.add(f);
 				} catch (ThinklabClientException e) {
 					// TODO warn project could not be loaded
