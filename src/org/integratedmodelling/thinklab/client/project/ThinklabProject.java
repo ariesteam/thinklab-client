@@ -29,6 +29,7 @@ public class ThinklabProject implements IProject {
 	String _id = null;
 	Properties _properties = null;
 	private ArrayList<INamespace> namespaces = new ArrayList<INamespace>();
+	private ArrayList<IProject> dependencies = new ArrayList<IProject>();
 	
 	public ThinklabProject(String pluginId) {		
 		_id = pluginId;
@@ -181,6 +182,32 @@ public class ThinklabProject implements IProject {
 		return f.exists();
 	}
 	
+	@Override
+	public void addDependency(String plugin, boolean reload) throws ThinklabClientException {
+	
+		String pp = getProperties().getProperty(IProject.PREREQUISITES_PROPERTY, "");
+		String[] deps = 
+			pp.isEmpty() ? new String[0] :
+			getProperties().getProperty(IProject.PREREQUISITES_PROPERTY, "").split(",");
+		
+		String dps = "";
+		for (String s : deps) {
+			if (s.equals(plugin))
+				return;
+			dps += (dps.isEmpty()? "" : ",") + s;
+		}
+		
+		dps += (dps.isEmpty()? "" : ",") + plugin;
+		getProperties().setProperty(IProject.PREREQUISITES_PROPERTY, dps);
+		deps = dps.split(",");
+
+		createManifest(getPath(), deps);
+		saveProperties();
+		
+		if (reload)
+			load();
+	}
+	
 	public void createManifest(File pluginDir, String[] dependencies) throws ThinklabClientException {
 
 		try {
@@ -314,6 +341,8 @@ public class ThinklabProject implements IProject {
 	
 		_properties = getPluginProperties(_id);
 
+		loadDependencies();
+		
 		namespaces = new ArrayList<INamespace>();
 		HashSet<File> read = new HashSet<File>();
 		
@@ -327,6 +356,21 @@ public class ThinklabProject implements IProject {
 		}
 		
 		return namespaces;
+	}
+
+	private void loadDependencies() throws ThinklabClientException {
+
+		String pp = getProperties().getProperty(IProject.PREREQUISITES_PROPERTY, "");
+		String[] deps = 
+			pp.isEmpty() ? new String[0] :
+			getProperties().getProperty(IProject.PREREQUISITES_PROPERTY, "").split(",");
+			
+		for (String dep : deps) {
+			IProject p = ProjectFactory.get().getProject(dep, true);
+			if (p == null)
+				throw new ThinklabClientException(_id + ": cannot load prerequisite project " + dep);
+			dependencies.add(p);
+		}
 	}
 
 	private void loadInternal(File f, HashSet<File> read, ArrayList<INamespace> ret, String path,
@@ -384,18 +428,41 @@ public class ThinklabProject implements IProject {
 				throw new ThinklabClientException(e);
 			}
 
-			/*
-			 * validate namespace vs. file path
-			 */
-			if (!ns.getNamespace().equals(path))
-				throw new ThinklabClientException(
-						"illegal namespace declaration in " + f + 
-						": file path requires " + path + ", " +
-						ns.getNamespace() + " found");
-					
 			ret.add(ns);
 		}
 		
+	}
+
+	@Override
+	public Collection<IProject> getPrerequisiteProjects() {
+		return dependencies;
+	}
+
+	@Override
+	public File findResource(String resource) {
+
+		for (File f : getSourceFolders()) {
+			File ff = new File(f + File.separator + resource);
+			if (ff.exists()) {
+				return ff;
+			}
+		}
+		
+		return null;
+	}
+	
+	@Override
+	public File findResourceForNamespace(String namespace, String extension) {
+
+		String fp = namespace.replace('.', File.separatorChar);
+		for (File f : getSourceFolders()) {
+			File ff = new File(f + File.separator + fp + "." + extension);
+			if (ff.exists()) {
+				return ff;
+			}
+		}
+		
+		return null;
 	}
 	
 }
