@@ -46,13 +46,11 @@ public class ModelManager implements IModelManager {
 	HashMap<String, IModelParser> interpreters = new HashMap<String, IModelParser>();
 	HashMap<String, INamespace> namespaces = new HashMap<String, INamespace>();
 	
-	private CContext _ccontext = null;
-	
-	class CContext implements IResolver {
+	class Resolver implements IResolver {
 		
 		ThinklabProject project;
 
-		public CContext(IProject project) {
+		public Resolver(IProject project) {
 			this.project = (ThinklabProject)project;
 		}
 		
@@ -344,21 +342,15 @@ public class ModelManager implements IModelManager {
 			throw new ThinklabValidationException("don't know how to parse a " + extension + " model file");
 		}
 		
-		Namespace ns = parser.parse(file, new CContext(project));
+		Namespace ns = parser.parse(file, new Resolver(project));
 		ns.setProject(project);
+		ns.setSourceFile(new File(file));
 		
 		ret = new ClientNamespace(ns);
 		
 		namespaces.put(ret.getNamespace(), ret);
 		
 		return ret;
-	}
-
-	private IResolver getResolver(IProject project) {
-		if (_ccontext == null) {
-			_ccontext = new CContext(project);
-		}
-		return _ccontext;
 	}
 
 	@Override

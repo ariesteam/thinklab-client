@@ -126,6 +126,19 @@ public class ThinklabProject implements IProject {
 				ns.replace('.', File.separatorChar) + ".tql";
 	}
 	
+	/**
+	 * Get the relative file path of given namespace. Doesn't have to exist.
+	 * 
+	 * FIXME only uses the first source folder.
+	 * 
+	 * @param ns
+	 * @return
+	 */
+	public String getNamespaceSourcePath(String ns) {
+		return getSourceFolderNames().iterator().next() + File.separator + 
+				ns.replace('.', File.separatorChar) + ".tql";
+	}
+	
 	public static ThinklabProject load(String id) throws ThinklabClientException {
 	
 		ThinklabProject ret = new ThinklabProject(id);

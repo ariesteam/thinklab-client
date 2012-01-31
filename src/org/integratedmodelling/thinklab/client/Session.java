@@ -37,6 +37,8 @@ import org.restlet.resource.ClientResource;
  */
 public class Session {
 
+	public static final int DEFAULT_SERVER_PORT = 8182;
+	
 	private String _server = "http://127.0.0.1:8182";
 	private String _id = null;
 	private String _name = null;
@@ -152,6 +154,9 @@ public class Session {
 	}
 
 	public void connect(String url, String user, String password) throws ThinklabClientException {
+
+		_server = url;
+		_name = "default";
 
 		initialize();
 
