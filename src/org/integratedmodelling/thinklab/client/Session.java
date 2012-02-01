@@ -10,6 +10,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.listeners.ProgressListener;
 import org.integratedmodelling.thinklab.client.project.ThinklabProject;
@@ -423,4 +424,32 @@ public class Session {
 		return display ? _curDir : _currentDirectory.toString();
 	}
 
+	/**
+	 * Deploy a project to the connected server
+	 * 
+	 * @param project
+	 * @return
+	 * @throws ThinklabClientException
+	 */
+	public boolean deploy(ThinklabProject project) throws ThinklabClientException {
+
+		if (!isConnected())
+			throw new ThinklabClientException("project: not connected to a server");
+
+		/*
+		 * deploy all dependencies first
+		 */
+		for (IProject p : project.getPrerequisiteProjects()) {
+			deploy((ThinklabProject)p);
+		}
+		
+		File zip = project.getZipArchive();
+		String handle = upload(zip, null);
+		Result result = send("project", false, 
+				"cmd", "deploy", 
+				"handle", handle, 
+				"plugin", project.getId());
+	
+		return result.getStatus() == Result.OK;
+	}
 }
