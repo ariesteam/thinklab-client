@@ -56,6 +56,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.apache.commons.io.FileUtils;
+import org.integratedmodelling.collections.Path;
 import org.integratedmodelling.thinklab.client.CommandHandler;
 import org.integratedmodelling.thinklab.client.CommandManager;
 import org.integratedmodelling.thinklab.client.Configuration;
@@ -64,7 +65,6 @@ import org.integratedmodelling.thinklab.client.Session;
 import org.integratedmodelling.thinklab.client.annotations.Command;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
-import org.integratedmodelling.thinklab.client.utils.Path;
 import org.integratedmodelling.thinklab.client.utils.ShellCommand;
 
 import bsh.util.JConsole;

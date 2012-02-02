@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 
-import org.integratedmodelling.thinklab.client.utils.Path;
+import org.integratedmodelling.collections.Path;
 
 public class Configuration {
 

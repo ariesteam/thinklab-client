@@ -2,10 +2,10 @@ package org.integratedmodelling.thinklab.client;
 
 import java.io.File;
 
+import org.integratedmodelling.collections.Pair;
 import org.integratedmodelling.thinklab.client.Session.RemoteCommand;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.shell.CommandLine;
-import org.integratedmodelling.thinklab.client.utils.Pair;
 
 import uk.co.flamingpenguin.jewel.cli.Option;
 

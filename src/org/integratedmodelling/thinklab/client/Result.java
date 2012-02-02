@@ -3,9 +3,9 @@ package org.integratedmodelling.thinklab.client;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.integratedmodelling.collections.Pair;
 import org.integratedmodelling.list.PolyList;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
-import org.integratedmodelling.thinklab.client.utils.Pair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

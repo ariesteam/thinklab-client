@@ -2,13 +2,13 @@ package org.integratedmodelling.thinklab.client.commands;
 
 import java.io.File;
 
+import org.integratedmodelling.collections.Pair;
 import org.integratedmodelling.thinklab.client.CommandHandler;
 import org.integratedmodelling.thinklab.client.Result;
 import org.integratedmodelling.thinklab.client.Session;
 import org.integratedmodelling.thinklab.client.annotations.Command;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.shell.CommandLine;
-import org.integratedmodelling.thinklab.client.utils.Pair;
 
 @Command(id="get")
 public class Download extends CommandHandler {

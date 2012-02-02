@@ -345,6 +345,7 @@ public class ModelManager implements IModelManager {
 		Namespace ns = parser.parse(file, new Resolver(project));
 		ns.setProject(project);
 		ns.setSourceFile(new File(file));
+		ns.synchronizeKnowledge();
 		
 		ret = new ClientNamespace(ns);
 		
@@ -370,6 +371,10 @@ public class ModelManager implements IModelManager {
 			throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public boolean canParseExtension(String fileExtension) {
+		return interpreters.containsKey(fileExtension);
 	}
 
 }

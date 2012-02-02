@@ -412,42 +412,7 @@ public class ThinklabProject implements IProject {
 				loadInternal(fl, read, ret, pth, project);
 			}
 			
-		} else if (f.toString().endsWith(".owl")) {
-			try {
-				ProjectFactory.refreshOntology(
-						f.toURI().toURL(), 
-						MiscUtilities.getFileBaseName(f.toString()), false);
-			} catch (MalformedURLException e) {
-				throw new ThinklabClientException(e);
-			}
-			
-			/*
-			 * TODO validate ontology URL vs. namespace path
-			 */
-			IOntology o = 
-					ProjectFactory.requireOntology(
-							MiscUtilities.getFileBaseName(f.toString()));
-			String uri = 
-					project.getOntologyNamespacePrefix() + "/" + path.replaceAll(".", "/") + 
-					MiscUtilities.getFileBaseName(f.toString());
-					
-			if (!o.getURI().equals(uri)) {
-				throw new ThinklabClientException(
-						"illegal ontology namespace in " + f + 
-						": file path requires " + uri + ", " +
-						o.getURI() + " found");
-			}
-			
-			/*
-			 * TODO add namespace and project to ontology metadata
-			 */
-			
-			/*
-			 * TODO if auto sync is requested and configured, upload newer ontologies 
-			 * to location matching URI
-			 */
-			
-		} else if (f.toString().endsWith(".tql") || f.toString().endsWith(".clj")) {
+		} else if (ModelManager.get().canParseExtension(MiscUtilities.getFileExtension(f.toString()))) {
 
 			INamespace ns;
 			try {
