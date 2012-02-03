@@ -44,6 +44,7 @@ public class Session {
 	private String _id = null;
 	private String _name = null;
 	private boolean _connected = false;
+	private String _user = null;
 	
 
 	private int delay = 4000;
@@ -149,6 +150,7 @@ public class Session {
 		
 		this._id = auth.get("session").toString();
 		this._connected = true;
+		this._user = user;
 	}
 	
 	public Session() {
@@ -167,6 +169,7 @@ public class Session {
 		Result auth = send("auth", false, "user", user, "password", password);
 		this._id = auth.get("session").toString();
 		this._connected = true;
+		this._user = user;
 	}
 	
 	/**
@@ -386,10 +389,15 @@ public class Session {
 		return this._currentProject;
 	}
 
+	public String getCurrentUser() {
+		return _user;
+	}
+	
 	public void disconnect() {
 
 		this._server = null;
 		this._name = null;
+		this._user = null;
 		this._connected = false;
 		this._id = null;
 	}
