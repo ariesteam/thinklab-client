@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -15,7 +14,6 @@ import java.util.Properties;
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabIOException;
 import org.integratedmodelling.exceptions.ThinklabRuntimeException;
-import org.integratedmodelling.thinklab.api.knowledge.IOntology;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.Configuration;
@@ -228,7 +226,13 @@ public class ThinklabProject implements IProject {
 		getProperties().setProperty(IProject.PREREQUISITES_PROPERTY, dps);
 		deps = dps.split(",");
 
-		createManifest(getPath(), deps);
+		/*
+		 * TBC this one is correct, but loading such projects within a TQL context messes up
+		 * something obscure with the classloader that Guice uses to initialize the parser at
+		 * the server side. Because we don't put any code in the project plugins, and we
+		 * handle imports explicitly, we can do without the JPF dependency.
+		 */
+//		createManifest(getPath(), deps);
 		saveProperties();
 		
 		if (reload)
