@@ -1,6 +1,10 @@
 package org.integratedmodelling.thinklab.client;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 
 import org.apache.http.HttpResponse;
@@ -11,6 +15,7 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.integratedmodelling.collections.Pair;
+import org.integratedmodelling.collections.Triple;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.listeners.ProgressListener;
@@ -392,6 +397,97 @@ public class Session {
 	public String getCurrentUser() {
 		return _user;
 	}
+	
+	public HashMap<String, Object> getFullStatus() throws ThinklabClientException {
+		
+		HashMap<String, Object> ret = new HashMap<String, Object>();
+
+		ret.put("user", this.getCurrentUser());
+		
+		Result res = this.send("capabilities", false);
+		
+		/*
+		 * report all vars
+		 */
+ 		ret.put("boot.time", new Date(Long.parseLong(res.get("boot.time").toString())));
+		ret.put("current.time", new Date(Long.parseLong(res.get("current.time").toString())));
+		
+		ret.put("memory.total", Long.parseLong(res.get("memory.total").toString())/(1024L*1024L));
+		ret.put("memory.free", Long.parseLong(res.get("memory.free").toString())/(1024L*1024L));
+		
+		/*
+		 * plugins status
+		 */
+		ArrayList<Triple<String, String, Boolean>> pls = new ArrayList<Triple<String,String,Boolean>>();
+		JSONArray plugins = (JSONArray) res.get("plugins");
+		for (int i = 0; i < plugins.length(); i++) {
+			try {
+				JSONObject plug = plugins.getJSONObject(i);
+				
+				String pid  = plug.getString("id");
+				String ver  = plug.getString("version");
+				Boolean act = plug.getString("active").equals("true");
+				
+				pls.add(new Triple<String, String, Boolean>(pid, ver, act));
+				
+			} catch (JSONException e) {
+				// christ
+			}
+
+		}
+
+		/*
+		 * sort by plugin ID
+		 */
+		Collections.sort(pls, new Comparator<Triple<String, String, Boolean>>() {
+			@Override
+			public int compare(Triple<String, String, Boolean> arg0,
+					Triple<String, String, Boolean> arg1) {
+				return arg0.getFirst().compareTo(arg1.getFirst());
+			}
+		});
+		ret.put("plugins", pls);
+		
+		/*
+		 * all non-project namespaces, i.e. all ontologies in system plugins
+		 */
+		JSONArray ontologies = (JSONArray)res.get("ontologies");
+		for (int i = 0; i < ontologies.length(); i++) {
+			try {
+				JSONArray jo = (JSONArray)(ontologies.get(i));
+				String id = jo.getString(0);
+				String uri = jo.getString(1);
+				long lastm = Long.parseLong(jo.getString(2));		
+				
+				/*
+				 * attempt to load namespace from server
+				 */
+				
+			} catch (JSONException e) {
+				// christ
+			}
+		}
+		
+		/*
+		 * tasks status
+		 */
+		
+		/*
+		 * namespaces and error status
+		 */
+		
+		/*
+		 * 
+		 */
+		
+		/*
+		 * log diff since last call
+		 */
+		
+		
+		return ret;
+	}
+
 	
 	public void disconnect() {
 

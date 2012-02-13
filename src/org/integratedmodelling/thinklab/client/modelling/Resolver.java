@@ -16,7 +16,7 @@ import org.integratedmodelling.thinklab.api.lang.IResolver;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.project.ThinklabProject;
 
-class Resolver implements IResolver {
+public class Resolver implements IResolver {
 	
 	ThinklabProject project;
 
