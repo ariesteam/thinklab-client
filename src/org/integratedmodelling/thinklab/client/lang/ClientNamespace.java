@@ -2,6 +2,7 @@ package org.integratedmodelling.thinklab.client.lang;
 
 import java.util.Collection;
 
+import org.integratedmodelling.lang.model.LanguageElement;
 import org.integratedmodelling.lang.model.Namespace;
 import org.integratedmodelling.thinklab.api.knowledge.IOntology;
 import org.integratedmodelling.thinklab.api.modelling.IModelObject;
@@ -46,6 +47,11 @@ public class ClientNamespace implements INamespace {
 
 	public Namespace getNamespaceBean() {
 		return _namespace;
+	}
+
+	@Override
+	public LanguageElement getLanguageElement() {
+		return this._namespace;
 	}
 	
 }

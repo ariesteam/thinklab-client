@@ -105,8 +105,7 @@ public class ModelManager implements IModelManager {
 
 	@Override
 	public INamespace getNamespace(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
+		return namespaces.get(arg0);
 	}
 
 	@Override
@@ -187,6 +186,32 @@ public class ModelManager implements IModelManager {
 
 	public boolean canParseExtension(String fileExtension) {
 		return interpreters.containsKey(fileExtension);
+	}
+
+	public INamespace loadNamespace(String namespaceId, String resource, String resourceType)
+			throws ThinklabException {
+		
+		String extension = resourceType;
+		if (extension == null)
+			extension = MiscUtilities.getFileExtension(resource);
+		
+		IModelParser parser = interpreters.get(extension);
+		INamespace ret = null;
+		
+		if (parser == null) {
+			throw new ThinklabValidationException("don't know how to parse a " + extension + " resource");
+		}
+		
+		Namespace ns = parser.parse(resource, createResolver(null));
+
+		if (ns != null) {
+			ns.setId(namespaceId);
+			ns.synchronizeKnowledge();
+			ret = new ClientNamespace(ns);
+			namespaces.put(ret.getNamespace(), ret);
+		}
+		
+		return ret;
 	}
 
 }

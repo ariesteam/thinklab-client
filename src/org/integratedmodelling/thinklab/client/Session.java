@@ -2,6 +2,7 @@ package org.integratedmodelling.thinklab.client;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -16,9 +17,13 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.integratedmodelling.collections.Pair;
 import org.integratedmodelling.collections.Triple;
+import org.integratedmodelling.exceptions.ThinklabException;
+import org.integratedmodelling.lang.model.Namespace;
+import org.integratedmodelling.thinklab.api.modelling.INamespace;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.listeners.ProgressListener;
+import org.integratedmodelling.thinklab.client.modelling.ModelManager;
 import org.integratedmodelling.thinklab.client.project.ThinklabProject;
 import org.integratedmodelling.thinklab.client.utils.Escape;
 import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
@@ -50,8 +55,10 @@ public class Session {
 	private String _name = null;
 	private boolean _connected = false;
 	private String _user = null;
-	
 
+	private ArrayList<INamespace> _systemNamespaces = 
+			new ArrayList<INamespace>();
+	
 	private int delay = 4000;
 	private String _curDir = File.separator;
 	private File _currentDirectory = Configuration.getProjectDirectory();
@@ -398,6 +405,48 @@ public class Session {
 		return _user;
 	}
 	
+	public Collection<INamespace> getSystemNamespaces() throws ThinklabClientException {
+		
+		_systemNamespaces.clear();
+		
+		Result res = this.send("capabilities", false);
+		/*
+		 * all non-project namespaces, i.e. all ontologies in system plugins, unless
+		 * already loaded and not modified.
+		 */
+		JSONArray ontologies = (JSONArray)res.get("ontologies");
+		for (int i = 0; i < ontologies.length(); i++) {
+			try {
+				JSONArray jo = (JSONArray)(ontologies.get(i));
+				String id = jo.getString(0);
+				String url = _server + "/resource?ontology=" + id;
+				long lastm = Long.parseLong(jo.getString(2));		
+				
+				/*
+				 * attempt to load namespace from server unless we have it
+				 * and its last modification date was >=
+				 */
+				Namespace ns = null;
+				INamespace nns = ModelManager.get().getNamespace(id);
+				if (nns != null)
+					ns = (Namespace) nns.getLanguageElement();
+
+				if (nns == null || (ns != null && ns.getTimeStamp() < lastm)) {
+					nns = ModelManager.get().loadNamespace(id, url, "owl");
+					if (nns != null)
+						_systemNamespaces.add(nns);					
+				}
+				
+			} catch (JSONException e) {
+				// christ
+			} catch (ThinklabException e) {
+				throw new ThinklabClientException(e);
+			}
+		}
+		
+		return _systemNamespaces;
+	}
+	
 	public HashMap<String, Object> getFullStatus() throws ThinklabClientException {
 		
 		HashMap<String, Object> ret = new HashMap<String, Object>();
@@ -448,25 +497,6 @@ public class Session {
 		});
 		ret.put("plugins", pls);
 		
-		/*
-		 * all non-project namespaces, i.e. all ontologies in system plugins
-		 */
-		JSONArray ontologies = (JSONArray)res.get("ontologies");
-		for (int i = 0; i < ontologies.length(); i++) {
-			try {
-				JSONArray jo = (JSONArray)(ontologies.get(i));
-				String id = jo.getString(0);
-				String uri = jo.getString(1);
-				long lastm = Long.parseLong(jo.getString(2));		
-				
-				/*
-				 * attempt to load namespace from server
-				 */
-				
-			} catch (JSONException e) {
-				// christ
-			}
-		}
 		
 		/*
 		 * tasks status
