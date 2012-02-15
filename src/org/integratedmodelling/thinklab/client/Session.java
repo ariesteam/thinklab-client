@@ -527,6 +527,7 @@ public class Session {
 		this._user = null;
 		this._connected = false;
 		this._id = null;
+		this._systemNamespaces.clear();
 	}
 
 	public void setCurrentDirectory(String dir) throws ThinklabClientException {
