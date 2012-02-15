@@ -433,10 +433,11 @@ public class Session {
 
 				if (nns == null || (ns != null && ns.getTimeStamp() < lastm)) {
 					nns = ModelManager.get().loadNamespace(id, url, "owl");
-					if (nns != null)
-						_systemNamespaces.add(nns);					
 				}
 				
+				if (nns != null) {
+					_systemNamespaces.add(nns);					
+				}
 			} catch (JSONException e) {
 				// christ
 			} catch (ThinklabException e) {
