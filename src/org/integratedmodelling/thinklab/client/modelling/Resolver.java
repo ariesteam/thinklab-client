@@ -196,6 +196,8 @@ public class Resolver implements IResolver {
 
 	@Override
 	public void onNamespaceDefined(Namespace namespace) {
+
+	
 	}
 
 	@Override
