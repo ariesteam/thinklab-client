@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import org.integratedmodelling.exceptions.ThinklabException;
+import org.integratedmodelling.thinklab.api.knowledge.IAxiom;
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
 import org.integratedmodelling.thinklab.api.knowledge.IInstance;
 import org.integratedmodelling.thinklab.api.knowledge.IOntology;
@@ -226,6 +227,12 @@ public class Ontology implements IOntology {
 	public IList asList() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void define(Collection<IAxiom> axioms) throws ThinklabException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
