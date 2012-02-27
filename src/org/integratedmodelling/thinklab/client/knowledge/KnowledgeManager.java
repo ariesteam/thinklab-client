@@ -9,8 +9,7 @@ import org.integratedmodelling.thinklab.api.knowledge.IOntology;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
 import org.integratedmodelling.thinklab.api.knowledge.IValue;
 import org.integratedmodelling.thinklab.api.knowledge.factories.IKnowledgeManager;
-import org.integratedmodelling.thinklab.api.knowledge.storage.IKBox;
-import org.integratedmodelling.thinklab.api.lang.IList;
+import org.integratedmodelling.thinklab.api.knowledge.kbox.IKbox;
 
 /**
  * Knowledge manager for client library, which will not allow any operation but will create
@@ -82,15 +81,21 @@ public class KnowledgeManager implements IKnowledgeManager {
 	}
 
 	@Override
-	public IKBox getDefaultKbox() {
+	public IKbox createKbox(String uri) throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void loadKnowledge(IList list) {
+	public void dropKbox(String uri) throws ThinklabException {
 		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	public IKbox requireKbox(String uri) throws ThinklabException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
