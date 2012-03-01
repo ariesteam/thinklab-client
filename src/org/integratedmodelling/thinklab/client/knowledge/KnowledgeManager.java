@@ -3,11 +3,12 @@ package org.integratedmodelling.thinklab.client.knowledge;
 import java.util.HashMap;
 
 import org.integratedmodelling.exceptions.ThinklabException;
+import org.integratedmodelling.lang.SemanticAnnotation;
 import org.integratedmodelling.lang.SemanticType;
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
 import org.integratedmodelling.thinklab.api.knowledge.IOntology;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
-import org.integratedmodelling.thinklab.api.knowledge.IValue;
+import org.integratedmodelling.thinklab.api.knowledge.ISemanticLiteral;
 import org.integratedmodelling.thinklab.api.knowledge.factories.IKnowledgeManager;
 import org.integratedmodelling.thinklab.api.knowledge.kbox.IKbox;
 
@@ -74,7 +75,7 @@ public class KnowledgeManager implements IKnowledgeManager {
 	}
 
 	@Override
-	public IValue validateLiteral(IConcept c, String literal)
+	public ISemanticLiteral validateLiteral(IConcept c, String literal)
 			throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
@@ -94,6 +95,26 @@ public class KnowledgeManager implements IKnowledgeManager {
 
 	@Override
 	public IKbox requireKbox(String uri) throws ThinklabException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ISemanticLiteral annotateLiteral(Object object) throws ThinklabException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SemanticAnnotation conceptualizeObject(Object i)
+			throws ThinklabException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object reifyAnnotation(SemanticAnnotation a)
+			throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
 	}
