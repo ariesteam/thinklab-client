@@ -5,13 +5,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collection;
 
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabIOException;
 import org.integratedmodelling.exceptions.ThinklabResourceNotFoundException;
 import org.integratedmodelling.lang.model.ConceptObject;
+import org.integratedmodelling.lang.model.ModelObject;
 import org.integratedmodelling.lang.model.Namespace;
 import org.integratedmodelling.lang.model.PropertyObject;
+import org.integratedmodelling.thinklab.api.knowledge.IExpression;
 import org.integratedmodelling.thinklab.api.lang.IResolver;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.project.ThinklabProject;
@@ -233,5 +236,18 @@ public class Resolver implements IResolver {
 		 */
 		
 		return ret;
+	}
+
+	@Override
+	public void onModelObjectDefined(Namespace namespace, ModelObject ret) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public IExpression resolveFunction(String functionId,
+			Collection<String> parameterNames) {
+		// TODO use current server; supply defaults for core library
+		return null;
 	}
 }
