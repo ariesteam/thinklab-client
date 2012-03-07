@@ -106,14 +106,14 @@ public class KnowledgeManager implements IKnowledgeManager {
 	}
 
 	@Override
-	public SemanticAnnotation conceptualizeObject(Object i)
+	public SemanticAnnotation conceptualize(Object i)
 			throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Object reifyAnnotation(SemanticAnnotation a)
+	public Object instantiate(SemanticAnnotation a)
 			throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
