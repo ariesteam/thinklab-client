@@ -9,7 +9,6 @@ import java.util.HashMap;
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.thinklab.api.knowledge.IAxiom;
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
-import org.integratedmodelling.thinklab.api.knowledge.IInstance;
 import org.integratedmodelling.thinklab.api.knowledge.IOntology;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
 import org.integratedmodelling.thinklab.api.lang.IList;
@@ -106,38 +105,6 @@ public class Ontology implements IOntology {
 		return null;
 	}
 
-	@Override
-	public Collection<IInstance> getInstances() throws ThinklabException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IInstance createInstance(String ID, IConcept c)
-			throws ThinklabException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IInstance createInstance(IInstance i) throws ThinklabException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IInstance createInstance(String ID, IList list)
-			throws ThinklabException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IInstance createInstance(IList list) throws ThinklabException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	/**
 	 * Create any concept that isn't available
 	 */
@@ -150,22 +117,11 @@ public class Ontology implements IOntology {
 		return ret;
 	}
 
-	@Override
-	public IInstance getInstance(String ID) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public IProperty getProperty(String ID) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public void removeInstance(String id) throws ThinklabException {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -186,11 +142,6 @@ public class Ontology implements IOntology {
 		return null;
 	}
 
-	@Override
-	public void createEquivalence(IInstance o1, IInstance o2) {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public long getLastModificationDate() {

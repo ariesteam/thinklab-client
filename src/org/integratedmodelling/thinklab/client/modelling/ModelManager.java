@@ -10,7 +10,6 @@ import java.util.HashMap;
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabValidationException;
 import org.integratedmodelling.lang.model.Namespace;
-import org.integratedmodelling.thinklab.api.knowledge.storage.IKBox;
 import org.integratedmodelling.thinklab.api.lang.IModelParser;
 import org.integratedmodelling.thinklab.api.modelling.IAgentModel;
 import org.integratedmodelling.thinklab.api.modelling.IContext;
@@ -20,7 +19,6 @@ import org.integratedmodelling.thinklab.api.modelling.INamespace;
 import org.integratedmodelling.thinklab.api.modelling.IScenario;
 import org.integratedmodelling.thinklab.api.modelling.factories.IModelManager;
 import org.integratedmodelling.thinklab.api.project.IProject;
-import org.integratedmodelling.thinklab.api.runtime.ISession;
 import org.integratedmodelling.thinklab.client.lang.ClientNamespace;
 import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
 
@@ -64,12 +62,6 @@ public class ModelManager implements IModelManager {
 
 	@Override
 	public IContext getContext(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IContext getCoverage(IModel arg0, IKBox arg1, ISession arg2) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -171,13 +163,6 @@ public class ModelManager implements IModelManager {
 	}
 
 	@Override
-	public IContext run(IModel arg0, IKBox arg1, ISession arg2, IContext arg3)
-			throws ThinklabException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Collection<INamespace> load(IProject project)
 			throws ThinklabException {
 		// TODO Auto-generated method stub
@@ -212,6 +197,12 @@ public class ModelManager implements IModelManager {
 		}
 		
 		return ret;
+	}
+
+	@Override
+	public IContext getCoverage(IModel model) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

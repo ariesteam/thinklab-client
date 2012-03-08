@@ -161,12 +161,6 @@ public class Concept implements IConcept {
 	}
 
 	@Override
-	public IQuery getRestrictions() throws ThinklabException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean isAbstract() {
 		// TODO Auto-generated method stub
 		return false;

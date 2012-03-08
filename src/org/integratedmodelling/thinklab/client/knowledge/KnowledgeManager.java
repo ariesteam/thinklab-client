@@ -3,12 +3,12 @@ package org.integratedmodelling.thinklab.client.knowledge;
 import java.util.HashMap;
 
 import org.integratedmodelling.exceptions.ThinklabException;
-import org.integratedmodelling.lang.SemanticAnnotation;
 import org.integratedmodelling.lang.SemanticType;
+import org.integratedmodelling.lang.Semantics;
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
 import org.integratedmodelling.thinklab.api.knowledge.IOntology;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
-import org.integratedmodelling.thinklab.api.knowledge.ISemanticLiteral;
+import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
 import org.integratedmodelling.thinklab.api.knowledge.factories.IKnowledgeManager;
 import org.integratedmodelling.thinklab.api.knowledge.kbox.IKbox;
 
@@ -57,26 +57,26 @@ public class KnowledgeManager implements IKnowledgeManager {
 	}
 
 	@Override
-	public IConcept getConceptForClass(Class<?> cls) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Class<?> getClassForConcept(IConcept cls) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public IConcept getLeastGeneralCommonConcept(IConcept... cc) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public void dropKbox(String uri) throws ThinklabException {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
-	public ISemanticLiteral validateLiteral(IConcept c, String literal)
+	public ISemanticObject parse(String literal, IConcept c)
 			throws ThinklabException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ISemanticObject annotate(Object object) throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -88,33 +88,19 @@ public class KnowledgeManager implements IKnowledgeManager {
 	}
 
 	@Override
-	public void dropKbox(String uri) throws ThinklabException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public IKbox requireKbox(String uri) throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ISemanticLiteral annotateLiteral(Object object) throws ThinklabException {
+	public Semantics conceptualize(Object object) throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public SemanticAnnotation conceptualize(Object i)
-			throws ThinklabException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Object instantiate(SemanticAnnotation a)
-			throws ThinklabException {
+	public Object instantiate(Semantics a) throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
 	}
