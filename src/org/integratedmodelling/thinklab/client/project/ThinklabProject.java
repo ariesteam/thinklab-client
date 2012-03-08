@@ -409,8 +409,8 @@ public class ThinklabProject implements IProject {
 			IProject project) throws ThinklabClientException {
 
 		if (f. isDirectory()) {
-			
-			String pth = path + "." + MiscUtilities.getFileBaseName(f.toString());
+		
+			String pth = path.isEmpty() ? "" : (path + "." + MiscUtilities.getFileBaseName(f.toString()));
 
 			for (File fl : f.listFiles()) {
 				loadInternal(fl, read, ret, pth, project);
@@ -420,7 +420,7 @@ public class ThinklabProject implements IProject {
 
 			INamespace ns;
 			try {
-				ns = ModelManager.get().loadFile(f.toString(), this);
+				ns = ModelManager.get().loadFile(f.toString(), path + "." + MiscUtilities.getFileBaseName(f.toString()), this);
 				ret.add(ns);
 			} catch (ThinklabException e) {
 				_namespacesInError ++;

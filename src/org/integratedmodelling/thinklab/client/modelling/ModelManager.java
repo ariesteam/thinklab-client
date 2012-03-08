@@ -135,7 +135,7 @@ public class ModelManager implements IModelManager {
 	}
 
 	@Override
-	public INamespace loadFile(String file, IProject project) throws ThinklabException {
+	public INamespace loadFile(String file, String namespaceId, IProject project) throws ThinklabException {
 		
 		String extension = MiscUtilities.getFileExtension(file);
 		IModelParser parser = interpreters.get(extension);
