@@ -19,6 +19,7 @@ import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.Configuration;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.modelling.ModelManager;
+import org.integratedmodelling.thinklab.client.utils.CamelCase;
 import org.integratedmodelling.thinklab.client.utils.FolderZiper;
 import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
 
@@ -408,10 +409,13 @@ public class ThinklabProject implements IProject {
 	private void loadInternal(File f, HashSet<File> read, ArrayList<INamespace> ret, String path,
 			IProject project) throws ThinklabClientException {
 
+		String pth = 
+				path == null ? 
+					"" : 
+					(path + (path.isEmpty() ? "" : ".") + CamelCase.toLowerCase(MiscUtilities.getFileBaseName(f.toString()), '-'));
+		
 		if (f. isDirectory()) {
 		
-			String pth = path.isEmpty() ? "" : (path + "." + MiscUtilities.getFileBaseName(f.toString()));
-
 			for (File fl : f.listFiles()) {
 				loadInternal(fl, read, ret, pth, project);
 			}
@@ -420,7 +424,7 @@ public class ThinklabProject implements IProject {
 
 			INamespace ns;
 			try {
-				ns = ModelManager.get().loadFile(f.toString(), path + "." + MiscUtilities.getFileBaseName(f.toString()), this);
+				ns = ModelManager.get().loadFile(f.toString(), pth, this);
 				ret.add(ns);
 			} catch (ThinklabException e) {
 				_namespacesInError ++;
