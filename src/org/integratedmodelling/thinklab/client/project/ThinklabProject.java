@@ -431,7 +431,6 @@ public class ThinklabProject implements IProject {
 				_resourcesInError.add(f);
 				_errors.add(e.getMessage());
 			}
-
 		}
 		
 	}
