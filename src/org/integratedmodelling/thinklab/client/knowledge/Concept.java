@@ -128,7 +128,7 @@ public class Concept implements IConcept {
 	}
 
 	@Override
-	public Collection<IConcept> getAllParents() {
+	public Collection<IConcept> getSemanticClosure() {
 		// TODO Auto-generated method stub
 		return null;
 	}
