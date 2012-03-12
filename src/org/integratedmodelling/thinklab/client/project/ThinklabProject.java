@@ -9,12 +9,14 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabIOException;
 import org.integratedmodelling.exceptions.ThinklabRuntimeException;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
+import org.integratedmodelling.thinklab.api.plugin.IThinklabPlugin;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.Configuration;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
@@ -28,7 +30,7 @@ public class ThinklabProject implements IProject {
 	String _id = null;
 	Properties _properties = null;
 	private ArrayList<INamespace> namespaces = new ArrayList<INamespace>();
-	private ArrayList<IProject> dependencies = new ArrayList<IProject>();
+	private List<IThinklabPlugin> dependencies = new ArrayList<IThinklabPlugin>();
 
 	/*
 	 * this is <= _errors.size()
@@ -44,7 +46,7 @@ public class ThinklabProject implements IProject {
 		_id = pluginId;
 	}
 	
-	public ThinklabProject(File dir) throws ThinklabClientException {		
+	public ThinklabProject(File dir) throws ThinklabException {		
 		_id = MiscUtilities.getFileName(dir.toString());
 		load();
 	}
@@ -138,7 +140,7 @@ public class ThinklabProject implements IProject {
 				ns.replace('.', File.separatorChar) + ".tql";
 	}
 	
-	public static ThinklabProject load(String id) throws ThinklabClientException {
+	public static ThinklabProject load(String id) throws ThinklabException {
 	
 		ThinklabProject ret = new ThinklabProject(id);
 
@@ -154,7 +156,7 @@ public class ThinklabProject implements IProject {
 	 * 
 	 * @throws ThinklabClientException
 	 */
-	public void refresh() throws ThinklabClientException {
+	public void refresh() throws ThinklabException {
 		namespaces.clear();
 		load();
 	}
@@ -209,7 +211,7 @@ public class ThinklabProject implements IProject {
 	}
 	
 	@Override
-	public void addDependency(String plugin, boolean reload) throws ThinklabClientException {
+	public void addDependency(String plugin, boolean reload) throws ThinklabException {
 	
 		String pp = getProperties().getProperty(IProject.PREREQUISITES_PROPERTY, "");
 		String[] deps = 
@@ -368,8 +370,7 @@ public class ThinklabProject implements IProject {
 				IProject.ONTOLOGY_NAMESPACE_PREFIX_PROPERTY, "http://www.integratedmodelling.org/ns");
 	}
 
-	public Collection<INamespace> load()
-			throws ThinklabClientException {
+	public void load() throws ThinklabException {
 	
 		_properties = getPluginProperties(_id);
 
@@ -388,7 +389,6 @@ public class ThinklabProject implements IProject {
 			loadInternal(dir, read, namespaces, "", this);
 		}
 		
-		return namespaces;
 	}
 
 	private void loadDependencies() throws ThinklabClientException {
@@ -436,7 +436,7 @@ public class ThinklabProject implements IProject {
 	}
 
 	@Override
-	public Collection<IProject> getPrerequisiteProjects() {
+	public List<IThinklabPlugin> getPrerequisites() {
 		return dependencies;
 	}
 
@@ -469,6 +469,42 @@ public class ThinklabProject implements IProject {
 
 	public Collection<String> getErrors() {
 		return _errors;
+	}
+
+	@Override
+	public void unload() throws ThinklabException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public File getWorkspace() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public File getWorkspace(String subspace) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public File getScratchArea() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public File getScratchArea(String subArea) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public File getTempArea(String subArea) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

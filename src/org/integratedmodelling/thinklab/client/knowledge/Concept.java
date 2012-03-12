@@ -1,6 +1,5 @@
 package org.integratedmodelling.thinklab.client.knowledge;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import org.integratedmodelling.exceptions.ThinklabException;
@@ -9,7 +8,6 @@ import org.integratedmodelling.thinklab.api.knowledge.IKnowledge;
 import org.integratedmodelling.thinklab.api.knowledge.IOntology;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
 import org.integratedmodelling.thinklab.api.knowledge.query.IQuery;
-import org.integratedmodelling.thinklab.api.lang.IList;
 
 /**
  * Just a proxy for a concept, can be used to create concepts that are automatically inserted in the

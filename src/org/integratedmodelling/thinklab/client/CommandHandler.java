@@ -2,6 +2,7 @@ package org.integratedmodelling.thinklab.client;
 
 import java.util.List;
 
+import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.shell.CommandLine;
 
@@ -45,7 +46,7 @@ public abstract class CommandHandler {
 	 * @return
 	 * @throws ThinklabClientException 
 	 */
-	public abstract Result execute(Arguments arguments, Session session, CommandLine cl) throws ThinklabClientException;
+	public abstract Result execute(Arguments arguments, Session session, CommandLine cl) throws ThinklabException;
 	
 	/**
 	 * Must return an inner interface annotated with jewelCli annotations for

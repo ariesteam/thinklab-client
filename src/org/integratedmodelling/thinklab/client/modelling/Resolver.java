@@ -16,6 +16,7 @@ import org.integratedmodelling.lang.model.Namespace;
 import org.integratedmodelling.lang.model.PropertyObject;
 import org.integratedmodelling.thinklab.api.knowledge.IExpression;
 import org.integratedmodelling.thinklab.api.lang.IResolver;
+import org.integratedmodelling.thinklab.api.plugin.IThinklabPlugin;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.project.ThinklabProject;
 
@@ -94,7 +95,7 @@ public class Resolver implements IResolver {
 			 * if we get here we haven't found it, look it up in all DIRECTLY imported projects (non-recursively)
 			 */
 			if (project != null) {
-				for (IProject pr : project.getPrerequisiteProjects()) {
+				for (IThinklabPlugin pr : project.getPrerequisites()) {
 					
 					ThinklabProject prj = (ThinklabProject)pr;
 					
@@ -154,7 +155,7 @@ public class Resolver implements IResolver {
 			 * if we get here we haven't found it, look it up in all DIRECTLY imported projects (non-recursively)
 			 */
 			if (project != null) {
-				for (IProject pr : project.getPrerequisiteProjects()) {
+				for (IThinklabPlugin pr : project.getPrerequisites()) {
 					
 					ThinklabProject prj = (ThinklabProject)pr;
 					

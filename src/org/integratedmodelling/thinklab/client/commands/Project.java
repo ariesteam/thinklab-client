@@ -3,6 +3,7 @@ package org.integratedmodelling.thinklab.client.commands;
 import java.io.File;
 
 import org.integratedmodelling.collections.Pair;
+import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.thinklab.client.CommandHandler;
 import org.integratedmodelling.thinklab.client.Configuration;
 import org.integratedmodelling.thinklab.client.Result;
@@ -35,7 +36,7 @@ public class Project extends CommandHandler {
 
 	@Override
 	public Result execute(Arguments arguments, Session session, CommandLine cl)
-			throws ThinklabClientException {
+			throws ThinklabException {
 
 		Args args = (Args)arguments;
 				

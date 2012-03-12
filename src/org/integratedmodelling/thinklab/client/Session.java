@@ -20,7 +20,7 @@ import org.integratedmodelling.collections.Triple;
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.lang.model.Namespace;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
-import org.integratedmodelling.thinklab.api.project.IProject;
+import org.integratedmodelling.thinklab.api.plugin.IThinklabPlugin;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.listeners.ProgressListener;
 import org.integratedmodelling.thinklab.client.modelling.ModelManager;
@@ -575,7 +575,7 @@ public class Session {
 		/*
 		 * deploy all dependencies first
 		 */
-		for (IProject p : project.getPrerequisiteProjects()) {
+		for (IThinklabPlugin p : project.getPrerequisites()) {
 			deploy((ThinklabProject)p);
 		}
 		

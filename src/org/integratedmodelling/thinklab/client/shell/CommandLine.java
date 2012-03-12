@@ -1,5 +1,6 @@
 package org.integratedmodelling.thinklab.client.shell;
 
+import org.integratedmodelling.exceptions.ThinklabIOException;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 
 public interface CommandLine {

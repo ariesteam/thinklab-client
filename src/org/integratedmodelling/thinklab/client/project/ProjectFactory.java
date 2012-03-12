@@ -63,7 +63,7 @@ public class ProjectFactory implements IProjectFactory {
 					}
 					_projects.add(proj);
 					_projectFiles.add(f);
-				} catch (ThinklabClientException e) {
+				} catch (ThinklabException e) {
 					// TODO warn project could not be loaded
 				}
 			}
@@ -114,7 +114,7 @@ public class ProjectFactory implements IProjectFactory {
 				try {
 					_projects.add(ret = new ThinklabProject(f));
 					_projectFiles.add(f);
-				} catch (ThinklabClientException e) {
+				} catch (ThinklabException e) {
 					// TODO warn project could not be loaded
 				}
 			}

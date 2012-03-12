@@ -46,8 +46,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,14 +55,11 @@ import javax.swing.JPanel;
 
 import org.apache.commons.io.FileUtils;
 import org.integratedmodelling.collections.Path;
-import org.integratedmodelling.thinklab.client.CommandHandler;
 import org.integratedmodelling.thinklab.client.CommandManager;
 import org.integratedmodelling.thinklab.client.Configuration;
 import org.integratedmodelling.thinklab.client.Result;
 import org.integratedmodelling.thinklab.client.Session;
-import org.integratedmodelling.thinklab.client.annotations.Command;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
-import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
 import org.integratedmodelling.thinklab.client.utils.ShellCommand;
 
 import bsh.util.JConsole;
