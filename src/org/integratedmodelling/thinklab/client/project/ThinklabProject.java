@@ -370,6 +370,7 @@ public class ThinklabProject implements IProject {
 				IProject.ONTOLOGY_NAMESPACE_PREFIX_PROPERTY, "http://www.integratedmodelling.org/ns");
 	}
 
+	@Override
 	public void load() throws ThinklabException {
 	
 		_properties = getPluginProperties(_id);
@@ -473,8 +474,7 @@ public class ThinklabProject implements IProject {
 
 	@Override
 	public void unload() throws ThinklabException {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -503,6 +503,12 @@ public class ThinklabProject implements IProject {
 
 	@Override
 	public File getTempArea(String subArea) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public File getLoadPath(String subArea) {
 		// TODO Auto-generated method stub
 		return null;
 	}
