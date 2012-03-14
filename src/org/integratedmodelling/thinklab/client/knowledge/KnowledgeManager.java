@@ -9,8 +9,8 @@ import org.integratedmodelling.thinklab.api.knowledge.IConcept;
 import org.integratedmodelling.thinklab.api.knowledge.IOntology;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
 import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
-import org.integratedmodelling.thinklab.api.knowledge.ISemantics;
 import org.integratedmodelling.thinklab.api.knowledge.kbox.IKbox;
+import org.integratedmodelling.thinklab.api.lang.IList;
 
 /**
  * Knowledge manager for client library, which will not allow any operation but will create
@@ -94,13 +94,7 @@ public class KnowledgeManager implements IKnowledgeManager {
 	}
 
 	@Override
-	public ISemantics conceptualize(Object object) throws ThinklabException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Object instantiate(ISemantics a) throws ThinklabException {
+	public ISemanticObject instantiate(IList a) throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
 	}
