@@ -9,11 +9,14 @@ import java.util.HashSet;
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.thinklab.api.knowledge.IOntology;
 import org.integratedmodelling.thinklab.api.project.IProject;
-import org.integratedmodelling.thinklab.api.project.IProjectFactory;
 import org.integratedmodelling.thinklab.client.Configuration;
-import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 
-public class ProjectFactory implements IProjectFactory {
+/**
+ * TODO clean up and merge with project manager
+ * @author Ferd
+ *
+ */
+public class ProjectFactory  {
 
 	private static ProjectFactory _this = null;
 	private boolean _initialized;
@@ -79,20 +82,17 @@ public class ProjectFactory implements IProjectFactory {
 		
 	}
 	
-	@Override
 	public IProject createProject(String arg0) throws ThinklabException {
 		IProject ret = ThinklabProject.create(arg0);
 		loadProjects();
 		return ret;	
 	}
 
-	@Override
 	public void deleteProject(String arg0) throws ThinklabException {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public IProject getProject(String arg0, boolean attemptLoading) {
 		
 		IProject ret = null;
@@ -123,8 +123,6 @@ public class ProjectFactory implements IProjectFactory {
 		return ret;
 	}
 	
-	
-	@Override
 	public Collection<IProject> getProjects() {
 		return _projects;
 	}

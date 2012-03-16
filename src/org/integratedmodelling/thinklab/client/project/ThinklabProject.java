@@ -16,7 +16,6 @@ import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabIOException;
 import org.integratedmodelling.exceptions.ThinklabRuntimeException;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
-import org.integratedmodelling.thinklab.api.plugin.IThinklabPlugin;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.Configuration;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
@@ -30,7 +29,7 @@ public class ThinklabProject implements IProject {
 	String _id = null;
 	Properties _properties = null;
 	private ArrayList<INamespace> namespaces = new ArrayList<INamespace>();
-	private List<IThinklabPlugin> dependencies = new ArrayList<IThinklabPlugin>();
+	private List<IProject> dependencies = new ArrayList<IProject>();
 
 	/*
 	 * this is <= _errors.size()
@@ -425,7 +424,7 @@ public class ThinklabProject implements IProject {
 	}
 
 	@Override
-	public List<IThinklabPlugin> getPrerequisites() {
+	public List<IProject> getPrerequisites() {
 		return dependencies;
 	}
 
