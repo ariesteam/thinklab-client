@@ -1,6 +1,7 @@
 package org.integratedmodelling.thinklab.client.knowledge;
 
 import java.util.Collection;
+import java.util.Set;
 
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
@@ -202,6 +203,12 @@ public class Concept implements IConcept {
 
 	@Override
 	public IQuery getDefinition() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<IConcept> getSemanticClosure() {
 		// TODO Auto-generated method stub
 		return null;
 	}

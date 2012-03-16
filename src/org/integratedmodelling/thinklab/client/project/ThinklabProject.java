@@ -110,7 +110,7 @@ public class ThinklabProject implements IProject {
 	 */
 	public String createNamespace(IProject p, String ns) throws ThinklabException {
 				
-		File ret = new File(getSourceFolders().iterator().next() + File.separator + 
+		File ret = new File(getSourceDirectory() + File.separator + 
 							ns.replace('.', File.separatorChar) + ".tql");
 		File dir = new File(MiscUtilities.getFilePath(ret.toString()));
 		
@@ -346,13 +346,9 @@ public class ThinklabProject implements IProject {
 	}
 
 	@Override
-	public Collection<File> getSourceFolders() {
-		String[] folders = getProperties().getProperty(IProject.SOURCE_FOLDER_PROPERTY, "src").split(",");
-		ArrayList<File> ret = new ArrayList<File>();
-		for (String f : folders) {
-			ret.add(new File(getPath() + File.separator + f));
-		} 
-		return ret;
+	public File getSourceDirectory() {
+		return new File(getPath() + File.separator + 
+				getProperties().getProperty(IProject.SOURCE_FOLDER_PROPERTY, "src"));
 	}
 	
 	public Collection<String> getSourceFolderNames() {
@@ -379,16 +375,8 @@ public class ThinklabProject implements IProject {
 		
 		namespaces = new ArrayList<INamespace>();
 		HashSet<File> read = new HashSet<File>();
-		
-		for (File dir : this.getSourceFolders()) {
-		
-			if (!dir.isDirectory() || !dir.canRead()) {
-				_errors.add("source directory " + dir + " is unreadable");
-				_resourcesInError.add(dir);
-			}	 
-		
-			loadInternal(dir, read, namespaces, "", this);
-		}
+			
+		loadInternal(this.getSourceDirectory(), read, namespaces, "", this);
 		
 	}
 
@@ -444,13 +432,10 @@ public class ThinklabProject implements IProject {
 	@Override
 	public File findResource(String resource) {
 
-		for (File f : getSourceFolders()) {
-			File ff = new File(f + File.separator + resource);
-			if (ff.exists()) {
-				return ff;
-			}
+		File ff = new File(getSourceDirectory() + File.separator + resource);
+		if (ff.exists()) {
+			return ff;
 		}
-		
 		return null;
 	}
 	
@@ -458,13 +443,11 @@ public class ThinklabProject implements IProject {
 	public File findResourceForNamespace(String namespace, String extension) {
 
 		String fp = namespace.replace('.', File.separatorChar);
-		for (File f : getSourceFolders()) {
-			File ff = new File(f + File.separator + fp + "." + extension);
-			if (ff.exists()) {
-				return ff;
-			}
+		File ff = new File(getSourceDirectory() + File.separator + fp + "." + extension);
+		if (ff.exists()) {
+			return ff;
 		}
-		
+			
 		return null;
 	}
 
