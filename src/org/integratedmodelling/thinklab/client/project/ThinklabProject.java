@@ -494,5 +494,11 @@ public class ThinklabProject implements IProject {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public File getLoadPath() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
