@@ -53,5 +53,11 @@ public class ClientNamespace implements INamespace {
 	public LanguageElement getLanguageElement() {
 		return this._namespace;
 	}
+
+	@Override
+	public String getId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

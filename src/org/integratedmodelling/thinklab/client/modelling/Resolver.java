@@ -15,7 +15,9 @@ import org.integratedmodelling.lang.model.ModelObject;
 import org.integratedmodelling.lang.model.Namespace;
 import org.integratedmodelling.lang.model.PropertyObject;
 import org.integratedmodelling.thinklab.api.knowledge.IExpression;
+import org.integratedmodelling.thinklab.api.lang.ILanguageObject;
 import org.integratedmodelling.thinklab.api.lang.IResolver;
+import org.integratedmodelling.thinklab.api.lang.parsing.ILanguageDefinition;
 import org.integratedmodelling.thinklab.api.plugin.IThinklabPlugin;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.project.ThinklabProject;
@@ -249,6 +251,13 @@ public class Resolver implements IResolver {
 	public IExpression resolveFunction(String functionId,
 			Collection<String> parameterNames) {
 		// TODO use current server; supply defaults for core library
+		return null;
+	}
+
+	@Override
+	public ILanguageDefinition newLanguageObject(
+			Class<? extends ILanguageObject> cls) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }
