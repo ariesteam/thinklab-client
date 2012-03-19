@@ -69,14 +69,14 @@ public class KnowledgeManager implements IKnowledgeManager {
 	}
 
 	@Override
-	public ISemanticObject parse(String literal, IConcept c)
+	public ISemanticObject<?> parse(String literal, IConcept c)
 			throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ISemanticObject annotate(Object object) throws ThinklabException {
+	public ISemanticObject<?> annotate(Object object) throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -94,14 +94,13 @@ public class KnowledgeManager implements IKnowledgeManager {
 	}
 
 	@Override
-	public ISemanticObject instantiate(IList a) throws ThinklabException {
+	public ISemanticObject<?> instantiate(IList a) throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void registerAnnotatedClass(Class<?> cls, IConcept concept,
-			Class<? extends ISemanticObject> semanticObjectClass) {
+	public void registerAnnotatedClass(Class<?> cls, IConcept concept) {
 		// TODO Auto-generated method stub
 		
 	}
