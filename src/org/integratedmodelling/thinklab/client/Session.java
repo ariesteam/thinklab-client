@@ -18,7 +18,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.integratedmodelling.collections.Pair;
 import org.integratedmodelling.collections.Triple;
 import org.integratedmodelling.exceptions.ThinklabException;
-import org.integratedmodelling.lang.model.Namespace;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
 import org.integratedmodelling.thinklab.api.plugin.IThinklabPlugin;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
@@ -426,12 +425,8 @@ public class Session {
 				 * attempt to load namespace from server unless we have it
 				 * and its last modification date was >=
 				 */
-				Namespace ns = null;
 				INamespace nns = ModelManager.get().getNamespace(id);
-				if (nns != null)
-					ns = (Namespace) nns.getLanguageElement();
-
-				if (nns == null || (ns != null && ns.getTimeStamp() < lastm)) {
+				if (nns == null || (nns != null && nns.getTimeStamp() < lastm)) {
 					nns = ModelManager.get().loadNamespace(id, url, "owl");
 				}
 				

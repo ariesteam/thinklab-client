@@ -1,6 +1,5 @@
 package org.integratedmodelling.thinklab.client.modelling;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -9,7 +8,6 @@ import java.util.HashMap;
 
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabValidationException;
-import org.integratedmodelling.lang.model.Namespace;
 import org.integratedmodelling.thinklab.api.factories.IModelManager;
 import org.integratedmodelling.thinklab.api.lang.IModelParser;
 import org.integratedmodelling.thinklab.api.modelling.IAgentModel;
@@ -19,7 +17,6 @@ import org.integratedmodelling.thinklab.api.modelling.IModelObject;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
 import org.integratedmodelling.thinklab.api.modelling.IScenario;
 import org.integratedmodelling.thinklab.api.project.IProject;
-import org.integratedmodelling.thinklab.client.lang.ClientNamespace;
 import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
 
 /**
@@ -114,7 +111,7 @@ public class ModelManager implements IModelManager {
 		Collections.sort(ret, new Comparator<INamespace>() {
 			@Override
 			public int compare(INamespace arg0, INamespace arg1) {
-				return arg0.getNamespace().compareTo(arg1.getNamespace());
+				return arg0.getId().compareTo(arg1.getId());
 			}
 		});
 		
@@ -139,20 +136,18 @@ public class ModelManager implements IModelManager {
 		
 		String extension = MiscUtilities.getFileExtension(file);
 		IModelParser parser = interpreters.get(extension);
-		INamespace ret = null;
+		Namespace ret = null;
 		
 		if (parser == null) {
 			throw new ThinklabValidationException("don't know how to parse a " + extension + " model file");
 		}
 		
-		Namespace ns = parser.parse(file, createResolver(project));
-		ns.setProject(project);
-		ns.setSourceFile(new File(file));
-		ns.synchronizeKnowledge();
-		
-		ret = new ClientNamespace(ns);
-		
-		namespaces.put(ret.getNamespace(), ret);
+		ret = (Namespace) parser.parse(file, createResolver(project));
+		ret.setProject(project);
+		ret.setResourceUrl(file);
+		ret.synchronizeKnowledge();
+
+		namespaces.put(ret.getId(), ret);
 		
 		return ret;
 	}
@@ -181,19 +176,18 @@ public class ModelManager implements IModelManager {
 			extension = MiscUtilities.getFileExtension(resource);
 		
 		IModelParser parser = interpreters.get(extension);
-		INamespace ret = null;
+		Namespace ret = null;
 		
 		if (parser == null) {
 			throw new ThinklabValidationException("don't know how to parse a " + extension + " resource");
 		}
 		
-		Namespace ns = parser.parse(resource, createResolver(null));
+		ret = (Namespace) parser.parse(resource, createResolver(null));
 
-		if (ns != null) {
-			ns.setId(namespaceId);
-			ns.synchronizeKnowledge();
-			ret = new ClientNamespace(ns);
-			namespaces.put(ret.getNamespace(), ret);
+		if (ret != null) {
+			ret.setId(namespaceId);
+			ret.synchronizeKnowledge();
+			namespaces.put(ret.getId(), ret);
 		}
 		
 		return ret;

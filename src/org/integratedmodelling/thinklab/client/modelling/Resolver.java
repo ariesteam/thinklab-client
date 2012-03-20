@@ -10,14 +10,13 @@ import java.util.Collection;
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabIOException;
 import org.integratedmodelling.exceptions.ThinklabResourceNotFoundException;
-import org.integratedmodelling.lang.model.ConceptObject;
-import org.integratedmodelling.lang.model.ModelObject;
-import org.integratedmodelling.lang.model.Namespace;
-import org.integratedmodelling.lang.model.PropertyObject;
 import org.integratedmodelling.thinklab.api.knowledge.IExpression;
-import org.integratedmodelling.thinklab.api.lang.ILanguageObject;
 import org.integratedmodelling.thinklab.api.lang.IResolver;
+import org.integratedmodelling.thinklab.api.lang.parsing.IConceptDefinition;
 import org.integratedmodelling.thinklab.api.lang.parsing.ILanguageDefinition;
+import org.integratedmodelling.thinklab.api.lang.parsing.IPropertyDefinition;
+import org.integratedmodelling.thinklab.api.modelling.IModelObject;
+import org.integratedmodelling.thinklab.api.modelling.INamespace;
 import org.integratedmodelling.thinklab.api.plugin.IThinklabPlugin;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.project.ThinklabProject;
@@ -194,14 +193,13 @@ public class Resolver implements IResolver {
 	}
 
 	@Override
-	public void onNamespaceDeclared(String namespaceId, String resourceId,
-			Namespace namespace) {
+	public void onNamespaceDeclared(String namespaceId, String resourceId, INamespace namespace) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void onNamespaceDefined(Namespace namespace) {
+	public void onNamespaceDefined(INamespace namespace) {
 
 	
 	}
@@ -214,11 +212,11 @@ public class Resolver implements IResolver {
 	}
 
 	@Override
-	public ConceptObject resolveExternalConcept(String id, Namespace namespace, int line)
+	public IConceptDefinition resolveExternalConcept(String id, INamespace namespace, int line)
 			throws ThinklabException {
 		
 		ConceptObject ret = new ConceptObject();
-		ret.setId(id);
+//		ret.setId(id);
 		
 		/*
 		 * TODO discuss import with knowledge manager. Should have been seen before.
@@ -228,7 +226,7 @@ public class Resolver implements IResolver {
 	}
 	
 	@Override
-	public PropertyObject resolveExternalProperty(String id, Namespace namespace, int line)
+	public IPropertyDefinition resolveExternalProperty(String id, INamespace namespace, int line)
 			throws ThinklabException {
 		
 		PropertyObject ret = new PropertyObject();
@@ -242,7 +240,7 @@ public class Resolver implements IResolver {
 	}
 
 	@Override
-	public void onModelObjectDefined(Namespace namespace, ModelObject ret) {
+	public void onModelObjectDefined(INamespace namespace, IModelObject ret) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -255,8 +253,7 @@ public class Resolver implements IResolver {
 	}
 
 	@Override
-	public ILanguageDefinition newLanguageObject(
-			Class<? extends ILanguageObject> cls) {
+	public ILanguageDefinition newLanguageObject(Class<?> cls) {
 		// TODO Auto-generated method stub
 		return null;
 	}
