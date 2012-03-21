@@ -12,7 +12,7 @@ import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientExceptio
 public class Server {
 
 	private Session _session;
-	int lastLog = 0;
+	long lastLogPosition = 0;
 
 	public Server(Session session) {
 		this._session = session;

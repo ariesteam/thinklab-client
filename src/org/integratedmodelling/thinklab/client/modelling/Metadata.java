@@ -8,22 +8,21 @@ import org.integratedmodelling.thinklab.api.lang.parsing.IMetadataDefinition;
 
 public class Metadata extends LanguageElement implements IMetadataDefinition {
 
-	HashMap<String, Object> data = new HashMap<String, Object>();
+	HashMap<String, Object> _data = new HashMap<String, Object>();
 	
 	@Override
 	public void put(String id, Object value) {
-		data.put(id,value);
+		_data.put(id,value);
 	}
 
 	@Override
 	public Collection<String> getKeys() {
-		return data.keySet();
+		return _data.keySet();
 	}
 
 	@Override
 	public Object get(String string) {
-		// TODO Auto-generated method stub
-		return null;
+		return _data.get(string);
 	}
 
 	@Override

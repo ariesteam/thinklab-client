@@ -36,7 +36,6 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	IProject project;
 	private String _resourceUrl;
 	
-	
 	public long getTimeStamp() {
 		return timeStamp;
 	}

@@ -465,20 +465,21 @@ public class Session {
 		 */
 		ArrayList<Triple<String, String, Boolean>> pls = new ArrayList<Triple<String,String,Boolean>>();
 		JSONArray plugins = (JSONArray) res.get("plugins");
-		for (int i = 0; i < plugins.length(); i++) {
-			try {
-				JSONObject plug = plugins.getJSONObject(i);
+		if (plugins != null) {
+			for (int i = 0; i < plugins.length(); i++) {
+				try {
+					JSONObject plug = plugins.getJSONObject(i);
 				
-				String pid  = plug.getString("id");
-				String ver  = plug.getString("version");
-				Boolean act = plug.getString("active").equals("true");
+					String pid  = plug.getString("id");
+					String ver  = plug.getString("version");
+					Boolean act = plug.getString("active").equals("true");
 				
-				pls.add(new Triple<String, String, Boolean>(pid, ver, act));
+					pls.add(new Triple<String, String, Boolean>(pid, ver, act));
 				
-			} catch (JSONException e) {
-				// christ
-			}
-
+				} catch (JSONException e) {
+					// christ
+				}
+			}	
 		}
 
 		/*
