@@ -153,9 +153,9 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 			if (axiom.is(IAxiom.CLASS_ASSERTION)) {
 				if (!_names.contains(axiom.getArgument(0))) {
 					ConceptObject co = new ConceptObject();
-//					co.setId(axiom.getArgument(0).toString());
-//					co.setNamespace(this);
-//					addModelObject(co);
+					co.setId(axiom.getArgument(0).toString());
+					co.setNamespace(this);
+					addModelObject(co);
 				}
 			}
 		}

@@ -94,7 +94,7 @@ public class KnowledgeManager implements IKnowledgeManager {
 	}
 
 	@Override
-	public ISemanticObject<?> instantiate(IList a) throws ThinklabException {
+	public Object instantiate(IList a) throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -107,8 +107,7 @@ public class KnowledgeManager implements IKnowledgeManager {
 
 	@Override
 	public ISemanticObject<?> entify(IList semantics) throws ThinklabException {
-		// TODO Auto-generated method stub
-		return null;
+		return new DummySemanticObject(semantics);
 	}
 
 }

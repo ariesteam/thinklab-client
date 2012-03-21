@@ -3,7 +3,6 @@ package org.integratedmodelling.thinklab.client.modelling;
 import java.util.Set;
 
 import org.integratedmodelling.thinklab.api.lang.parsing.ICategorizingObserverDefinition;
-import org.integratedmodelling.thinklab.api.modelling.ICategorizingObserver;
 
 public class Categorization extends Observer implements ICategorizingObserverDefinition {
 

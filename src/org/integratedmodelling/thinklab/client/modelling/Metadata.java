@@ -10,16 +10,14 @@ public class Metadata extends LanguageElement implements IMetadataDefinition {
 
 	HashMap<String, Object> data = new HashMap<String, Object>();
 	
+	@Override
 	public void put(String id, Object value) {
 		data.put(id,value);
 	}
 
+	@Override
 	public Collection<String> getKeys() {
 		return data.keySet();
-	}
-	
-	public Object getValue(String key) {
-		return data.get(key);
 	}
 
 	@Override
