@@ -1,6 +1,5 @@
 package org.integratedmodelling.thinklab.client.modelling;
 
-import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,7 +34,7 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	String _id;
 	long timeStamp;
 	IProject project;
-	private File sourceFile;
+	private String _resourceUrl;
 	
 	
 	public long getTimeStamp() {
@@ -85,8 +84,11 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 			_names.add(mo.getId());
 		}
 		
-		if ( (sourceFile != null && 
-				(sourceFile.toString().endsWith(".tql") || sourceFile.toString().endsWith(".clj") )) &&				
+		/*
+		 * FIXME this should disappear
+		 */
+		if ( (_resourceUrl != null && 
+				(_resourceUrl.toString().endsWith(".tql") || _resourceUrl.toString().endsWith(".clj") )) &&				
 				(mo instanceof ConceptObject || mo instanceof PropertyObject) && 
 				mo.getFirstLineNumber() == 0 && mo.getLastLineNumber() == 0) {
 			_knowledge.add(mo);
@@ -161,8 +163,7 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	
 	@Override
 	public void setResourceUrl(String resourceUrl) {
-		// TODO Auto-generated method stub
-		
+		_resourceUrl = resourceUrl;
 	}
 	
 	@Override
@@ -191,6 +192,12 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	@Override
 	public String getId() {
 		return _id;
+	}
+	
+	@Override
+	public String getResourceUrl() {
+		// TODO Auto-generated method stub
+		return _resourceUrl;
 	}
 
 	

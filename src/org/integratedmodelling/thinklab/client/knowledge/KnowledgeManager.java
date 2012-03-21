@@ -105,4 +105,10 @@ public class KnowledgeManager implements IKnowledgeManager {
 		
 	}
 
+	@Override
+	public ISemanticObject<?> entify(IList semantics) throws ThinklabException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
