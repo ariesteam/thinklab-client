@@ -209,7 +209,7 @@ public class Resolver implements IResolver {
 	}
 
 	@Override
-	public void onNamespaceDeclared(String namespaceId, String resourceId, INamespace namespace) {
+	public void onNamespaceDeclared(String namespaceId, INamespace namespace) {
 		// TODO Auto-generated method stub
 		
 	}
