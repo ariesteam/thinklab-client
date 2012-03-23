@@ -26,4 +26,5 @@ public class DataSourceDefinition extends ModelObject implements IDataSourceDefi
 		_parameters = parameters;
 	}
 
+
 }
