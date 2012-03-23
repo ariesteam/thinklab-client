@@ -1,7 +1,7 @@
 package org.integratedmodelling.thinklab.client.modelling;
 
-import org.integratedmodelling.thinklab.api.lang.parsing.IScenarioDefinition;
 import org.integratedmodelling.thinklab.api.modelling.IScenario;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IScenarioDefinition;
 
 public class Scenario extends ModelObject implements IScenarioDefinition {
 

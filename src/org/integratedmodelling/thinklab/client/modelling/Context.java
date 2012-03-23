@@ -6,13 +6,14 @@ import java.util.List;
 
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
-import org.integratedmodelling.thinklab.api.lang.parsing.IContextDefinition;
-import org.integratedmodelling.thinklab.api.lang.parsing.IObservationDefinition;
 import org.integratedmodelling.thinklab.api.listeners.IListener;
 import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IExtent;
 import org.integratedmodelling.thinklab.api.modelling.IObservation;
 import org.integratedmodelling.thinklab.api.modelling.IState;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IContextDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IObservationDefinition;
 
 public class Context extends ModelObject implements IContextDefinition {
 
@@ -138,6 +139,12 @@ public class Context extends ModelObject implements IContextDefinition {
 	public IContext collapse(IConcept dimension) throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void addObservationGeneratorFunction(IFunctionDefinition function) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

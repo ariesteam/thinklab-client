@@ -9,10 +9,10 @@ import java.util.List;
 import org.integratedmodelling.thinklab.api.knowledge.IAxiom;
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
-import org.integratedmodelling.thinklab.api.lang.parsing.IModelObjectDefinition;
-import org.integratedmodelling.thinklab.api.lang.parsing.INamespaceDefinition;
 import org.integratedmodelling.thinklab.api.modelling.IModelObject;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IModelObjectDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.INamespaceDefinition;
 import org.integratedmodelling.thinklab.api.project.IProject;
 
 /**

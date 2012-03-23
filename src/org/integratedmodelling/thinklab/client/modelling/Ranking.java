@@ -1,7 +1,7 @@
 package org.integratedmodelling.thinklab.client.modelling;
 
 import org.integratedmodelling.collections.Pair;
-import org.integratedmodelling.thinklab.api.lang.parsing.IRankingObserverDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IRankingObserverDefinition;
 
 public class Ranking extends Observer implements IRankingObserverDefinition {
 	

@@ -3,7 +3,7 @@ package org.integratedmodelling.thinklab.client.modelling;
 import java.util.Map;
 
 import org.integratedmodelling.thinklab.api.knowledge.IExpression;
-import org.integratedmodelling.thinklab.api.lang.parsing.IDataSourceDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IDataSourceDefinition;
 
 public class DataSourceDefinition extends ModelObject implements IDataSourceDefinition {
 

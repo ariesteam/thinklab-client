@@ -4,7 +4,7 @@ import java.io.PrintStream;
 import java.util.Collection;
 import java.util.HashMap;
 
-import org.integratedmodelling.thinklab.api.lang.parsing.IMetadataDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IMetadataDefinition;
 
 public class Metadata extends LanguageElement implements IMetadataDefinition {
 

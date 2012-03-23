@@ -2,7 +2,7 @@ package org.integratedmodelling.thinklab.client.modelling;
 
 import java.io.PrintStream;
 
-import org.integratedmodelling.thinklab.api.lang.parsing.IUnitDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IUnitDefinition;
 
 public class UnitDefinition extends LanguageElement implements IUnitDefinition {
 

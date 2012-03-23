@@ -1,8 +1,8 @@
 package org.integratedmodelling.thinklab.client.modelling;
 
-import org.integratedmodelling.thinklab.api.lang.parsing.IMeasuringObserverDefinition;
-import org.integratedmodelling.thinklab.api.lang.parsing.IUnitDefinition;
 import org.integratedmodelling.thinklab.api.modelling.IUnit;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IMeasuringObserverDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IUnitDefinition;
 
 public class Measurement extends Observer implements IMeasuringObserverDefinition {
 

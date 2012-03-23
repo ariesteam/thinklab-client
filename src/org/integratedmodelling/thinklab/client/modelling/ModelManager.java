@@ -1,5 +1,6 @@
 package org.integratedmodelling.thinklab.client.modelling;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabValidationException;
 import org.integratedmodelling.thinklab.api.factories.IModelManager;
+import org.integratedmodelling.thinklab.api.knowledge.IExpression;
 import org.integratedmodelling.thinklab.api.lang.IModelParser;
 import org.integratedmodelling.thinklab.api.modelling.IAgentModel;
 import org.integratedmodelling.thinklab.api.modelling.IContext;
@@ -195,6 +197,20 @@ public class ModelManager implements IModelManager {
 
 	@Override
 	public IContext getCoverage(IModel model) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IExpression resolveFunction(String functionId,
+			Collection<String> parameterNames) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<INamespace> loadSourceDirectory(File sourcedir)
+			throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
 	}

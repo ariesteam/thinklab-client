@@ -14,9 +14,6 @@ import org.integratedmodelling.thinklab.api.knowledge.IConcept;
 import org.integratedmodelling.thinklab.api.knowledge.IExpression;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
 import org.integratedmodelling.thinklab.api.lang.IResolver;
-import org.integratedmodelling.thinklab.api.lang.parsing.IConceptDefinition;
-import org.integratedmodelling.thinklab.api.lang.parsing.ILanguageDefinition;
-import org.integratedmodelling.thinklab.api.lang.parsing.IPropertyDefinition;
 import org.integratedmodelling.thinklab.api.metadata.IMetadata;
 import org.integratedmodelling.thinklab.api.modelling.IAgentModel;
 import org.integratedmodelling.thinklab.api.modelling.ICategorizingObserver;
@@ -33,6 +30,10 @@ import org.integratedmodelling.thinklab.api.modelling.IScenario;
 import org.integratedmodelling.thinklab.api.modelling.IStoryline;
 import org.integratedmodelling.thinklab.api.modelling.IUnit;
 import org.integratedmodelling.thinklab.api.modelling.IValuingObserver;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IConceptDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.ILanguageDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IPropertyDefinition;
 import org.integratedmodelling.thinklab.api.plugin.IThinklabPlugin;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.project.ThinklabProject;
@@ -305,7 +306,10 @@ public class Resolver implements IResolver {
 			return new UnitDefinition();
 		} else if (cls.equals(IMetadata.class)) {
 			return new Metadata();
+		} else if (cls.equals(IFunctionDefinition.class)) {
+			return new FunctionDefinition();
 		}
+		
 		
 		return null;
 	}

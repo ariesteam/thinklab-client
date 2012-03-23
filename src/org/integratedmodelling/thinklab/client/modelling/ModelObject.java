@@ -2,12 +2,12 @@ package org.integratedmodelling.thinklab.client.modelling;
 
 import java.io.PrintStream;
 
-import org.integratedmodelling.thinklab.api.lang.parsing.IMetadataDefinition;
-import org.integratedmodelling.thinklab.api.lang.parsing.IModelObjectDefinition;
-import org.integratedmodelling.thinklab.api.lang.parsing.INamespaceDefinition;
 import org.integratedmodelling.thinklab.api.metadata.IMetadata;
 import org.integratedmodelling.thinklab.api.modelling.IModelObject;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IMetadataDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IModelObjectDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.INamespaceDefinition;
 
 public class ModelObject extends LanguageElement implements IModelObject, IModelObjectDefinition {
 	

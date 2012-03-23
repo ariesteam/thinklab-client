@@ -1,11 +1,11 @@
 package org.integratedmodelling.thinklab.client.modelling;
 
 import org.integratedmodelling.thinklab.api.lang.IList;
-import org.integratedmodelling.thinklab.api.lang.parsing.IDataSourceDefinition;
-import org.integratedmodelling.thinklab.api.lang.parsing.IObservationDefinition;
 import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IDataSource;
 import org.integratedmodelling.thinklab.api.modelling.IObserver;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IObservationDefinition;
 
 /**
  * An observation pairs a datasource with an observer. The datasource may provide
@@ -25,11 +25,6 @@ public class Observation extends ModelObject implements IObservationDefinition {
 	@Override
 	public void setObservable(IList semantics) {
 		_observable = semantics;
-	}
-
-	@Override
-	public void setDataSource(IDataSourceDefinition datasource) {
-		_datasource = (IDataSource)datasource;
 	}
 
 	@Override
@@ -55,6 +50,18 @@ public class Observation extends ModelObject implements IObservationDefinition {
 	@Override
 	public void setInlineState(Object state) {
 		_inlineState = state;
+	}
+
+	@Override
+	public void setDataSource(IDataSource datasource) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setDatasourceGeneratorFunction(IFunctionDefinition function) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

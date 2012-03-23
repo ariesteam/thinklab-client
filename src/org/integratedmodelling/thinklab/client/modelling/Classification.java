@@ -1,7 +1,7 @@
 package org.integratedmodelling.thinklab.client.modelling;
 
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
-import org.integratedmodelling.thinklab.api.lang.parsing.IClassifyingObserverDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IClassifyingObserverDefinition;
 
 public class Classification extends Observer implements IClassifyingObserverDefinition {
 

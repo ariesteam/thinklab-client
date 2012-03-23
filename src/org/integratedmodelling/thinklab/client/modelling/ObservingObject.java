@@ -8,10 +8,10 @@ import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabRuntimeException;
 import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
 import org.integratedmodelling.thinklab.api.lang.IList;
-import org.integratedmodelling.thinklab.api.lang.parsing.IModelDefinition;
-import org.integratedmodelling.thinklab.api.lang.parsing.IObservingObjectDefinition;
 import org.integratedmodelling.thinklab.api.modelling.IModel;
 import org.integratedmodelling.thinklab.api.modelling.IObservingObject;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IModelDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IObservingObjectDefinition;
 import org.integratedmodelling.thinklab.client.knowledge.KnowledgeManager;
 
 /**
