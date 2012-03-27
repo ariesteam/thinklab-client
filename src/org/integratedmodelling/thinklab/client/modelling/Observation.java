@@ -1,5 +1,6 @@
 package org.integratedmodelling.thinklab.client.modelling;
 
+import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
 import org.integratedmodelling.thinklab.api.lang.IList;
 import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IDataSource;
@@ -16,19 +17,21 @@ import org.integratedmodelling.thinklab.api.modelling.parsing.IObservationDefini
  */
 public class Observation extends ModelObject implements IObservationDefinition {
 
-	IList       _observable;
 	IDataSource _datasource;
 	IContext    _context;
 	IObserver   _observer;
 	Object      _inlineState;
 	
+	ISemanticObject<?> _observable;
+	IList       _observableDefinition;
+	
 	@Override
 	public void setObservable(IList semantics) {
-		_observable = semantics;
+		_observableDefinition = semantics;
 	}
 
 	@Override
-	public IList getObservable() {
+	public ISemanticObject<?> getObservable() {
 		return _observable;
 	}
 
@@ -61,7 +64,11 @@ public class Observation extends ModelObject implements IObservationDefinition {
 	@Override
 	public void setDatasourceGeneratorFunction(IFunctionDefinition function) {
 		// TODO Auto-generated method stub
-		
+	}
+
+	@Override
+	public IObserver getObserver() {
+		return _observer;
 	}
 
 }
