@@ -14,10 +14,12 @@ public class ConditionalObserver extends Observer implements IConditionalObserve
 
 	ArrayList<Pair<IObserver,IExpression>> _observers;
 	
+	@Override
 	public void addObserver(IExpressionDefinition expression, IObserverDefinition observer) {
 		_observers.add(new Pair<IObserver, IExpression>((IObserver)observer, (IExpression)expression));
 	}
 	
+	@Override
 	public List<Pair<IObserver,IExpression>> getObservers() {
 		return _observers;
 	}
