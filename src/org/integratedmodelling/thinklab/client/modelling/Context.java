@@ -13,7 +13,7 @@ import org.integratedmodelling.thinklab.api.modelling.IObservation;
 import org.integratedmodelling.thinklab.api.modelling.IState;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IContextDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionDefinition;
-import org.integratedmodelling.thinklab.api.modelling.parsing.IObservationDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IModelDefinition;
 
 public class Context extends ModelObject implements IContextDefinition {
 
@@ -69,11 +69,6 @@ public class Context extends ModelObject implements IContextDefinition {
 		
 	}
 
-	@Override
-	public void addObservation(IObservationDefinition observation) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public List<IExtent> getExtents() {
@@ -143,6 +138,12 @@ public class Context extends ModelObject implements IContextDefinition {
 
 	@Override
 	public void addObservationGeneratorFunction(IFunctionDefinition function) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addModel(IModelDefinition observation) {
 		// TODO Auto-generated method stub
 		
 	}
