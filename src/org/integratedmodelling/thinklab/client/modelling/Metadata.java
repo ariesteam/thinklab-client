@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.util.Collection;
 import java.util.HashMap;
 
+import org.integratedmodelling.thinklab.api.metadata.IMetadata;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IMetadataDefinition;
 
 public class Metadata extends LanguageElement implements IMetadataDefinition {
@@ -28,7 +29,10 @@ public class Metadata extends LanguageElement implements IMetadataDefinition {
 	@Override
 	public void dump(PrintStream out) {
 		// TODO Auto-generated method stub
-		
 	}
-	
+
+	@Override
+	public void merge(IMetadata md) {
+		_data.putAll(((Metadata)md)._data);
+	}
 }
