@@ -18,4 +18,9 @@ public class UnitDefinition extends LanguageElement implements IUnitDefinition {
 		
 	}
 
+	@Override
+	public String getStringExpression() {
+		return _expression;
+	}
+
 }

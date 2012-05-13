@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
+import java.util.UUID;
 
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabIOException;
@@ -310,7 +311,17 @@ public class Resolver implements IResolver {
 			return new FunctionDefinition();
 		}
 		
-		
 		return null;
+	}
+	
+
+	@Override
+	public boolean isGeneratedId(String id) {
+		return id.endsWith("___");
+	}
+
+	@Override
+	public String generateId(IModelObject o) {
+		return UUID.randomUUID().toString() + "___";
 	}
 }
