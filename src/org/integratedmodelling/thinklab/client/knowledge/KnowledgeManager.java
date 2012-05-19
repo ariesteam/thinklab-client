@@ -110,4 +110,10 @@ public class KnowledgeManager implements IKnowledgeManager {
 		return new DummySemanticObject(semantics);
 	}
 
+	@Override
+	public IConcept getXSDMapping(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
