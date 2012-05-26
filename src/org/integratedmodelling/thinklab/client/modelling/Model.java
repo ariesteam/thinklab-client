@@ -71,11 +71,5 @@ public class Model extends ObservingObject implements IModelDefinition {
 		
 	}
 
-	@Override
-	public void defineObservable() {
-		// TODO Auto-generated method stub
-		
-	}
-
 
 }
