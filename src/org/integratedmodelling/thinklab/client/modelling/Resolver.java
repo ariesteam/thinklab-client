@@ -289,8 +289,8 @@ public class Resolver implements IResolver {
 			return new Model();
 		} else if (cls.equals(IContext.class)) {
 			return new Context();
-		} else if (cls.equals(IDataSource.class)) {
-			return new DataSourceDefinition();
+//		} else if (cls.equals(IDataSource.class)) {
+//			return new DataSourceDefinition();
 		} else if (cls.equals(IStoryline.class)) {
 			return new Storyline();
 		} else if (cls.equals(IScenario.class)) {
