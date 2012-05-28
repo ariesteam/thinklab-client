@@ -35,6 +35,9 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	long timeStamp;
 	IProject project;
 	private String _resourceUrl;
+	String _trainingKbox = null;
+	String _storageKbox = null;
+	String _lookupKbox = null;
 	
 	public long getTimeStamp() {
 		return timeStamp;
@@ -198,6 +201,34 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 		// TODO Auto-generated method stub
 		return _resourceUrl;
 	}
-
 	
+	@Override
+	public void setStorageKbox(String kboxUri) {
+		_storageKbox = kboxUri;
+	}
+
+	@Override
+	public void setTrainingKbox(String kboxUri) {
+		_trainingKbox = kboxUri;
+	}
+	
+	@Override
+	public String getStorageKbox() {
+		return _storageKbox;
+	}
+	
+	@Override
+	public String getTrainingKbox() {
+		return _trainingKbox;
+	}
+	
+	@Override
+	public void setLookupKbox(String kboxUri) {
+		_lookupKbox = kboxUri;
+	}
+	
+	@Override
+	public String getLookupKbox() {
+		return _lookupKbox;
+	}
 }
