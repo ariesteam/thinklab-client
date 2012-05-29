@@ -6,6 +6,7 @@ import org.integratedmodelling.thinklab.api.knowledge.IExpression;
 import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
 import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IDataSource;
+import org.integratedmodelling.thinklab.api.modelling.IExtent;
 import org.integratedmodelling.thinklab.api.modelling.IObservation;
 import org.integratedmodelling.thinklab.api.modelling.IObserver;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IExpressionDefinition;
@@ -67,6 +68,18 @@ public class Model extends ObservingObject implements IModelDefinition {
 
 	@Override
 	public void setInlineState(Object state) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public IContext getCoverage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void addCoveredExtent(IExtent extent) throws ThinklabException {
 		// TODO Auto-generated method stub
 		
 	}

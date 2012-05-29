@@ -324,4 +324,17 @@ public class Resolver implements IResolver {
 	public String generateId(IModelObject o) {
 		return UUID.randomUUID().toString() + "___";
 	}
+
+	@Override
+	public Object runFunction(IFunctionDefinition function) {
+		
+		IExpression f = resolveFunction(function.getId(), function.getParameters().keySet());
+		if (f != null) {
+			try {
+				return f.eval(function.getParameters());
+			} catch (ThinklabException e) {
+			}
+		}
+		return null;
+	}
 }
