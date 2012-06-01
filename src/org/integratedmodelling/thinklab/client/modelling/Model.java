@@ -1,5 +1,7 @@
 package org.integratedmodelling.thinklab.client.modelling;
 
+import java.util.List;
+
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabUnsupportedOperationException;
 import org.integratedmodelling.thinklab.api.knowledge.IExpression;
@@ -54,6 +56,11 @@ public class Model extends ObservingObject implements IModelDefinition {
 		return getObservables().get(0);
 	}
 
+	@Override
+	public List<ISemanticObject<?>> getObservables() {
+		return _observables;
+	}
+	
 	@Override
 	public void setDataSource(IDataSource datasource) {
 		// TODO Auto-generated method stub

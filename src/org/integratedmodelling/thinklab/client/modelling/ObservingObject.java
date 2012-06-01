@@ -36,12 +36,7 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 			throw new ThinklabRuntimeException(e);
 		}
 	}
-
-	@Override
-	public List<ISemanticObject<?>> getObservables() {
-		return _observables;
-	}
-
+	
 	@Override
 	public void addDependency(IModelDefinition cmodel, String formalName, boolean required) {
 		_dependencies.add(new Triple<IModel, String, Boolean>((IModel)cmodel, formalName, required));

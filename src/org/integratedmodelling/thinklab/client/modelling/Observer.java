@@ -51,7 +51,7 @@ public abstract class Observer extends ObservingObject implements IObserverDefin
 		}
 	}
 	
-	public IObserver getMediated() {
+	public Object getObservedObject() {
 		return _mediated;
 	}
 
