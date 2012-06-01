@@ -52,11 +52,6 @@ public class Model extends ObservingObject implements IModelDefinition {
 	}
 
 	@Override
-	public ISemanticObject<?> getObservable() {
-		return getObservables().get(0);
-	}
-
-	@Override
 	public List<ISemanticObject<?>> getObservables() {
 		return _observables;
 	}
@@ -89,6 +84,12 @@ public class Model extends ObservingObject implements IModelDefinition {
 	public void addCoveredExtent(IExtent extent) throws ThinklabException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public IDataSource getDatasource() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
