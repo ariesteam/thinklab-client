@@ -82,7 +82,10 @@ public abstract class Observer extends ObservingObject implements IObserverDefin
 	public IObserver applyScenario(IScenario scenario) throws ThinklabException {
 		throw new ThinklabUnsupportedOperationException("scenarios cannot be applied at the client side");
 	}
-	
 
+	@Override
+	public IObserver getMediatedObserver() {
+		return _mediated;
+	}
 	
 }
