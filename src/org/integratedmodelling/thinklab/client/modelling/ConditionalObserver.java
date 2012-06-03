@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.integratedmodelling.collections.Pair;
+import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.thinklab.api.knowledge.IExpression;
+import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
+import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IObserver;
+import org.integratedmodelling.thinklab.api.modelling.IState;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IConditionalObserverDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IExpressionDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IObserverDefinition;
@@ -22,5 +26,12 @@ public class ConditionalObserver extends Observer implements IConditionalObserve
 	@Override
 	public List<Pair<IObserver,IExpression>> getObservers() {
 		return _observers;
+	}
+
+	@Override
+	public IState createState(ISemanticObject<?> observable, IContext context)
+			throws ThinklabException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

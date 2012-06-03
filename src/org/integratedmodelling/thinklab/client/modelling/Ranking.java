@@ -1,6 +1,10 @@
 package org.integratedmodelling.thinklab.client.modelling;
 
 import org.integratedmodelling.collections.Pair;
+import org.integratedmodelling.exceptions.ThinklabException;
+import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
+import org.integratedmodelling.thinklab.api.modelling.IContext;
+import org.integratedmodelling.thinklab.api.modelling.IState;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IRankingObserverDefinition;
 
 public class Ranking extends Observer implements IRankingObserverDefinition {
@@ -28,6 +32,13 @@ public class Ranking extends Observer implements IRankingObserverDefinition {
 	public void setScale(Number from, Number to) {
 		_from = from;
 		_to = to;
+	}
+
+	@Override
+	public IState createState(ISemanticObject<?> observable, IContext context)
+			throws ThinklabException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
