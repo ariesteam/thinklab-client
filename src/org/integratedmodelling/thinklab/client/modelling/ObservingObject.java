@@ -23,8 +23,8 @@ import org.integratedmodelling.thinklab.client.knowledge.KnowledgeManager;
  */
 public abstract class ObservingObject extends ModelObject implements IObservingObject, IObservingObjectDefinition {
 	
-	ArrayList<Triple<IModel, String, Boolean>> _dependencies = 
-			new ArrayList<Triple<IModel,String, Boolean>>();
+	ArrayList<Triple<Object, String, Boolean>> _dependencies = 
+			new ArrayList<Triple<Object,String, Boolean>>();
 	
 	ArrayList<ISemanticObject<?>> _observables = new ArrayList<ISemanticObject<?>>();
 
@@ -38,12 +38,12 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 	}
 	
 	@Override
-	public void addDependency(IModelDefinition cmodel, String formalName, boolean required) {
-		_dependencies.add(new Triple<IModel, String, Boolean>((IModel)cmodel, formalName, required));
+	public void addDependency(Object cmodel, String formalName, boolean required) {
+		_dependencies.add(new Triple<Object, String, Boolean>(cmodel, formalName, required));
 	}
 
 	@Override
-	public List<Triple<IModel, String, Boolean>> getDependencies() {
+	public List<Triple<Object, String, Boolean>> getDependencies() {
 		return _dependencies;
 	}
 	
