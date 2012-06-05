@@ -28,15 +28,26 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 	
 	ArrayList<ISemanticObject<?>> _observables = new ArrayList<ISemanticObject<?>>();
 
+	String _observableCName;
+	
 	@Override
 	public void addObservable(IList instance) {
 		try {
+			_observableCName = instance.first().toString();
 			_observables.add(KnowledgeManager.get().entify(instance));
 		} catch (ThinklabException e) {
 			throw new ThinklabRuntimeException(e);
 		}
 	}
 	
+	
+	
+	@Override
+	public String getObservableConceptName() {
+		return _observableCName;
+	}
+
+
 	@Override
 	public void addDependency(Object cmodel, String formalName, boolean required) {
 		_dependencies.add(new Triple<Object, String, Boolean>(cmodel, formalName, required));
