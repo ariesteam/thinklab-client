@@ -38,6 +38,7 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	String _trainingKbox = null;
 	String _storageKbox = null;
 	String _lookupKbox = null;
+	String _expressionLanguage = null;
 	
 	public long getTimeStamp() {
 		return timeStamp;
@@ -230,5 +231,14 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	@Override
 	public String getLookupKbox() {
 		return _lookupKbox;
+	}
+	@Override
+	public void setExpressionLanguage(String language) {
+		_expressionLanguage = language;
+	}
+
+	@Override
+	public String getExpressionLanguage() {
+		return _expressionLanguage;
 	}
 }

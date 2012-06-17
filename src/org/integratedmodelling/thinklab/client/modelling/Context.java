@@ -154,4 +154,10 @@ public class Context extends ModelObject implements IContextDefinition {
 		return 0;
 	}
 
+	@Override
+	public IContext getParentContext() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -1,13 +1,10 @@
 package org.integratedmodelling.thinklab.client.modelling;
 
-import java.util.List;
-
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabUnsupportedOperationException;
 import org.integratedmodelling.thinklab.api.knowledge.IExpression;
 import org.integratedmodelling.thinklab.api.modelling.IAccessor;
 import org.integratedmodelling.thinklab.api.modelling.IContext;
-import org.integratedmodelling.thinklab.api.modelling.IObservation;
 import org.integratedmodelling.thinklab.api.modelling.IObserver;
 import org.integratedmodelling.thinklab.api.modelling.IScenario;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IExpressionDefinition;
@@ -63,14 +60,8 @@ public abstract class Observer extends ObservingObject implements IObserverDefin
 	}
 
 	@Override
-	public IAccessor getAccessor() {
+	public IAccessor getAccessor(IContext context) {
 		return _accessor;
-	}
-
-	@Override
-	public List<IObservation> observe(IContext context)
-			throws ThinklabException {
-		throw new ThinklabUnsupportedOperationException("models cannot be observed at the client side");
 	}
 
 	@Override
