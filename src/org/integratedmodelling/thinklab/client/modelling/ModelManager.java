@@ -17,6 +17,7 @@ import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IModel;
 import org.integratedmodelling.thinklab.api.modelling.IModelObject;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
+import org.integratedmodelling.thinklab.api.modelling.IObservation;
 import org.integratedmodelling.thinklab.api.modelling.IScenario;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
@@ -210,6 +211,13 @@ public class ModelManager implements IModelManager {
 
 	@Override
 	public Collection<INamespace> loadSourceDirectory(File sourcedir)
+			throws ThinklabException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IObservation observe(Object object, IContext context)
 			throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;

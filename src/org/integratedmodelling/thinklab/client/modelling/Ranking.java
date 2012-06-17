@@ -1,7 +1,7 @@
 package org.integratedmodelling.thinklab.client.modelling;
 
-import org.integratedmodelling.collections.Pair;
 import org.integratedmodelling.exceptions.ThinklabException;
+import org.integratedmodelling.lang.RankingScale;
 import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
 import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IState;
@@ -9,19 +9,14 @@ import org.integratedmodelling.thinklab.api.modelling.parsing.IRankingObserverDe
 
 public class Ranking extends Observer implements IRankingObserverDefinition {
 	
-	Number _from = null;
-	Number _to = null;
 	Type _type = Type.RANKING;
+	RankingScale _scale = new RankingScale();
 
 	@Override
 	public Type getType() {
 		return _type;
 	}
 
-	@Override
-	public Pair<Number, Number> getRange() {
-		return new Pair<Number, Number>(_from, _to);
-	}
 
 	@Override
 	public void setType(Type type) {
@@ -30,8 +25,7 @@ public class Ranking extends Observer implements IRankingObserverDefinition {
 
 	@Override
 	public void setScale(Number from, Number to) {
-		_from = from;
-		_to = to;
+		_scale = new RankingScale(from, to);
 	}
 
 	@Override
@@ -39,6 +33,11 @@ public class Ranking extends Observer implements IRankingObserverDefinition {
 			throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public RankingScale getScale() {
+		return _scale;
 	}
 
 }
