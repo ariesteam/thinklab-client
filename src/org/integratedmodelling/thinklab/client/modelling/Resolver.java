@@ -20,7 +20,6 @@ import org.integratedmodelling.thinklab.api.modelling.IAgentModel;
 import org.integratedmodelling.thinklab.api.modelling.ICategorizingObserver;
 import org.integratedmodelling.thinklab.api.modelling.IClassifyingObserver;
 import org.integratedmodelling.thinklab.api.modelling.IContext;
-import org.integratedmodelling.thinklab.api.modelling.IDataSource;
 import org.integratedmodelling.thinklab.api.modelling.IMeasuringObserver;
 import org.integratedmodelling.thinklab.api.modelling.IModel;
 import org.integratedmodelling.thinklab.api.modelling.IModelObject;

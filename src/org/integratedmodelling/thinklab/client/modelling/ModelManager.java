@@ -210,7 +210,7 @@ public class ModelManager implements IModelManager {
 	}
 
 	@Override
-	public Collection<INamespace> loadSourceDirectory(File sourcedir)
+	public Collection<INamespace> loadSourceDirectory(File sourcedir, IProject project)
 			throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;

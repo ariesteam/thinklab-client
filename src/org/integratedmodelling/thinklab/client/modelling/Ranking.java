@@ -5,6 +5,7 @@ import org.integratedmodelling.lang.RankingScale;
 import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
 import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IState;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IClassificationDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IRankingObserverDefinition;
 
 public class Ranking extends Observer implements IRankingObserverDefinition {
@@ -38,6 +39,13 @@ public class Ranking extends Observer implements IRankingObserverDefinition {
 	@Override
 	public RankingScale getScale() {
 		return _scale;
+	}
+
+
+	@Override
+	public void setDiscretization(IClassificationDefinition classification) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
