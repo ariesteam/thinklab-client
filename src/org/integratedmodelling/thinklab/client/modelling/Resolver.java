@@ -336,4 +336,23 @@ public class Resolver implements IResolver {
 		}
 		return null;
 	}
+
+	@Override
+	public IModelObject getLastProcessedObject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isInteractive() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void handleObserveStatement(Object observable, INamespace ns,  IContext ctx, boolean resetContext) 
+			throws ThinklabException {
+		// TODO Auto-generated method stub
+		
+	}
 }
