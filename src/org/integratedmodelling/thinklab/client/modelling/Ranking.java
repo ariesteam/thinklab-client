@@ -10,17 +10,17 @@ import org.integratedmodelling.thinklab.api.modelling.parsing.IRankingObserverDe
 
 public class Ranking extends Observer implements IRankingObserverDefinition {
 	
-	Type _type = Type.RANKING;
+	int _type = RANKING;
 	RankingScale _scale = new RankingScale();
 
 	@Override
-	public Type getType() {
+	public int getType() {
 		return _type;
 	}
 
 
 	@Override
-	public void setType(Type type) {
+	public void setType(int type) {
 		_type = type;
 	}
 

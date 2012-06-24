@@ -11,6 +11,7 @@ import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IExtent;
 import org.integratedmodelling.thinklab.api.modelling.IObservation;
 import org.integratedmodelling.thinklab.api.modelling.IState;
+import org.integratedmodelling.thinklab.api.modelling.ITopologicallyComparable;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IContextDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IModelDefinition;
@@ -158,6 +159,19 @@ public class Context extends ModelObject implements IContextDefinition {
 	public IContext getParentContext() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	@Override
+	public double getCoverage(int extent) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double cover(ITopologicallyComparable<?>[] context) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

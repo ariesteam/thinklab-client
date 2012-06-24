@@ -120,4 +120,10 @@ public class Metadata extends LanguageElement implements IMetadataDefinition {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Collection<Object> getValues() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
