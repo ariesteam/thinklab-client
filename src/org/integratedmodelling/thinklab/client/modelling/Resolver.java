@@ -355,4 +355,10 @@ public class Resolver implements IResolver {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public IResolver getImportResolver() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
