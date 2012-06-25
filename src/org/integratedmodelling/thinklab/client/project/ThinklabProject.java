@@ -188,7 +188,7 @@ public class ThinklabProject implements IProject {
 	public boolean exists() {
 		File f = 
 			new File(Configuration.getProjectDirectory() + 
-					File.separator + _id + File.separator + "META-INF");
+					File.separator + _id + File.separator + "META-INF" + File.separator + "thinklab.properties");
 		
 		return f.exists();
 	}
@@ -196,7 +196,7 @@ public class ThinklabProject implements IProject {
 	public static boolean exists(File dir) {
 		
 		File f = 
-			new File(dir + File.separator + "META-INF");
+			new File(dir + File.separator + "META-INF" + File.separator + "thinklab.properties");
 		return f.exists();
 	}
 	

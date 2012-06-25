@@ -2,7 +2,7 @@ package org.integratedmodelling.thinklab.client.modelling;
 
 import java.io.PrintStream;
 
-import org.integratedmodelling.thinklab.api.knowledge.IConcept;
+import org.integratedmodelling.lang.SemanticType;
 import org.integratedmodelling.thinklab.api.metadata.IMetadata;
 import org.integratedmodelling.thinklab.api.modelling.IModelObject;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
@@ -12,9 +12,37 @@ import org.integratedmodelling.thinklab.api.modelling.parsing.INamespaceDefiniti
 
 public class ModelObject extends LanguageElement implements IModelObject, IModelObjectDefinition {
 	
+	
 	String     _id;
+	String _namespaceId;
+		
+	/*
+	 * no @Property
+	 * store without namespace to avoid chain effect of trying to store the whole thing
+	 * for each stored object. We only store the namespace ID to be able to retrieve
+	 * objects by namespace.
+	 */
 	INamespace _namespace;
-	IMetadata  _metadata;
+	
+	/*
+	 * no @Property
+	 * don't store metadata as our Kbox implementation floats them to the
+	 * top object level for easier searching.
+	 */
+	IMetadata  _metadata = new Metadata();
+	
+	/**
+	 * This is called after the model object is defined. If it returns anything other than
+	 * null, the metadata are merged with the object's and the object is stored in the 
+	 * thinklab kbox for the namespace, so that it can be found by queries and used to
+	 * resolve dependencies.
+	 * 
+	 * @return
+	 */
+	public IMetadata getStorageMetadata() {
+		return null;
+	}
+	
 	
 	@Override
 	public void dump(PrintStream out) {
@@ -55,6 +83,14 @@ public class ModelObject extends LanguageElement implements IModelObject, IModel
 
 	@Override
 	public void setId(String id) {
-		_id = id;
+		
+		if (SemanticType.validate(id)) {
+			SemanticType st = new SemanticType(id);
+			_namespace = ModelManager.get().getNamespace(st.getConceptSpace());
+			_id = st.getLocalName();
+		} else {
+			_id = id;
+		}
 	}
+
 }

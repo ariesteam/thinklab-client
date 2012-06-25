@@ -51,6 +51,8 @@ public class ProjectFactory  {
 
 			if (ThinklabProject.exists(f)) {
 					
+				System.out.println("loading Thinklab project from " + f);
+				
 				try {
 					ThinklabProject proj = new ThinklabProject(f);
 
@@ -84,6 +86,9 @@ public class ProjectFactory  {
 	
 	public IProject createProject(String arg0) throws ThinklabException {
 		IProject ret = ThinklabProject.create(arg0);
+		/*
+		 * FIXME need to force initialization (won't do anything since _initialized is true)
+		 */
 		loadProjects();
 		return ret;	
 	}

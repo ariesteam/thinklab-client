@@ -358,7 +358,6 @@ public class Resolver implements IResolver {
 
 	@Override
 	public IResolver getImportResolver() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Resolver(project);
 	}
 }
