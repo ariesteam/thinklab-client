@@ -1,29 +1,19 @@
 package org.integratedmodelling.thinklab.client.knowledge;
 
 import java.util.Collection;
-import java.util.Set;
 
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
 import org.integratedmodelling.thinklab.api.knowledge.IKnowledge;
 import org.integratedmodelling.thinklab.api.knowledge.IOntology;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
-import org.integratedmodelling.thinklab.api.knowledge.query.IQuery;
 
-/**
- * Just a proxy for a concept, can be used to create concepts that are automatically inserted in the
- * proxy knowledge manager. Ontologies can be extracted as lists and marshalled to a server for
- * actual knowledge creation.
- * 
- * @author Ferd
- *
- */
-public class Concept implements IConcept {
+public class Property implements IProperty {
 
 	String _id;
 	String _cs;
 	
-	public Concept(String cs, String id) {
+	public Property(String cs, String id) {
 		this._cs = cs;
 		this._id = id;
 	}
@@ -37,6 +27,7 @@ public class Concept implements IConcept {
 	public String getLocalName() {
 		return _id;
 	}
+
 
 	@Override
 	public boolean is(IKnowledge concept) {
@@ -53,6 +44,7 @@ public class Concept implements IConcept {
 	@Override
 	public void addAnnotation(String property, String value) {
 		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -122,38 +114,43 @@ public class Concept implements IConcept {
 	}
 
 	@Override
-	public Collection<IConcept> getParents() {
+	public boolean isClassification() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isLiteralProperty() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isObjectProperty() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isAnnotation() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public IProperty getInverseProperty() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Collection<IConcept> getAllParents() {
+	public Collection<IConcept> getRange() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Collection<IConcept> getChildren() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<IProperty> getProperties() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<IProperty> getAllProperties() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<IConcept> getPropertyRange(IProperty property)
-			throws ThinklabException {
+	public Collection<IConcept> getDomain() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -165,51 +162,39 @@ public class Concept implements IConcept {
 	}
 
 	@Override
-	public IConcept getParent() throws ThinklabException {
+	public IProperty getParent() throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public int getPropertiesCount(String property) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMinCardinality(IProperty property) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxCardinality(IProperty property) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public Collection<IProperty> getAnnotationProperties() {
+	public Collection<IProperty> getParents() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IConcept getLeastGeneralCommonConcept(IConcept c) {
+	public Collection<IProperty> getAllParents() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IQuery getDefinition() {
+	public Collection<IProperty> getChildren() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Set<IConcept> getSemanticClosure() {
+	public Collection<IProperty> getAllChildren() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean isFunctional() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

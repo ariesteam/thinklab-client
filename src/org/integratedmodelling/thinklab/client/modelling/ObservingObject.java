@@ -3,16 +3,16 @@ package org.integratedmodelling.thinklab.client.modelling;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.integratedmodelling.collections.Triple;
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabRuntimeException;
+import org.integratedmodelling.thinklab.api.knowledge.IProperty;
 import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
 import org.integratedmodelling.thinklab.api.lang.IList;
-import org.integratedmodelling.thinklab.api.modelling.IModel;
 import org.integratedmodelling.thinklab.api.modelling.IObservingObject;
-import org.integratedmodelling.thinklab.api.modelling.parsing.IModelDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IObservingObjectDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IPropertyDefinition;
 import org.integratedmodelling.thinklab.client.knowledge.KnowledgeManager;
+import org.integratedmodelling.thinklab.client.knowledge.Property;
 
 /**
  * Models and Observers. They both have observables, which are complicated enough to handle
@@ -23,9 +23,45 @@ import org.integratedmodelling.thinklab.client.knowledge.KnowledgeManager;
  */
 public abstract class ObservingObject extends ModelObject implements IObservingObject, IObservingObjectDefinition {
 	
-	ArrayList<Triple<Object, String, Boolean>> _dependencies = 
-			new ArrayList<Triple<Object,String, Boolean>>();
+	public static class Dependency implements IDependency {
+
+		private Object _cmodel;
+		private String _formalName;
+		private IProperty _property;
+		private boolean _optional;
+
+		Dependency() {}
+		
+		Dependency(Object cmodel, String formalName, IProperty property, boolean required) {
+			this._cmodel = cmodel;
+			this._formalName = formalName;
+			this._property = property;
+			this._optional = required;
+		}
+		
+		@Override
+		public Object getObservable() {
+			return _cmodel;
+		}
+
+		@Override
+		public String getFormalName() {
+			return _formalName;
+		}
+
+		@Override
+		public boolean isOptional() {
+			return _optional;
+		}
+
+		@Override
+		public IProperty getProperty() {
+			return _property;
+		}
+		
+	}
 	
+	ArrayList<IDependency> _dependencies = new ArrayList<IDependency>();
 	ArrayList<ISemanticObject<?>> _observables = new ArrayList<ISemanticObject<?>>();
 
 	String _observableCName;
@@ -40,8 +76,6 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 		}
 	}
 	
-	
-	
 	@Override
 	public String getObservableConceptName() {
 		return _observableCName;
@@ -49,12 +83,12 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 
 
 	@Override
-	public void addDependency(Object cmodel, String formalName, boolean required) {
-		_dependencies.add(new Triple<Object, String, Boolean>(cmodel, formalName, required));
+	public void addDependency(Object cmodel, String formalName, IPropertyDefinition property, boolean optional) {
+		_dependencies.add(new Dependency(cmodel, formalName, new Property(property.getNamespace().getId(), property.getId()), optional));
 	}
 
 	@Override
-	public List<Triple<Object, String, Boolean>> getDependencies() {
+	public List<IDependency> getDependencies() {
 		return _dependencies;
 	}
 	
