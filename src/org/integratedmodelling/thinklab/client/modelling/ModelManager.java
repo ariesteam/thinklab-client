@@ -146,11 +146,14 @@ public class ModelManager implements IModelManager {
 		}
 		
 		ret = (Namespace) parser.parse(file, createResolver(project));
-		ret.setProject(project);
-		ret.setResourceUrl(file);
-		ret.synchronizeKnowledge();
-
-		namespaces.put(ret.getId(), ret);
+		
+		if (ret != null) {
+		
+			ret.setProject(project);
+			ret.setResourceUrl(file);
+			ret.synchronizeKnowledge();
+			namespaces.put(ret.getId(), ret);
+		}
 		
 		return ret;
 	}

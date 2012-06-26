@@ -413,7 +413,8 @@ public class ThinklabProject implements IProject {
 			INamespace ns;
 			try {
 				ns = ModelManager.get().loadFile(f.toString(), pth, this);
-				ret.add(ns);
+				if (ns != null) 
+					ret.add(ns);
 			} catch (ThinklabException e) {
 				_namespacesInError ++;
 				_resourcesInError.add(f);
