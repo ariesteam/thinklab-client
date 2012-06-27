@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.UUID;
 
 import org.integratedmodelling.exceptions.ThinklabException;
@@ -33,6 +34,7 @@ import org.integratedmodelling.thinklab.api.modelling.IValuingObserver;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IConceptDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.ILanguageDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IModelObjectDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IPropertyDefinition;
 import org.integratedmodelling.thinklab.api.plugin.IThinklabPlugin;
 import org.integratedmodelling.thinklab.api.project.IProject;
@@ -41,6 +43,8 @@ import org.integratedmodelling.thinklab.client.project.ThinklabProject;
 public class Resolver implements IResolver {
 	
 	ThinklabProject project;
+	
+	HashSet<String> _defined = new HashSet<String>();
 
 	public Resolver(IProject project) {
 		this.project = (ThinklabProject)project;
@@ -211,8 +215,7 @@ public class Resolver implements IResolver {
 
 	@Override
 	public void onNamespaceDeclared(String namespaceId, INamespace namespace) {
-		// TODO Auto-generated method stub
-		
+		_defined.add(namespaceId);
 	}
 
 	@Override
@@ -358,6 +361,19 @@ public class Resolver implements IResolver {
 
 	@Override
 	public IResolver getImportResolver() {
-		return new Resolver(project);
+		Resolver ret = new Resolver(project);
+		ret._defined = _defined;
+		return ret;
+	}
+
+	@Override
+	public boolean isNamespaceDefined(String id) {
+		return _defined.contains(id);
+	}
+
+	@Override
+	public IModelObjectDefinition resolveModelObject(String ns, String object) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
