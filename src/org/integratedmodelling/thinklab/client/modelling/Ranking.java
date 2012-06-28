@@ -3,9 +3,9 @@ package org.integratedmodelling.thinklab.client.modelling;
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.lang.RankingScale;
 import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
+import org.integratedmodelling.thinklab.api.modelling.IClassification;
 import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IState;
-import org.integratedmodelling.thinklab.api.modelling.parsing.IClassificationDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IRankingObserverDefinition;
 
 public class Ranking extends Observer implements IRankingObserverDefinition {
@@ -43,7 +43,7 @@ public class Ranking extends Observer implements IRankingObserverDefinition {
 
 
 	@Override
-	public void setDiscretization(IClassificationDefinition classification) {
+	public void setDiscretization(IClassification classification) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -2,10 +2,10 @@ package org.integratedmodelling.thinklab.client.modelling;
 
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
+import org.integratedmodelling.thinklab.api.modelling.IClassification;
 import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IState;
 import org.integratedmodelling.thinklab.api.modelling.IUnit;
-import org.integratedmodelling.thinklab.api.modelling.parsing.IClassificationDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IMeasuringObserverDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IUnitDefinition;
 
@@ -34,7 +34,7 @@ public class Measurement extends Observer implements IMeasuringObserverDefinitio
 	}
 
 	@Override
-	public void setDiscretization(IClassificationDefinition classification) {
+	public void setDiscretization(IClassification classification) {
 		// TODO Auto-generated method stub
 		
 	}
