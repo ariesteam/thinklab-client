@@ -31,6 +31,7 @@ import org.integratedmodelling.thinklab.api.modelling.IScenario;
 import org.integratedmodelling.thinklab.api.modelling.IStoryline;
 import org.integratedmodelling.thinklab.api.modelling.IUnit;
 import org.integratedmodelling.thinklab.api.modelling.IValuingObserver;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IClassificationDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IConceptDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.ILanguageDefinition;
@@ -311,6 +312,8 @@ public class Resolver implements IResolver {
 			return new Metadata();
 		} else if (cls.equals(IFunctionDefinition.class)) {
 			return new FunctionDefinition();
+		}  else if (cls.equals(IClassificationDefinition.class)) {
+			return new ClassificationDefinition();
 		}
 		
 		return null;
