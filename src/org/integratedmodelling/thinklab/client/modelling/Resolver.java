@@ -12,6 +12,7 @@ import java.util.UUID;
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabIOException;
 import org.integratedmodelling.exceptions.ThinklabResourceNotFoundException;
+import org.integratedmodelling.lang.SemanticType;
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
 import org.integratedmodelling.thinklab.api.knowledge.IExpression;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
@@ -52,8 +53,7 @@ public class Resolver implements IResolver {
 	}
 	
 	@Override
-	public boolean onException(Throwable e, int lineNumber)
-			throws ThinklabException {
+	public boolean onException(Throwable e, int lineNumber) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -71,8 +71,7 @@ public class Resolver implements IResolver {
 	}
 
 	@Override
-	public InputStream resolveNamespace(String namespace, String reference)
-			throws ThinklabException {
+	public InputStream resolveNamespace(String namespace, String reference) {
 		
 		/*
 		 * TODO
@@ -111,7 +110,7 @@ public class Resolver implements IResolver {
 					return url.openStream();
 				}
 			} catch (Exception e) {
-				throw new ThinklabIOException(e);
+				onException( new ThinklabIOException(e), 0 );
 			}
 			
 			/*
@@ -130,7 +129,7 @@ public class Resolver implements IResolver {
 						try {
 							return new FileInputStream(f);
 						} catch (FileNotFoundException e) {
-							throw new ThinklabIOException(e);
+							onException( new ThinklabIOException(e), 0 );	
 						}
 					}
 				}
@@ -151,7 +150,7 @@ public class Resolver implements IResolver {
 					try {
 						return new FileInputStream(f);
 					} catch (FileNotFoundException e) {
-						throw new ThinklabIOException(e);
+						onException( new ThinklabIOException(e), 0 );
 					}
 				}
 			}
@@ -170,7 +169,7 @@ public class Resolver implements IResolver {
 				try {
 					return new FileInputStream(f);
 				} catch (FileNotFoundException e) {
-					throw new ThinklabIOException(e);
+					onException( new ThinklabIOException(e), 0 );
 				}
 			}
 			
@@ -190,7 +189,7 @@ public class Resolver implements IResolver {
 						try {
 							return new FileInputStream(f);
 						} catch (FileNotFoundException e) {
-							throw new ThinklabIOException(e);
+							onException( new ThinklabIOException(e), 0 );
 						}
 					}
 				}
@@ -210,7 +209,9 @@ public class Resolver implements IResolver {
 		else 
 			message = "cannot read namespace " + namespace + " from resource " + reference;
 
-		throw new ThinklabResourceNotFoundException(message);
+		onException (new ThinklabResourceNotFoundException(message), 0);
+		
+		return null;
 		
 	}
 
@@ -227,14 +228,14 @@ public class Resolver implements IResolver {
 
 	@Override
 	public void validateNamespaceForResource(String resource,
-			String namespace) throws ThinklabException {
+			String namespace)  {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public IConceptDefinition resolveExternalConcept(String id, INamespace namespace, int line)
-			throws ThinklabException {
+			 {
 		
 		ConceptObject ret = new ConceptObject();
 //		ret.setId(id);
@@ -248,10 +249,21 @@ public class Resolver implements IResolver {
 	
 	@Override
 	public IPropertyDefinition resolveExternalProperty(String id, INamespace namespace, int line)
-			throws ThinklabException {
+			 {
+		
+		/*
+		 * TODO - check this. We basically create a new namespace per unseen property, not 
+		 * a great strategy really. Only to prevent null pointer exceptions so far.
+		 * 
+		 * These unresolved namespaces should be accepted in the client but kept 
+		 * tidy in the projects as "knowledge dependencies" and checked with each client that is 
+		 * connected before accepting the connection.
+		 */
 		
 		PropertyObject ret = new PropertyObject();
-		ret.setId(id);
+		SemanticType st = new SemanticType(id);
+		ret.setId(st.getLocalName());
+		ret.setNamespace(new Namespace(st.getLocalName()));
 		
 		/*
 		 * TODO discuss import with knowledge manager. Should have been seen before.
@@ -357,7 +369,7 @@ public class Resolver implements IResolver {
 
 	@Override
 	public void handleObserveStatement(Object observable, INamespace ns,  IContext ctx, boolean resetContext) 
-			throws ThinklabException {
+			 {
 		// TODO Auto-generated method stub
 		
 	}

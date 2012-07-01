@@ -10,6 +10,7 @@ import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.thinklab.api.knowledge.IOntology;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.Configuration;
+import org.integratedmodelling.thinklab.client.modelling.ModelManager;
 
 /**
  * TODO clean up and merge with project manager
@@ -52,6 +53,7 @@ public class ProjectFactory  {
 			if (ThinklabProject.exists(f)) {
 					
 				System.out.println("loading Thinklab project from " + f);
+				
 				
 				try {
 					ThinklabProject proj = new ThinklabProject(f);

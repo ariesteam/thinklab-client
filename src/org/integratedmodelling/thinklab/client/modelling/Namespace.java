@@ -40,6 +40,10 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	String _lookupKbox = null;
 	String _expressionLanguage = null;
 	
+	
+	public Namespace() {}
+	public Namespace(String id) { setId(id); }
+	
 	public long getTimeStamp() {
 		return timeStamp;
 	}

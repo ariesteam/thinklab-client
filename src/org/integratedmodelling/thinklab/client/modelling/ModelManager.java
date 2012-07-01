@@ -226,4 +226,10 @@ public class ModelManager implements IModelManager {
 		return null;
 	}
 
+	public void notifySourceDirectory(File sourceDirectory) {
+		for (IModelParser parser : interpreters.values()) {
+			parser.notifyImportDirectory(sourceDirectory);
+		}
+	}
+
 }
