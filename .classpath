@@ -22,5 +22,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/org.apache.httpmime.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/org.apache.james.mime4j.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/thinklab-api"/>
+	<classpathentry kind="lib" path="lib/owlapi-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

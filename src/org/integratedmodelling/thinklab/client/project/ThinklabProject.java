@@ -374,12 +374,7 @@ public class ThinklabProject implements IProject {
 		
 		namespaces = new ArrayList<INamespace>();
 		HashSet<File> read = new HashSet<File>();
-			
-		ModelManager.get().notifySourceDirectory(this.getSourceDirectory());
-
-		
 		loadInternal(this.getSourceDirectory(), read, namespaces, "", this);
-		
 	}
 
 	private void loadDependencies() throws ThinklabClientException {

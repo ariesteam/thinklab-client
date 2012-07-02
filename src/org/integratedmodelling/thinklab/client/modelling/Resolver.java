@@ -40,15 +40,21 @@ import org.integratedmodelling.thinklab.api.modelling.parsing.IModelObjectDefini
 import org.integratedmodelling.thinklab.api.modelling.parsing.IPropertyDefinition;
 import org.integratedmodelling.thinklab.api.plugin.IThinklabPlugin;
 import org.integratedmodelling.thinklab.api.project.IProject;
+import org.integratedmodelling.thinklab.api.runtime.IServer;
 import org.integratedmodelling.thinklab.client.project.ThinklabProject;
 
 public class Resolver implements IResolver {
 	
 	ThinklabProject project;
 	
+	/*
+	 * TODO load knowledge from server the first time a resolver is created for it.
+	 */
+	IServer server;
+	
 	HashSet<String> _defined = new HashSet<String>();
 
-	public Resolver(IProject project) {
+	public Resolver(IServer server, IProject project) {
 		this.project = (ThinklabProject)project;
 	}
 	
@@ -376,7 +382,7 @@ public class Resolver implements IResolver {
 
 	@Override
 	public IResolver getImportResolver() {
-		Resolver ret = new Resolver(project);
+		Resolver ret = new Resolver(server, project);
 		ret._defined = _defined;
 		return ret;
 	}
