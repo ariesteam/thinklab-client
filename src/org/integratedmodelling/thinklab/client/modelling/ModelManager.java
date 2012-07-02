@@ -92,7 +92,7 @@ public class ModelManager implements IModelManager {
 	 * @return
 	 */
 	public Resolver createResolver(IProject project) {
-		return new Resolver(project);
+		return new Resolver(null, project);
 	}
 
 	@Override
