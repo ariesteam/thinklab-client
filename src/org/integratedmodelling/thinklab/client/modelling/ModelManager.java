@@ -34,7 +34,7 @@ public class ModelManager implements IModelManager {
 	private static ModelManager _this = null;
 	
 	HashMap<String, IModelParser> interpreters = new HashMap<String, IModelParser>();
-	HashMap<String, INamespace> namespaces = new HashMap<String, INamespace>();
+	HashMap<String, INamespace> namespacesById = new HashMap<String, INamespace>();
 	
 	public static ModelManager get() {
 		if (_this == null) {
@@ -97,14 +97,14 @@ public class ModelManager implements IModelManager {
 
 	@Override
 	public INamespace getNamespace(String arg0) {
-		return namespaces.get(arg0);
+		return namespacesById.get(arg0);
 	}
 
 	@Override
 	public Collection<INamespace> getNamespaces() {
 
 		ArrayList<INamespace> ret = new ArrayList<INamespace>();
-		for (INamespace n : namespaces.values()) {
+		for (INamespace n : namespacesById.values()) {
 			ret.add(n);
 		}
 		
@@ -152,7 +152,7 @@ public class ModelManager implements IModelManager {
 			ret.setProject(project);
 			ret.setResourceUrl(file);
 			ret.synchronizeKnowledge();
-			namespaces.put(ret.getId(), ret);
+			namespacesById.put(ret.getId(), ret);
 		}
 		
 		return ret;
@@ -193,7 +193,7 @@ public class ModelManager implements IModelManager {
 		if (ret != null) {
 			ret.setId(namespaceId);
 			ret.synchronizeKnowledge();
-			namespaces.put(ret.getId(), ret);
+			namespacesById.put(ret.getId(), ret);
 		}
 		
 		return ret;
