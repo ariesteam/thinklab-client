@@ -54,26 +54,33 @@ public class Resolver implements IResolver {
 	
 	HashSet<String> _defined = new HashSet<String>();
 
+	private INamespace _currentNs;
+
 	public Resolver(IServer server, IProject project) {
 		this.project = (ThinklabProject)project;
 	}
 	
 	@Override
 	public boolean onException(Throwable e, int lineNumber) {
-		// TODO Auto-generated method stub
-		return false;
+
+		if (_currentNs != null) {
+			((Namespace)_currentNs).addError(e.getMessage(), lineNumber);
+		}
+		return true;
 	}
 
 	@Override
 	public boolean onWarning(String warning, int lineNumber) {
-		// TODO Auto-generated method stub
-		return false;
+		if (_currentNs != null) {
+			((Namespace)_currentNs).addWarning(warning, lineNumber);
+		}
+		return true;
 	}
 
 	@Override
 	public boolean onInfo(String info, int lineNumber) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
@@ -224,12 +231,14 @@ public class Resolver implements IResolver {
 	@Override
 	public void onNamespaceDeclared(String namespaceId, INamespace namespace) {
 		_defined.add(namespaceId);
+		_currentNs = namespace;
 	}
 
 	@Override
 	public void onNamespaceDefined(INamespace namespace) {
-
-	
+		if (((Namespace)namespace).hasErrors()) {
+			System.out.println("coccodio");
+		}
 	}
 
 	@Override

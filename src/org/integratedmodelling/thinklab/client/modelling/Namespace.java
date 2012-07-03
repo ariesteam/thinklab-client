@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import org.integratedmodelling.collections.Pair;
 import org.integratedmodelling.thinklab.api.knowledge.IAxiom;
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
@@ -31,6 +32,9 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	ArrayList<IModelObject> _knowledge = new ArrayList<IModelObject>();
 	public HashSet<String> _names = new HashSet<String>();
 	
+	ArrayList<Pair<String, Integer>> _errors = new ArrayList<Pair<String,Integer>>();
+	ArrayList<Pair<String, Integer>> _warnings = new ArrayList<Pair<String,Integer>>();
+	
 	String _id;
 	long timeStamp;
 	IProject project;
@@ -39,7 +43,6 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	String _storageKbox = null;
 	String _lookupKbox = null;
 	String _expressionLanguage = null;
-	
 	
 	public Namespace() {}
 	public Namespace(String id) { setId(id); }
@@ -135,7 +138,6 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 		}
 		return null;
 	}
-	
 	
 	public IProject getProject() {
 		return project;
@@ -244,5 +246,17 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	@Override
 	public String getExpressionLanguage() {
 		return _expressionLanguage;
+	}
+	
+	public void addError(String error, int lineNumber) {
+		_errors.add(new Pair<String, Integer>(error, lineNumber));
+	}
+	
+	public boolean hasErrors() {
+		return _errors.size() > 0;
+	}
+	
+	public void addWarning(String warning, int lineNumber) {	
+		_warnings.add(new Pair<String, Integer>(warning, lineNumber));
 	}
 }

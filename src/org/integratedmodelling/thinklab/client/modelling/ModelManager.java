@@ -147,7 +147,7 @@ public class ModelManager implements IModelManager {
 		
 		ret = (Namespace) parser.parse(file, createResolver(project));
 		
-		if (ret != null) {
+		if (ret != null && !((Namespace)(ret)).hasErrors()) {
 		
 			ret.setProject(project);
 			ret.setResourceUrl(file);
