@@ -1,14 +1,15 @@
 package org.integratedmodelling.thinklab.client.servers;
 
 import java.io.File;
-import java.util.List;
 
-import org.integratedmodelling.thinklab.api.lang.IPrototype;
-import org.integratedmodelling.thinklab.api.metadata.IMetadata;
-import org.integratedmodelling.thinklab.api.project.IProject;
-import org.integratedmodelling.thinklab.api.runtime.IServer;
-import org.integratedmodelling.thinklab.client.modelling.Metadata;
-import org.integratedmodelling.thinklab.client.utils.JVMLauncher;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteException;
+import org.apache.commons.exec.ExecuteResultHandler;
+import org.apache.commons.exec.ExecuteWatchdog;
+import org.integratedmodelling.exceptions.ThinklabRuntimeException;
+import org.integratedmodelling.thinklab.client.Session;
+import org.integratedmodelling.thinklab.client.utils.NetUtilities;
 
 /**
  * Boots a server on the local machine and gives specialized access to it 
@@ -17,110 +18,99 @@ import org.integratedmodelling.thinklab.client.utils.JVMLauncher;
  * @author Ferd
  *
  */
-public class EmbeddedServer implements IServer {
+public class EmbeddedServer extends RESTServer {
 
-	JVMLauncher _jvm = new JVMLauncher();
-	Metadata _metadata = new Metadata();
+	String   _instDir;
+	Session  _session;
+	boolean _running = false;
+	CResult _err = null;
+	private ExecuteWatchdog _watchdog;
 	
-	@Override
-	public IMetadata getMetadata() {
-		return _metadata;
-	}
-
-	@Override
-	public Result executeStatement(String s) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Result executeCommand(String command) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public long executeStatementAsynchronous(String s) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public long executeCommandAsynchronous(String command) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getStatus(long handle) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public Result getTaskResult(long handle, boolean dispose) {
-		// TODO Auto-generated method stub
-		return null;
+	private static final String LOCAL_URL = "http://127.0.0.1/8182/rest";
+	
+	/*
+	 * default timeout 30s until we decide that the server didn't start up properly.
+	 */
+	private static final long TIMEOUT = 30000;
+	
+	public EmbeddedServer() {
+		super(LOCAL_URL, null, null);
+		_instDir = System.getenv("THINKLAB_HOME");
+		if (_instDir == null)
+			throw new ThinklabRuntimeException("THINKLAB_HOME not defined: cannot establish a path to Thinklab");
 	}
 
 	@Override
 	public Result boot() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		/*
+		 * see if a server was started before we boot.
+		 */
+		if (!NetUtilities.portAvailable(8182)) {
+			return OK_RESULT;
+		}
+		
+		/*
+		 * start it with the script and wait until port becomes available.
+		 */
+		String line = "run-server.bat";
+		CommandLine cmdLine = CommandLine.parse(line);
+		DefaultExecutor executor = new DefaultExecutor();
+		executor.setWorkingDirectory(new File(_instDir));
+		try {
+			executor.execute(cmdLine, new ExecuteResultHandler() {
+				
+				@Override
+				public void onProcessFailed(ExecuteException arg0) {
+					_running = false;
+					_err = error(arg0);
+				}
+				
+				@Override
+				public void onProcessComplete(int arg0) {
+					_running = false;
+				}
+			});
+		} catch (Exception e) {
+			return error(e);
+		}
+		
+		_watchdog = executor.getWatchdog();
+
+		long timeout = 0;
+		do {
+			try {
+				Thread.sleep(500);
+				timeout += 500;
+			} catch (InterruptedException e) {
+			}
+		} while (NetUtilities.portAvailable(8182) || timeout > TIMEOUT);
+		
+		if (NetUtilities.portAvailable(8182)) {
+			_watchdog = null;
+			_running = false;
+			return error(null);
+		}
+		
+		return OK_RESULT;
 	}
 
 	@Override
 	public Result shutdown() {
-		// TODO Auto-generated method stub
-		return null;
+
+		if (_watchdog != null && _running) {
+			_watchdog.destroyProcess();
+		}
+		_running = false;
+		
+		return OK_RESULT;
 	}
 
 	@Override
 	public boolean isActive() {
-		// TODO Auto-generated method stub
+		// TODO
 		return false;
 	}
 
-	@Override
-	public Result authenticate(Object... authInfo) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public Result deploy(IProject p) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Result undeploy(IProject p) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<IPrototype> getFunctionPrototypes() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<IPrototype> getCommandPrototypes() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<String> getSupportedLanguages() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Result exportCoreKnowledge(File file) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }
