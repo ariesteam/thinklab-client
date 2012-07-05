@@ -7,6 +7,7 @@ import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.ExecuteResultHandler;
 import org.apache.commons.exec.ExecuteWatchdog;
+import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabRuntimeException;
 import org.integratedmodelling.thinklab.client.Session;
 import org.integratedmodelling.thinklab.client.utils.NetUtilities;
@@ -29,9 +30,9 @@ public class EmbeddedServer extends RESTServer {
 	private static final String LOCAL_URL = "http://127.0.0.1/8182/rest";
 	
 	/*
-	 * default timeout 30s until we decide that the server didn't start up properly.
+	 * default timeout 1min until we decide that the server didn't start up properly.
 	 */
-	private static final long TIMEOUT = 30000;
+	private static final long TIMEOUT = 60000;
 	
 	public EmbeddedServer() {
 		super(LOCAL_URL, null, null);
@@ -44,7 +45,9 @@ public class EmbeddedServer extends RESTServer {
 	public Result boot() {
 		
 		/*
-		 * see if a server was started before we boot.
+		 * see if a server was started before we boot. CHECK - we
+		 * should check that it's actually a thinklab server on the
+		 * port, although that may be overkill at this point.
 		 */
 		if (!NetUtilities.portAvailable(8182)) {
 			return OK_RESULT;
@@ -53,11 +56,12 @@ public class EmbeddedServer extends RESTServer {
 		/*
 		 * start it with the script and wait until port becomes available.
 		 */
-		String line = "run-server.bat";
+		String line = _instDir + File.separator + "run-server.bat";
 		CommandLine cmdLine = CommandLine.parse(line);
 		DefaultExecutor executor = new DefaultExecutor();
 		executor.setWorkingDirectory(new File(_instDir));
 		try {
+			_running = true;
 			executor.execute(cmdLine, new ExecuteResultHandler() {
 				
 				@Override
@@ -75,8 +79,21 @@ public class EmbeddedServer extends RESTServer {
 			return error(e);
 		}
 		
+		if (!_running) {
+			/*
+			 * failed
+			 */
+			return 
+				_err == null ? 
+					error(new ThinklabException("launch of embedded Thinklab server failed")) :
+					_err;
+		}
+		
 		_watchdog = executor.getWatchdog();
 
+		/*
+		 * wait until server is active before giving control to client
+		 */
 		long timeout = 0;
 		do {
 			try {
@@ -84,7 +101,7 @@ public class EmbeddedServer extends RESTServer {
 				timeout += 500;
 			} catch (InterruptedException e) {
 			}
-		} while (NetUtilities.portAvailable(8182) || timeout > TIMEOUT);
+		} while (NetUtilities.portAvailable(8182) && timeout < TIMEOUT);
 		
 		if (NetUtilities.portAvailable(8182)) {
 			_watchdog = null;

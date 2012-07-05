@@ -25,7 +25,7 @@ public class RESTServer implements IServer {
 	protected ArrayList<IPrototype> _functions;
 	protected ArrayList<IPrototype> _commands;
 	
-	RESTServer(String url, String user, String password) {
+	public RESTServer(String url, String user, String password) {
 		_url = url;
 		_user = user;
 		_password = password;
