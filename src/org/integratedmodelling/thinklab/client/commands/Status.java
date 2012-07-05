@@ -2,6 +2,7 @@ package org.integratedmodelling.thinklab.client.commands;
 
 import java.util.Date;
 
+import org.integratedmodelling.thinklab.api.runtime.IServer;
 import org.integratedmodelling.thinklab.client.RemoteCommandHandler;
 import org.integratedmodelling.thinklab.client.Result;
 import org.integratedmodelling.thinklab.client.Session;
@@ -62,7 +63,7 @@ public class Status extends RemoteCommandHandler {
 			 */
 			 Result rlog = session.send("log", false, "lines", args.getLog()+"");
 			 
-			 if (rlog.getStatus() == Result.OK) {
+			 if (rlog.getStatus() == IServer.OK) {
 				 cl.say(rlog.getResult().toString());
 			 }
 			 

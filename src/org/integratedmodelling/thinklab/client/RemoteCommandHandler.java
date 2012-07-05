@@ -3,6 +3,7 @@ package org.integratedmodelling.thinklab.client;
 import java.io.File;
 
 import org.integratedmodelling.collections.Pair;
+import org.integratedmodelling.thinklab.api.runtime.IServer;
 import org.integratedmodelling.thinklab.client.Session.RemoteCommand;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.shell.CommandLine;
@@ -145,7 +146,7 @@ public abstract class RemoteCommandHandler extends CommandHandler {
 		/*
 		 * postprocess result; if anything needs to be downloaded, download
 		 */
-		if (result.getStatus() == Result.OK) {
+		if (result.getStatus() == IServer.OK) {
 			
 			for (Pair<String,String> df : result.getDownloads()) {
 				cl.append("downloading file " + df.getFirst() + "... ");

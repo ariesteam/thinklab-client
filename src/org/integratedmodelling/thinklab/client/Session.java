@@ -20,6 +20,7 @@ import org.integratedmodelling.collections.Triple;
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
 import org.integratedmodelling.thinklab.api.plugin.IThinklabPlugin;
+import org.integratedmodelling.thinklab.api.runtime.IServer;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.listeners.ProgressListener;
 import org.integratedmodelling.thinklab.client.modelling.ModelManager;
@@ -128,7 +129,7 @@ public class Session {
 		new HashMap<String, Session.RemoteCommand>();
 	private ThinklabProject _currentProject;
 	
-	private void initialize() throws ThinklabClientException {
+	private Result initialize() throws ThinklabClientException {
 	
 		/*
 		 * send ping, disconnect if offline
@@ -139,6 +140,8 @@ public class Session {
 		 * get capabilities, store in session
 		 */
 		scanCommands();
+		
+		return rs;
 	}
 	
 	public void connect(String url, String name, String user, String password) throws ThinklabClientException {
@@ -156,7 +159,7 @@ public class Session {
 				send("auth", false) :
 				send("auth", false, "user", user, "password", password);
 				
-		if (auth.getStatus() != Result.OK)
+		if (auth.getStatus() != IServer.OK)
 			throw new ThinklabClientException(auth.print());
 		
 		this._id = auth.get("session").toString();
@@ -172,12 +175,17 @@ public class Session {
 		_server = url;
 		_name = "default";
 
-		initialize();
+		Result auth = initialize();
 
 		/*
 		 * get an authenticated session, establish ID
 		 */
-		Result auth = send("auth", false, "user", user, "password", password);
+		if (user != null && password != null) {
+			auth = send("auth", false, "user", user, "password", password);
+		} else {
+			auth = send ("auth", false);
+		}
+		
 		this._id = auth.get("session").toString();
 		this._connected = true;
 		this._user = user;
@@ -222,7 +230,7 @@ public class Session {
 		boolean waiting = false;
 		do {			
 			ret = sendInternal(command, arguments);
-			if ( (waiting = (!asynchronous && ret != null && ret.getStatus() == Result.WAIT))) {
+			if ( (waiting = (!asynchronous && ret != null && ret.getStatus() == IServer.SCHEDULED))) {
 				try {
 					Thread.sleep(delay);
 					if (listener != null)
@@ -369,7 +377,7 @@ public class Session {
 					response.getEntity().getContent());
 			
 			Result js = new Result(new JSONObject(rep));
-			if (js.getStatus() != Result.OK)
+			if (js.getStatus() != IServer.OK)
 				throw new ThinklabClientException("transfer failed");
 			
 			return js.getResult().toString();
@@ -582,6 +590,26 @@ public class Session {
 				"handle", handle, 
 				"plugin", project.getId());
 	
-		return result.getStatus() == Result.OK;
+		return result.getStatus() == IServer.OK;
+	}
+
+	/**
+	 * Undeploy project. Assumes server will know what to do for dependencies.
+	 * 
+	 * @param project
+	 * @return
+	 * @throws ThinklabClientException
+	 */
+	public boolean undeploy(ThinklabProject project) throws ThinklabClientException {
+		
+		if (!isConnected())
+			throw new ThinklabClientException("project: not connected to a server");
+
+		Result result = send("project", false, 
+				"cmd", "undeploy", 
+				"plugin", project.getId());
+	
+		return result.getStatus() == IServer.OK;
+
 	}
 }

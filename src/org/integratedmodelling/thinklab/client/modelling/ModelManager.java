@@ -174,6 +174,8 @@ public class ModelManager implements IModelManager {
 		return interpreters.containsKey(fileExtension);
 	}
 
+	
+	
 	public INamespace loadNamespace(String namespaceId, String resource, String resourceType)
 			throws ThinklabException {
 		

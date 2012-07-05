@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.integratedmodelling.collections.Pair;
 import org.integratedmodelling.thinklab.api.lang.IPrototype;
 import org.integratedmodelling.thinklab.api.metadata.IMetadata;
 import org.integratedmodelling.thinklab.api.project.IProject;
@@ -11,10 +12,18 @@ import org.integratedmodelling.thinklab.api.runtime.IServer;
 import org.integratedmodelling.thinklab.client.Session;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.modelling.Metadata;
+import org.integratedmodelling.thinklab.client.project.ThinklabProject;
+import org.integratedmodelling.thinklab.client.utils.FolderZiper;
 
 public class RESTServer implements IServer {
 
 	Metadata _metadata = new Metadata();
+	
+	/*
+	 * this is to flag situations when the server can access the same filesystem
+	 * as the client, preventing the need to transfer files.
+	 */
+	protected boolean _isLocal = false;
 	
 	protected final CResult OK_RESULT = new CResult(OK, null, null, null, null);
 	private Session _session;
@@ -54,20 +63,40 @@ public class RESTServer implements IServer {
 	
 	@Override
 	public Result executeStatement(String s) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		org.integratedmodelling.thinklab.client.Result r;
+		try {
+			r = getSession().send(
+					"execute-statement", false, "statement", s, "isLocal", 
+					_isLocal ? "true" : "false");
+		} catch (ThinklabClientException e) {
+			return error(e);
+		}
+		
+		CResult ret = new CResult(r.getStatus(), s, r.getResult(), null, null);
+		
+		return ret;
 	}
 
 	@Override
 	public Result executeCommand(String command) {
-		// TODO Auto-generated method stub
-		return null;
+
+		return OK_RESULT;
 	}
 
 	@Override
 	public long executeStatementAsynchronous(String s) {
-		// TODO Auto-generated method stub
-		return 0;
+
+		org.integratedmodelling.thinklab.client.Result r;
+		try {
+			r = getSession().send("execute-statement", true, "statement", s,
+					_isLocal ? "true" : "false");
+		} catch (ThinklabClientException e) {
+			return -1L;
+		}
+		
+		
+		return r.getTaskID();
 	}
 
 	@Override
@@ -84,44 +113,74 @@ public class RESTServer implements IServer {
 
 	@Override
 	public Result getTaskResult(long handle, boolean dispose) {
-		// TODO Auto-generated method stub
+		// TODO get capabilities and test connection
 		return null;
 	}
 
 	@Override
 	public Result boot() {
+
+		try {
+			org.integratedmodelling.thinklab.client.Result r = 
+					getSession().send("capabilities", false);
+			
+			if (r.getStatus() != IServer.OK) {
+				return error(new ThinklabClientException("cannot parse server response"));
+			}
+			
+			/*
+			 * parse capabilities into server metadata
+			 */
+			parseCapabilities(r);
+		
+		} catch (ThinklabClientException e) {
+			return error(e);
+		}
+		return OK_RESULT;
+	}
+
+	protected void parseCapabilities(
+			org.integratedmodelling.thinklab.client.Result r) {
 		// TODO Auto-generated method stub
-		return null;
+		System.out.println(r);
 	}
 
 	@Override
 	public Result shutdown() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		if (_session != null) {
+			_session.disconnect();
+			_session = null;
+		}
+		return OK_RESULT;
 	}
 
 	@Override
 	public boolean isActive() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Result authenticate(Object... authInfo) {
-		// TODO Auto-generated method stub
-		return null;
+		return _session != null && _session.isConnected();
 	}
 
 	@Override
 	public Result deploy(IProject p) {
-		// TODO Auto-generated method stub
-		return null;
+
+		try {
+			if (!getSession().deploy((ThinklabProject)p))
+				return error(new ThinklabClientException("failed to deploy project " + p.getId()));
+		} catch (ThinklabClientException e) {
+			return error(e);
+		}
+		return OK_RESULT;
 	}
 
 	@Override
 	public Result undeploy(IProject p) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			if (!getSession().undeploy((ThinklabProject)p))
+				return error(new ThinklabClientException("failed to deploy project " + p.getId()));
+		} catch (ThinklabClientException e) {
+			return error(e);
+		}
+		return OK_RESULT;
 	}
 
 	@Override
@@ -148,12 +207,17 @@ public class RESTServer implements IServer {
 		try {
 
 			Session s = getSession();
-			s.send("extract-knowledge", false);
+			org.integratedmodelling.thinklab.client.Result ret = s.send("extract-knowledge", false);
 
+			String handle = (String)ret.get("handle");
+			if (handle != null) {
+				Pair<File, Integer> zip = s.download(handle, null, null);
+				FolderZiper.unzip(zip.getFirst(), file);
+			}
+			
 		} catch (ThinklabClientException e) {
 			return new CResult(ERROR, null, null, null, e);
 		}
-		
 		
 		return OK_RESULT;
 	}

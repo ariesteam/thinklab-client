@@ -38,5 +38,11 @@ public class Measurement extends Observer implements IMeasuringObserverDefinitio
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public IClassification getDiscretization() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

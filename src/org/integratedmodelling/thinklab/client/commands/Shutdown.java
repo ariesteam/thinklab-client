@@ -2,6 +2,7 @@ package org.integratedmodelling.thinklab.client.commands;
 
 import java.util.ArrayList;
 
+import org.integratedmodelling.thinklab.api.runtime.IServer;
 import org.integratedmodelling.thinklab.client.CommandHandler;
 import org.integratedmodelling.thinklab.client.Result;
 import org.integratedmodelling.thinklab.client.Session;
@@ -92,7 +93,7 @@ public class Shutdown extends CommandHandler {
 		/*
 		 * TODO cleanup session
 		 */
-		if (ret.getStatus() == Result.OK)
+		if (ret.getStatus() == IServer.OK)
 			session.disconnect();
 		
 		return ret.setSession(session);

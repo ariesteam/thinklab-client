@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.integratedmodelling.collections.Pair;
 import org.integratedmodelling.list.PolyList;
+import org.integratedmodelling.thinklab.api.runtime.IServer;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,9 +18,7 @@ import org.json.JSONObject;
  * @author ferdinando.villa
  *
  */
-public class Result {
-
-	static public final int OK = 0, FAIL = 1, WAIT = 2; 
+public class Result implements IServer.Result {
 	
 	int    _status = 0;	
 	String _taskID = null;
@@ -69,12 +68,12 @@ public class Result {
 	}
 	
 	public Result() {
-		_status = OK;
+		_status = IServer.OK;
 	}
 	
 	public static Result fail(Session session) {
 		Result ret = new Result().setSession(session);
-		ret._status = FAIL;
+		ret._status = IServer.ERROR;
 		return ret;
 	}
 
@@ -82,7 +81,7 @@ public class Result {
 
 		String ret = "";
 		try {
-			if (_status == OK) {
+			if (_status == IServer.OK) {
 				if (_result != null) {
 					if (js != null && js.has("info"))
 						ret = js.getString("info") + "\n";
@@ -92,12 +91,12 @@ public class Result {
 				}else if (js != null && js.has("info")) {
 					ret = js.getString("info");
 				}
-			} else if (_status == FAIL) {
+			} else if (_status == IServer.ERROR) {
 				ret = "** error **";
 				if (js != null && js.has("error")) {
 					ret += ": " + js.getString("error");
 				}
-			} else if (_status == WAIT) {
+			} else if (_status == IServer.SCHEDULED) {
 				ret = "[" + js.getString("taskid") + "]";
 			}
 		} catch (JSONException e) {
@@ -197,6 +196,7 @@ public class Result {
 		}
 	}
 
+	@Override
 	public int getStatus() {
 		return _status;
 	}
@@ -206,6 +206,10 @@ public class Result {
 		return this;
 	}
 
+	public long getTaskID() {
+		return Long.parseLong(_taskID);
+	}
+	
 	/**
 	 * Return all the files to download inserted in the result by the remote command.
 	 * 
@@ -229,6 +233,24 @@ public class Result {
 			throw new ThinklabClientException(e);
 		}
 		return ret;
+	}
+
+	@Override
+	public String getCommand() {
+		// TODO Auto-generated method stub
+		return "";
+	}
+
+	@Override
+	public String getOutput() {
+		// TODO Auto-generated method stub
+		return "";
+	}
+
+	@Override
+	public Throwable getException() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

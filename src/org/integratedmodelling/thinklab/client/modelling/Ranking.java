@@ -48,4 +48,11 @@ public class Ranking extends Observer implements IRankingObserverDefinition {
 		
 	}
 
+
+	@Override
+	public IClassification getDiscretization() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

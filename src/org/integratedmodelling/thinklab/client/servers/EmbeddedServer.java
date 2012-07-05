@@ -8,8 +8,8 @@ import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.ExecuteResultHandler;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.integratedmodelling.exceptions.ThinklabException;
-import org.integratedmodelling.exceptions.ThinklabRuntimeException;
 import org.integratedmodelling.thinklab.client.Session;
+import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.utils.NetUtilities;
 
 /**
@@ -25,9 +25,8 @@ public class EmbeddedServer extends RESTServer {
 	Session  _session;
 	boolean _running = false;
 	CResult _err = null;
-	private ExecuteWatchdog _watchdog;
 	
-	private static final String LOCAL_URL = "http://127.0.0.1/8182/rest";
+	private static final String LOCAL_URL = "http://127.0.0.1:8182/rest";
 	
 	/*
 	 * default timeout 1min until we decide that the server didn't start up properly.
@@ -36,13 +35,20 @@ public class EmbeddedServer extends RESTServer {
 	
 	public EmbeddedServer() {
 		super(LOCAL_URL, null, null);
+		_isLocal = true;
 		_instDir = System.getenv("THINKLAB_HOME");
-		if (_instDir == null)
-			throw new ThinklabRuntimeException("THINKLAB_HOME not defined: cannot establish a path to Thinklab");
+		if (_instDir == null) {
+			// server is useless. Do not say anything.
+		}
 	}
-
+	
+	
 	@Override
 	public Result boot() {
+	
+		if (_instDir == null)
+			return error(
+				new ThinklabClientException("no THINKLAB_HOME defined: cannot access a local Thinklab installation"));
 		
 		/*
 		 * see if a server was started before we boot. CHECK - we
@@ -89,7 +95,6 @@ public class EmbeddedServer extends RESTServer {
 					_err;
 		}
 		
-		_watchdog = executor.getWatchdog();
 
 		/*
 		 * wait until server is active before giving control to client
@@ -104,20 +109,30 @@ public class EmbeddedServer extends RESTServer {
 		} while (NetUtilities.portAvailable(8182) && timeout < TIMEOUT);
 		
 		if (NetUtilities.portAvailable(8182)) {
-			_watchdog = null;
 			_running = false;
 			return error(null);
 		}
-		
-		return OK_RESULT;
+
+		/*
+		 * parse capabilities and set metadata
+		 */
+		return super.boot();		
 	}
 
 	@Override
 	public Result shutdown() {
 
-		if (_watchdog != null && _running) {
-			_watchdog.destroyProcess();
-		}
+		/*
+		 * delete session
+		 */
+		super.shutdown();
+
+		/*
+		 * TODO so far haven't found a way to destroy the process. Server will
+		 * remain running, this just kills the session. Behavior is proper, but
+		 * no restart facility is available for now.
+		 */
+		
 		_running = false;
 		
 		return OK_RESULT;
@@ -125,8 +140,7 @@ public class EmbeddedServer extends RESTServer {
 
 	@Override
 	public boolean isActive() {
-		// TODO
-		return false;
+		return _running;
 	}
 
 

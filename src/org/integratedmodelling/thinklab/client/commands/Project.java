@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.integratedmodelling.collections.Pair;
 import org.integratedmodelling.exceptions.ThinklabException;
+import org.integratedmodelling.thinklab.api.runtime.IServer;
 import org.integratedmodelling.thinklab.client.CommandHandler;
 import org.integratedmodelling.thinklab.client.Configuration;
 import org.integratedmodelling.thinklab.client.Result;
@@ -79,7 +80,7 @@ public class Project extends CommandHandler {
 					return Result.fail(session).error("project: not connected to a server");
 
 				Result res = session.send("list", true, "arg", "projects");
-				if (res.getStatus() == Result.OK) {
+				if (res.getStatus() == IServer.OK) {
 					cl.say(res.size() + " projects on " + session.getName());
 					for (int i = 0; i < res.size(); i++) {
 						cl.say("   " + res.getResult(i));
@@ -119,7 +120,7 @@ public class Project extends CommandHandler {
 					"handle", handle, 
 					"plugin", current.getId());
 		
-			if (result.getStatus() == Result.OK) {
+			if (result.getStatus() == IServer.OK) {
 				cl.say("done");
 				info = "project " + current.getId() + " deployed to " + session.getName();
 			} else {
@@ -139,7 +140,7 @@ public class Project extends CommandHandler {
 					"cmd", "undeploy", 
 					"plugin", current.getId());
 
-			if (result.getStatus() == Result.OK) {
+			if (result.getStatus() == IServer.OK) {
 				cl.say("done");
 				info = "project " + current.getId() + " removed from " + session.getName();
 			} else {
