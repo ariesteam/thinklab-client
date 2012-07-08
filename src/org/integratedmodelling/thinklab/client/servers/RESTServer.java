@@ -2,6 +2,7 @@ package org.integratedmodelling.thinklab.client.servers;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.integratedmodelling.collections.Pair;
@@ -262,6 +263,12 @@ public class RESTServer implements IServer {
 		public Throwable getException() {
 			return _e;
 		}
+		
+	}
+
+	@Override
+	public void loadAll(Collection<IProject> projects) {
+		// TODO Auto-generated method stub
 		
 	}
 
