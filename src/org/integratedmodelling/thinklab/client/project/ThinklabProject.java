@@ -35,6 +35,11 @@ public class ThinklabProject implements IProject {
 	 * this is <= _errors.size()
 	 */
 	private int _namespacesInError = 0;
+	
+	/*
+	 * loaded from here. No more assumption for projects to be in fixed project directory.
+	 */
+	File _path;
 	/*
 	 * these 2 are in sync
 	 */
@@ -47,6 +52,7 @@ public class ThinklabProject implements IProject {
 	
 	public ThinklabProject(File dir) throws ThinklabException {		
 		_id = MiscUtilities.getFileName(dir.toString());
+		_path = dir;
 		load();
 	}
 	
@@ -54,40 +60,40 @@ public class ThinklabProject implements IProject {
 		return _namespacesInError > 0;
 	}
 	
-	/**
-	 * Get the content of META-INF/thinklab.properties if the plugin contains that
-	 * directory, or null if it doesn't. Can be used to check if a plugin is a 
-	 * thinklab plugin based on the null return value.
-	 * 
-	 * TODO move to client library and load the library in the server package
-	 * 
-	 * @param plugin
-	 * @return
-	 * @throws ThinklabIOException
-	 */
-	public static Properties getPluginProperties(String plugin) throws ThinklabClientException {
-		
-			Properties ret = null;
-			File pfile = 
-				new File(
-					Configuration.getProjectDirectory(plugin) + 
-					File.separator + 
-					"META-INF" +
-					File.separator + 
-					"thinklab.properties");
-			
-			if (pfile.exists()) {
-				try {
-					ret = new Properties();
-					ret.load(new FileInputStream(pfile));
-				} catch (Exception e) {
-					throw new ThinklabClientException(e);
-				}
-			}
-			
-			return ret;
-		}
-	
+//	/**
+//	 * Get the content of META-INF/thinklab.properties if the plugin contains that
+//	 * directory, or null if it doesn't. Can be used to check if a plugin is a 
+//	 * thinklab plugin based on the null return value.
+//	 * 
+//	 * TODO move to client library and load the library in the server package
+//	 * 
+//	 * @param plugin
+//	 * @return
+//	 * @throws ThinklabIOException
+//	 */
+//	public static Properties getPluginProperties(String plugin) throws ThinklabClientException {
+//		
+//			Properties ret = null;
+//			File pfile = 
+//				new File(
+//					Configuration.getProjectDirectory(plugin) + 
+//					File.separator + 
+//					"META-INF" +
+//					File.separator + 
+//					"thinklab.properties");
+//			
+//			if (pfile.exists()) {
+//				try {
+//					ret = new Properties();
+//					ret.load(new FileInputStream(pfile));
+//				} catch (Exception e) {
+//					throw new ThinklabClientException(e);
+//				}
+//			}
+//			
+//			return ret;
+//		}
+//	
 	public static ThinklabProject create(String id) throws ThinklabClientException {
 	
 		ThinklabProject ret = new ThinklabProject(id);
@@ -109,7 +115,7 @@ public class ThinklabProject implements IProject {
 	 */
 	public String createNamespace(IProject p, String ns) throws ThinklabException {
 				
-		File ret = new File(getSourceDirectory() + File.separator + 
+		File ret = new File(getPath() + File.separator + getSourceDirectory() + File.separator + 
 							ns.replace('.', File.separatorChar) + ".tql");
 		File dir = new File(MiscUtilities.getFilePath(ret.toString()));
 		
@@ -176,8 +182,7 @@ public class ThinklabProject implements IProject {
 			dependencies = dps.split(",");
 		}
 		
-		File plugdir = Configuration.getProjectDirectory(_id);
-		createManifest(plugdir, dependencies);
+		createManifest(_path, dependencies);
 		
 	}
 	
@@ -187,7 +192,7 @@ public class ThinklabProject implements IProject {
 	
 	public boolean exists() {
 		File f = 
-			new File(Configuration.getProjectDirectory() + 
+			new File(_path + 
 					File.separator + _id + File.separator + "META-INF" + File.separator + "thinklab.properties");
 		
 		return f.exists();
@@ -200,14 +205,14 @@ public class ThinklabProject implements IProject {
 		return f.exists();
 	}
 	
-	public static boolean exists(String id) {
-		
-		File f = 
-			new File(Configuration.getProjectDirectory() + 
-					File.separator + id + File.separator + "META-INF" + File.separator + "thinklab.properties");
-		
-		return f.exists();
-	}
+//	public static boolean exists(String id) {
+//		
+//		File f = 
+//			new File(Configuration.getProjectDirectory() + 
+//					File.separator + id + File.separator + "META-INF" + File.separator + "thinklab.properties");
+//		
+//		return f.exists();
+//	}
 	
 	@Override
 	public void addDependency(String plugin, boolean reload) throws ThinklabException {
@@ -314,7 +319,7 @@ public class ThinklabProject implements IProject {
 	}
 
 	public File getPath() {
-		return Configuration.getProjectDirectory(_id);
+		return _path;
 	}
 	
 	@Override
@@ -329,9 +334,27 @@ public class ThinklabProject implements IProject {
 
 	@Override
 	public Properties getProperties() {
+		
 		if (_properties == null) {
+
+			_properties = new Properties();
 			try {
-				_properties = getPluginProperties(getId());
+				File pfile = 
+					new File(
+						_path + 
+						File.separator + 
+						"META-INF" +
+						File.separator + 
+						"thinklab.properties");
+				
+				if (pfile.exists()) {
+					try {
+						_properties.load(new FileInputStream(pfile));
+					} catch (Exception e) {
+						throw new ThinklabClientException(e);
+					}
+				}
+					
 			} catch (ThinklabClientException e) {
 				throw new ThinklabRuntimeException(e);
 			}
@@ -345,9 +368,8 @@ public class ThinklabProject implements IProject {
 	}
 
 	@Override
-	public File getSourceDirectory() {
-		return new File(getPath() + File.separator + 
-				getProperties().getProperty(IProject.SOURCE_FOLDER_PROPERTY, "src"));
+	public String getSourceDirectory() {
+		return getProperties().getProperty(IProject.SOURCE_FOLDER_PROPERTY, "src");
 	}
 	
 	public Collection<String> getSourceFolderNames() {
@@ -368,13 +390,13 @@ public class ThinklabProject implements IProject {
 	@Override
 	public void load() throws ThinklabException {
 	
-		_properties = getPluginProperties(_id);
+		_properties = getProperties();
 
 		loadDependencies();
 		
 		namespaces = new ArrayList<INamespace>();
 		HashSet<File> read = new HashSet<File>();
-		loadInternal(this.getSourceDirectory(), read, namespaces, "", this);
+		loadInternal(new File(getPath() + File.separator + this.getSourceDirectory()), read, namespaces, "", this);
 	}
 
 	private void loadDependencies() throws ThinklabClientException {
@@ -430,7 +452,7 @@ public class ThinklabProject implements IProject {
 	@Override
 	public File findResource(String resource) {
 
-		File ff = new File(getSourceDirectory() + File.separator + resource);
+		File ff = new File(getPath() + File.separator + getSourceDirectory() + File.separator + resource);
 		if (ff.exists()) {
 			return ff;
 		}
@@ -441,7 +463,7 @@ public class ThinklabProject implements IProject {
 	public File findResourceForNamespace(String namespace, String extension) {
 
 		String fp = namespace.replace('.', File.separatorChar);
-		File ff = new File(getSourceDirectory() + File.separator + fp + "." + extension);
+		File ff = new File(getPath() + File.separator + getSourceDirectory() + File.separator + fp + "." + extension);
 		if (ff.exists()) {
 			return ff;
 		}
@@ -461,13 +483,12 @@ public class ThinklabProject implements IProject {
 	@Override
 	public File getWorkspace() {
 		// TODO Auto-generated method stub
-		return null;
+		return getPath();
 	}
 
 	@Override
 	public File getWorkspace(String subspace) {
-		// TODO Auto-generated method stub
-		return null;
+		return new File(getPath() + File.separator + subspace);
 	}
 
 	@Override
@@ -496,8 +517,7 @@ public class ThinklabProject implements IProject {
 
 	@Override
 	public File getLoadPath() {
-		// TODO Auto-generated method stub
-		return null;
+		return _path;
 	}
 	
 }

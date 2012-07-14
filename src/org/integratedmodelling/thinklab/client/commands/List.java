@@ -54,19 +54,19 @@ public class List extends CommandHandler {
 		Args args = (Args) arguments;
 
 		if (expect(args,0).equals("projects")) {
-
-			ThinklabProject current = session.getCurrentProject();
-
-			for (File f : Configuration.getProjectDirectory().listFiles()) {
-				if (f.isDirectory() && 
-						ThinklabProject.exists(MiscUtilities.getFileName(f.toString()))) {
-					String pname = MiscUtilities.getFileName(f.toString());
-					cl.say(
-							(current != null && current.getId().equals(pname) ? " * " : "   ") + 
-							pname);
-				}
-			}			
-			return Result.ok(session);
+//
+//			ThinklabProject current = session.getCurrentProject();
+//
+//			for (File f : Configuration.getProjectDirectory().listFiles()) {
+//				if (f.isDirectory() && 
+//						ThinklabProject.exists(MiscUtilities.getFileName(f.toString()))) {
+//					String pname = MiscUtilities.getFileName(f.toString());
+//					cl.say(
+//							(current != null && current.getId().equals(pname) ? " * " : "   ") + 
+//							pname);
+//				}
+//			}			
+//			return Result.ok(session);
 			
 		} else if (expect(args,0).equals("remotes")) {
 			

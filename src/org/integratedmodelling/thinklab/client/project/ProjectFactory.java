@@ -34,6 +34,12 @@ public class ProjectFactory  {
 	
 	protected ProjectFactory() {		
 	}
+	
+	public static boolean isThinklabProject(File dir) {
+		File f = 
+			new File(dir + File.separator + "META-INF" + File.separator + "thinklab.properties");
+		return f.exists();
+	}
 
 	public synchronized void loadProjects() {
 
@@ -49,7 +55,7 @@ public class ProjectFactory  {
 			if (_projectFiles.contains(f))
 				continue;
 
-			if (ThinklabProject.exists(f)) {
+			if (isThinklabProject(f)) {
 					
 				System.out.println("loading Thinklab project from " + f);
 				
@@ -98,6 +104,26 @@ public class ProjectFactory  {
 		// TODO Auto-generated method stub
 		
 	}
+	
+
+	public IProject getProject(String arg0, File pdir) throws ThinklabException {
+		
+		IProject ret = null;
+		
+		for (IProject p : _projects) {
+			if (p.getId().equals(arg0)) {
+				return p;
+			}
+		}
+		
+		if (ThinklabProject.exists(pdir)) {
+			_projects.add(ret = new ThinklabProject(pdir));
+			_projectFiles.add(pdir);
+		}
+		
+		return ret;
+		
+	}
 
 	public IProject getProject(String arg0, boolean attemptLoading) {
 		
@@ -142,5 +168,6 @@ public class ProjectFactory  {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 }

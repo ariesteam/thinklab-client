@@ -91,15 +91,15 @@ public class Project extends CommandHandler {
 				
 			} else {
 			
-				for (File f : Configuration.getProjectDirectory().listFiles()) {
-					if (f.isDirectory() && 
-							ThinklabProject.exists(MiscUtilities.getFileName(f.toString()))) {
-						String pname = MiscUtilities.getFileName(f.toString());
-						cl.say(
-								(current != null && current.getId().equals(pname) ? " * " : "   ") + 
-								pname);
-					}
-				}
+//				for (File f : Configuration.getProjectDirectory().listFiles()) {
+//					if (f.isDirectory() && 
+//							ThinklabProject.exists(MiscUtilities.getFileName(f.toString()))) {
+//						String pname = MiscUtilities.getFileName(f.toString());
+//						cl.say(
+//								(current != null && current.getId().equals(pname) ? " * " : "   ") + 
+//								pname);
+//					}
+//				}
 			}
  			
 		} else if (cmd.equals("deploy")) {
@@ -154,15 +154,15 @@ public class Project extends CommandHandler {
 				return Result.fail(session).error("project: not connected to a server");
 
 			String pid = expect(args,1);
-			boolean ok = true;
+			boolean ok = false;
 			
-			if (ThinklabProject.exists(pid)) {
-				if (!args.isForce() && !cl.ask("do you want to overwrite project " +
-					pid + 
-					" from the local repository? [yes|no] ").equals("yes")) {
-					ok = false;
-				}
-			}
+//			if (ThinklabProject.exists(pid)) {
+//				if (!args.isForce() && !cl.ask("do you want to overwrite project " +
+//					pid + 
+//					" from the local repository? [yes|no] ").equals("yes")) {
+//					ok = false;
+//				}
+//			}
 			
 			if (ok) {
 				Result ret = session.send("project", false, "cmd", "pack", "plugin", pid);
