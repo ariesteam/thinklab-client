@@ -23,7 +23,8 @@ Bundle-ClassPath: .,
  lib/org.apache.httpmime.jar,
  lib/org.apache.james.mime4j.jar,
  lib/owlapi-bin.jar,
- lib/commons-exec-1.1.jar
+ lib/commons-exec-1.1.jar,
+ lib/jgrapht.jar
 Export-Package: asm,
  bsf,
  bsh;uses:="bsh.org.objectweb.asm,javax.swing.event",

@@ -135,8 +135,6 @@ public class ThinklabProject implements IProject {
 	/**
 	 * Get the relative file path of given namespace. Doesn't have to exist.
 	 * 
-	 * FIXME only uses the first source folder.
-	 * 
 	 * @param ns
 	 * @return
 	 */
@@ -518,6 +516,18 @@ public class ThinklabProject implements IProject {
 	@Override
 	public File getLoadPath() {
 		return _path;
+	}
+
+	@Override
+	public boolean isLoaded() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public long getLastModificationTime() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 }
