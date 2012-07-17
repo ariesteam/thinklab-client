@@ -12,7 +12,7 @@ import org.integratedmodelling.exceptions.ThinklabValidationException;
 import org.integratedmodelling.thinklab.api.factories.IModelManager;
 import org.integratedmodelling.thinklab.api.knowledge.IExpression;
 import org.integratedmodelling.thinklab.api.lang.IModelParser;
-import org.integratedmodelling.thinklab.api.modelling.IAgentModel;
+import org.integratedmodelling.thinklab.api.lang.IResolver;
 import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IModel;
 import org.integratedmodelling.thinklab.api.modelling.IModelObject;
@@ -47,12 +47,6 @@ public class ModelManager implements IModelManager {
 		interpreters.put(extension, modelParser);
 	}
 	
-	@Override
-	public IAgentModel getAgentModel(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Override
 	public Collection<IScenario> getApplicableScenarios(IModel arg0,
 			IContext arg1, boolean arg2) throws ThinklabException {
@@ -134,8 +128,7 @@ public class ModelManager implements IModelManager {
 		return null;
 	}
 
-	@Override
-	public INamespace loadFile(String file, String namespaceId, IProject project) throws ThinklabException {
+	public INamespace loadFile(String file, String namespaceId, IProject project, IResolver resolver) throws ThinklabException {
 		
 		String extension = MiscUtilities.getFileExtension(file);
 		IModelParser parser = interpreters.get(extension);
@@ -145,7 +138,7 @@ public class ModelManager implements IModelManager {
 			throw new ThinklabValidationException("don't know how to parse a " + extension + " model file");
 		}
 		
-		ret = (Namespace) parser.parse(file, createResolver(project));
+		ret = (Namespace) parser.parse(file, resolver);
 		
 		if (ret != null && !((Namespace)(ret)).hasErrors()) {
 		
@@ -159,8 +152,13 @@ public class ModelManager implements IModelManager {
 	}
 
 	@Override
+	public INamespace loadFile(String file, String namespaceId, IProject project) throws ThinklabException {
+		return loadFile(file, namespaceId, project, createResolver(project));
+	}
+	
+	@Override
 	public void releaseNamespace(String arg0) {
-		// TODO Auto-generated method stub
+		namespacesById.remove(arg0);
 	}
 
 	@Override

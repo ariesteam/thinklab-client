@@ -19,7 +19,6 @@ import org.integratedmodelling.thinklab.api.knowledge.IExpression;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
 import org.integratedmodelling.thinklab.api.lang.IResolver;
 import org.integratedmodelling.thinklab.api.metadata.IMetadata;
-import org.integratedmodelling.thinklab.api.modelling.IAgentModel;
 import org.integratedmodelling.thinklab.api.modelling.ICategorizingObserver;
 import org.integratedmodelling.thinklab.api.modelling.IClassifyingObserver;
 import org.integratedmodelling.thinklab.api.modelling.IContext;
@@ -42,27 +41,37 @@ import org.integratedmodelling.thinklab.api.modelling.parsing.IPropertyDefinitio
 import org.integratedmodelling.thinklab.api.plugin.IThinklabPlugin;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.api.runtime.IServer;
-import org.integratedmodelling.thinklab.client.project.ThinklabProject;
+import org.integratedmodelling.thinklab.client.project.Project;
 
 public class Resolver implements IResolver {
 	
-	ThinklabProject project;
+	IProject project;
 	String resourceId = "(not set)";
 	long _timestamp = new Date().getTime();
 
 	/*
 	 * TODO load knowledge from server the first time a resolver is created for it.
 	 */
-	IServer server;
+	public IServer server;
 	
 	HashSet<String> _defined = new HashSet<String>();
 
 	private INamespace _currentNs;
 
 	public Resolver(IServer server, IProject project) {
-		this.project = (ThinklabProject)project;
+		this.server = server;
+		this.project = project;
 	}
 	
+	public Resolver() {
+		// this needs to set server and project
+	}
+	
+	public void initialize(IServer server, IProject project) {
+		this.server = server;
+		this.project = project;
+	}
+
 	@Override
 	public boolean onException(Throwable e, int lineNumber) {
 
@@ -161,7 +170,7 @@ public class Resolver implements IResolver {
 				if (project != null) {
 					for (IThinklabPlugin pr : project.getPrerequisites()) {
 						
-						ThinklabProject prj = (ThinklabProject)pr;
+						Project prj = (Project)pr;
 						
 						/*
 						 * lookup file here, if found return open filestream
@@ -237,7 +246,7 @@ public class Resolver implements IResolver {
 			if (project != null) {
 				for (IThinklabPlugin pr : project.getPrerequisites()) {
 					
-					ThinklabProject prj = (ThinklabProject)pr;
+					IProject prj = (IProject)pr;
 					
 					/*
 					 * lookup file here, if found return open filestream
@@ -312,8 +321,7 @@ public class Resolver implements IResolver {
 	}
 	
 	@Override
-	public IPropertyDefinition resolveExternalProperty(String id, INamespace namespace, int line)
-			 {
+	public IPropertyDefinition resolveExternalProperty(String id, INamespace namespace, int line) {
 		
 		/*
 		 * TODO - check this. We basically create a new namespace per unseen property, not 
@@ -368,14 +376,10 @@ public class Resolver implements IResolver {
 			return new Model();
 		} else if (cls.equals(IContext.class)) {
 			return new Context();
-//		} else if (cls.equals(IDataSource.class)) {
-//			return new DataSourceDefinition();
 		} else if (cls.equals(IStoryline.class)) {
 			return new Storyline();
 		} else if (cls.equals(IScenario.class)) {
 			return new Scenario();
-		} else if (cls.equals(IAgentModel.class)) {
-			return new AgentModel();
 		} else if (cls.equals(IConcept.class)) {
 			return new ConceptObject();
 		} else if (cls.equals(IProperty.class)) {

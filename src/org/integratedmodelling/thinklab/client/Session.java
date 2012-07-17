@@ -19,12 +19,12 @@ import org.integratedmodelling.collections.Pair;
 import org.integratedmodelling.collections.Triple;
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
-import org.integratedmodelling.thinklab.api.plugin.IThinklabPlugin;
+import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.api.runtime.IServer;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.listeners.ProgressListener;
 import org.integratedmodelling.thinklab.client.modelling.ModelManager;
-import org.integratedmodelling.thinklab.client.project.ThinklabProject;
+import org.integratedmodelling.thinklab.client.project.ProjectManager;
 import org.integratedmodelling.thinklab.client.utils.Escape;
 import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
 import org.json.JSONArray;
@@ -127,7 +127,7 @@ public class Session {
 	
 	private HashMap<String, RemoteCommand> _commands = 
 		new HashMap<String, Session.RemoteCommand>();
-	private ThinklabProject _currentProject;
+	private IProject _currentProject;
 	
 	private Result initialize() throws ThinklabClientException {
 	
@@ -395,7 +395,7 @@ public class Session {
 		return _server;
 	}
 
-	public void setCurrentProject(ThinklabProject project) throws ThinklabClientException {
+	public void setCurrentProject(IProject project) throws ThinklabClientException {
 		this._currentProject = project;
 		/*
 		 * reset current dir
@@ -404,7 +404,7 @@ public class Session {
 		setCurrentDirectory(project.getId());
 	}
 
-	public ThinklabProject getCurrentProject() {
+	public IProject getCurrentProject() {
 		return this._currentProject;
 	}
 
@@ -571,7 +571,7 @@ public class Session {
 	 * @return
 	 * @throws ThinklabClientException
 	 */
-	public boolean deploy(ThinklabProject project) throws ThinklabClientException {
+	public boolean deploy(IProject project) throws ThinklabException {
 
 		if (!isConnected())
 			throw new ThinklabClientException("project: not connected to a server");
@@ -579,11 +579,11 @@ public class Session {
 		/*
 		 * deploy all dependencies first
 		 */
-		for (IThinklabPlugin p : project.getPrerequisites()) {
-			deploy((ThinklabProject)p);
+		for (IProject p : project.getPrerequisites()) {
+			deploy(p);
 		}
 		
-		File zip = project.getZipArchive();
+		File zip = ProjectManager.get().archiveProject(project.getId());
 		String handle = upload(zip, null);
 		Result result = send("project", false, 
 				"cmd", "deploy", 
@@ -600,7 +600,7 @@ public class Session {
 	 * @return
 	 * @throws ThinklabClientException
 	 */
-	public boolean undeploy(ThinklabProject project) throws ThinklabClientException {
+	public boolean undeploy(IProject project) throws ThinklabClientException {
 		
 		if (!isConnected())
 			throw new ThinklabClientException("project: not connected to a server");

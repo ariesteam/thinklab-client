@@ -3,6 +3,7 @@ package org.integratedmodelling.thinklab.client.project;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -18,6 +19,7 @@ import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.Configuration;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.modelling.ModelManager;
+import org.integratedmodelling.thinklab.client.modelling.Resolver;
 import org.integratedmodelling.thinklab.client.utils.CamelCase;
 import org.integratedmodelling.thinklab.client.utils.FolderZiper;
 import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
@@ -39,6 +41,11 @@ public class Project extends HashableObject implements IProject {
 	 */
 	private ArrayList<File> _resourcesInError = new ArrayList<File>();
 	private ArrayList<String> _errors = new ArrayList<String>();
+
+	/*
+	 * if true, we need refresh
+	 */
+	private boolean _isDirty = false;
 	
 	public Project(File path, IProjectManager manager) {
 		
@@ -57,45 +64,74 @@ public class Project extends HashableObject implements IProject {
 		return _id;
 	}
 
-
-	@Override
-	public void load() throws ThinklabException {
-
-		loadDependencies();		
-		_namespaces = new ArrayList<INamespace>();
-		HashSet<File> read = new HashSet<File>();
-		loadInternal(new File(_path + File.separator + this.getSourceDirectory()), read, _namespaces, "", this);
-		_loaded = true;
+	/**
+	 * Use this to force unload when refresh is called.
+	 * 
+	 * @param isDirty
+	 */
+	public void setDirty(boolean isDirty) {
+		_isDirty = isDirty;
 	}
 
-	private void loadDependencies() throws ThinklabClientException {
+	public void load(Resolver resolver) throws ThinklabException {
+
+		if (isLoaded() && isDirty())
+			unload();
+		
+		/*
+		 * if we haven't been unloaded, we didn't need to so we don't need
+		 * loading, either.
+		 */
+		if (isLoaded())
+			return;
+		
+		loadDependencies(resolver);		
+		_namespaces = new ArrayList<INamespace>();
+		HashSet<File> read = new HashSet<File>();
+		loadInternal(new File(_path + File.separator + this.getSourceDirectory()), read, _namespaces, "", this, resolver);
+		_loaded = true;
+		_isDirty = false;
+	}
+
+	private boolean isDirty() {
+		return _isDirty ;
+	}
+
+	private void loadDependencies(Resolver resolver) throws ThinklabException {
 
 		for (String dep : _dependencies) {
-			IProject p = ProjectFactory.get().getProject(dep, true);
+			IProject p = _manager.getProject(dep);
 			if (p == null)
 				throw new ThinklabClientException(_id + ": cannot load prerequisite project " + dep);
+
+			/*
+			 * load with newly initialized resolver
+			 */
+			Resolver r = (Resolver) resolver.getImportResolver();
+			r.initialize(resolver.server, p);
+			((Project)p).load(r);
 		}
 	}
 
 	private void loadInternal(File f, HashSet<File> read, ArrayList<INamespace> ret, String path,
-			IProject project) throws ThinklabClientException {
+			IProject project, Resolver resolver) throws ThinklabClientException {
 
 		String pth = 
 				path == null ? 
 					"" : 
 					(path + (path.isEmpty() ? "" : ".") + CamelCase.toLowerCase(MiscUtilities.getFileBaseName(f.toString()), '-'));
-		
+						
 		if (f. isDirectory()) {
 		
 			for (File fl : f.listFiles()) {
-				loadInternal(fl, read, ret, pth, project);
+				loadInternal(fl, read, ret, pth, project, resolver);
 			}
 			
 		} else if (ModelManager.get().canParseExtension(MiscUtilities.getFileExtension(f.toString()))) {
 
 			INamespace ns;
 			try {
-				ns = ModelManager.get().loadFile(f.toString(), pth, this);
+				ns = ModelManager.get().loadFile(f.toString(), pth, this, resolver);
 				if (ns != null) 
 					ret.add(ns);
 			} catch (ThinklabException e) {
@@ -105,7 +141,6 @@ public class Project extends HashableObject implements IProject {
 		}
 	}
 
-	@Override
 	public void unload() throws ThinklabException {
 		
 		for (INamespace ns : _namespaces) {
@@ -143,7 +178,6 @@ public class Project extends HashableObject implements IProject {
 		return null;
 	}
 
-	@Override
 	public boolean isLoaded() {
 		return _loaded;
 	}
@@ -236,12 +270,6 @@ public class Project extends HashableObject implements IProject {
 	}
 
 	@Override
-	public void addDependency(String plugin, boolean reload)
-			throws ThinklabException {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
 	public List<IProject> getPrerequisites() {
 		
 		ArrayList<IProject> ret = new ArrayList<IProject>();
@@ -263,8 +291,45 @@ public class Project extends HashableObject implements IProject {
 	}
 
 	// NON-API
+
+	public void addDependency(String plugin) throws ThinklabException {
 	
-	private void saveProperties() throws ThinklabClientException {
+		String pp = getProperties().getProperty(IProject.PREREQUISITES_PROPERTY, "");
+		String[] deps = 
+			pp.isEmpty() ? new String[0] :
+			getProperties().getProperty(IProject.PREREQUISITES_PROPERTY, "").split(",");
+		
+		String dps = "";
+		for (String s : deps) {
+			if (s.equals(plugin))
+				return;
+			dps += (dps.isEmpty()? "" : ",") + s;
+		}
+		
+		dps += (dps.isEmpty()? "" : ",") + plugin;
+		getProperties().setProperty(IProject.PREREQUISITES_PROPERTY, dps);
+		deps = dps.split(",");
+
+		saveProperties();
+		
+	}
+	
+	public void createManifest(String[] dependencies) throws ThinklabException {
+			
+		File td = new File(_path + File.separator + "META-INF");
+		td.mkdirs();
+		
+		new File(_path + File.separator + getSourceDirectory()).mkdirs();
+			
+		if (dependencies != null && dependencies.length > 0) {
+			for (String d : dependencies)
+				addDependency(d);
+		} else {
+			saveProperties();
+		}
+	}
+	
+	private void saveProperties() throws ThinklabException {
 		
 		File td = 
 			new File(_path +
@@ -272,14 +337,14 @@ public class Project extends HashableObject implements IProject {
 				File.separator + "thinklab.properties");
 		
 		try {
-			_properties.store(new FileOutputStream(td), null);
+			getProperties().store(new FileOutputStream(td), null);
 		} catch (Exception e) {
 			throw new ThinklabClientException(e);
 		}
 		
 	}
 
-	public File getZipArchive() throws ThinklabClientException {
+	public File getZipArchive() throws ThinklabException {
 		
 		File ret = null;
 		try {
@@ -293,4 +358,22 @@ public class Project extends HashableObject implements IProject {
 		return ret;
 	}
 
+	public String createNamespace(IProject p, String ns) throws ThinklabException {
+		
+		File ret = new File(_path + File.separator + getSourceDirectory() + File.separator + 
+				ns.replace('.', File.separatorChar) + ".tql");
+		File dir = new File(MiscUtilities.getFilePath(ret.toString()));
+
+		try {
+			dir.mkdirs();
+			PrintWriter out = new PrintWriter(ret);
+			out.println("namespace " + ns + ";\n");
+			out.close();
+		} catch (Exception e) {
+			throw new ThinklabClientException(e);
+		}
+
+		return getSourceDirectory() + File.separator + 
+				ns.replace('.', File.separatorChar) + ".tql";
+	}
 }

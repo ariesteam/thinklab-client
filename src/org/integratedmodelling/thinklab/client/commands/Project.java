@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.integratedmodelling.collections.Pair;
 import org.integratedmodelling.exceptions.ThinklabException;
+import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.api.runtime.IServer;
 import org.integratedmodelling.thinklab.client.CommandHandler;
 import org.integratedmodelling.thinklab.client.Configuration;
@@ -11,10 +12,9 @@ import org.integratedmodelling.thinklab.client.Result;
 import org.integratedmodelling.thinklab.client.Session;
 import org.integratedmodelling.thinklab.client.annotations.Command;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
-import org.integratedmodelling.thinklab.client.project.ThinklabProject;
+import org.integratedmodelling.thinklab.client.project.ProjectManager;
 import org.integratedmodelling.thinklab.client.shell.CommandLine;
 import org.integratedmodelling.thinklab.client.utils.FolderZiper;
-import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
 
 import uk.co.flamingpenguin.jewel.cli.Option;
 
@@ -41,7 +41,7 @@ public class Project extends CommandHandler {
 
 		Args args = (Args)arguments;
 				
-		ThinklabProject current = session.getCurrentProject();
+		IProject current = session.getCurrentProject();
 		String info = "";
 		
 		String cmd = expect(args,0);
@@ -49,22 +49,24 @@ public class Project extends CommandHandler {
 		if (cmd.equals("create")) {
 			
 			String projectId = expect(args,1);
-			session.setCurrentProject(ThinklabProject.create(projectId));
+			session.setCurrentProject(ProjectManager.get().
+					createProject(Configuration.getProjectDirectory(projectId), null));
 			info = 
 				"project " + projectId + " created in " + 
-				Configuration.getProjectDirectory();
+				Configuration.getProjectDirectory(projectId);
 		
 		} else if (cmd.equals("load")) {
 
 			String projectId = expect(args,1);
-			session.setCurrentProject(ThinklabProject.load(projectId));
+			session.setCurrentProject(ProjectManager.get().getProject(projectId));
+			ProjectManager.get().loadProject(projectId);
 			info = "project " + projectId + " loaded";
 
 		} else if (cmd.equals("info")) {
 
-			ThinklabProject proj = current;
+			IProject proj = current;
 			if (args.getArguments().size() > 1) {
-				proj = ThinklabProject.load(expect(args,1));
+				proj = ProjectManager.get().loadProject(expect(args,1));
 			}
 			checkCurrent(proj);
 			
@@ -108,7 +110,7 @@ public class Project extends CommandHandler {
 				return Result.fail(session).error("project: not connected to a server");
 
 			checkCurrent(current);
-			File zip = current.getZipArchive();
+			File zip = ProjectManager.get().archiveProject(current.getId());
 			
 			cl.append("uploading project... ");
 			String handle = session.upload(zip, null);
@@ -175,7 +177,7 @@ public class Project extends CommandHandler {
 				
 					FolderZiper.unzip(zip.getFirst(), Configuration.getProjectDirectory());
 				
-					session.setCurrentProject(ThinklabProject.load(pid));
+					session.setCurrentProject(ProjectManager.get().loadProject(pid));
 					info = "project " + pid + " imported from " + session.getName() + " and loaded";
 				
 				} else {
@@ -192,7 +194,7 @@ public class Project extends CommandHandler {
 				pid = current.getId();
 			}
 			
-			ThinklabProject proj = ThinklabProject.load(pid);
+			IProject proj = ProjectManager.get().loadProject(pid);
 			if (proj == null) {
 				return Result.fail(session).error("project " + pid + " does not exist on the client");
 			}
@@ -201,7 +203,7 @@ public class Project extends CommandHandler {
 					pid + 
 					" from the local repository? [yes|no] ").equals("yes")) {
 				
-				MiscUtilities.recursiveDelete(proj.getPath());
+				ProjectManager.get().deleteProject(pid);
 				cl.say("project " + pid + " removed from disk");				
 				if (current != null && current.equals(proj))
 					session.setCurrentProject(current = null);
@@ -211,7 +213,7 @@ public class Project extends CommandHandler {
 		return Result.ok(session).info(info);
 	}
 
-	private void checkCurrent(ThinklabProject current) throws ThinklabClientException {
+	private void checkCurrent(IProject current) throws ThinklabClientException {
 		if (current == null) {
 			throw new ThinklabClientException(
 					"no current project set: create or load a project first");

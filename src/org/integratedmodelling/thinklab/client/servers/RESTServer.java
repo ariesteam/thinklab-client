@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.integratedmodelling.collections.Pair;
+import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.thinklab.api.lang.IPrototype;
 import org.integratedmodelling.thinklab.api.metadata.IMetadata;
 import org.integratedmodelling.thinklab.api.project.IProject;
@@ -13,7 +14,6 @@ import org.integratedmodelling.thinklab.api.runtime.IServer;
 import org.integratedmodelling.thinklab.client.Session;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.modelling.Metadata;
-import org.integratedmodelling.thinklab.client.project.ThinklabProject;
 import org.integratedmodelling.thinklab.client.utils.FolderZiper;
 
 public class RESTServer implements IServer {
@@ -165,9 +165,9 @@ public class RESTServer implements IServer {
 	public Result deploy(IProject p) {
 
 		try {
-			if (!getSession().deploy((ThinklabProject)p))
+			if (!getSession().deploy(p))
 				return error(new ThinklabClientException("failed to deploy project " + p.getId()));
-		} catch (ThinklabClientException e) {
+		} catch (ThinklabException e) {
 			return error(e);
 		}
 		return OK_RESULT;
@@ -176,7 +176,7 @@ public class RESTServer implements IServer {
 	@Override
 	public Result undeploy(IProject p) {
 		try {
-			if (!getSession().undeploy((ThinklabProject)p))
+			if (!getSession().undeploy(p))
 				return error(new ThinklabClientException("failed to deploy project " + p.getId()));
 		} catch (ThinklabClientException e) {
 			return error(e);
