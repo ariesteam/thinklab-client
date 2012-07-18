@@ -244,6 +244,7 @@ public class Resolver implements IResolver {
 			 * if we get here we haven't found it, look it up in all DIRECTLY imported projects (non-recursively)
 			 */
 			if (project != null) {
+				try {
 				for (IThinklabPlugin pr : project.getPrerequisites()) {
 					
 					IProject prj = (IProject)pr;
@@ -253,15 +254,14 @@ public class Resolver implements IResolver {
 					 */
 					f = prj.findResourceForNamespace(namespace, "tql");
 					if (f != null) {
-						try {
 							if (resourceId == null) {
 								resourceId = f.toString();
 							}
 							return new FileInputStream(f);
-						} catch (FileNotFoundException e) {
-							onException( new ThinklabIOException(e), 0);
-						}
 					}
+				}
+				} catch (Exception e) {
+					onException(new ThinklabException(e), 0);
 				}
 			}
 		}

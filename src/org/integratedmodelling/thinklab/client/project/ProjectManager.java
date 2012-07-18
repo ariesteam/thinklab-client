@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.integratedmodelling.exceptions.ThinklabException;
@@ -233,7 +233,7 @@ public class ProjectManager implements IProjectManager, IProjectFactory {
 	 * @return
 	 * @throws ThinklabException
 	 */
-	public Iterator<IProject> computeDependencies() throws ThinklabException {
+	public List<IProject> computeDependencies() throws ThinklabException {
 		
 		DefaultDirectedGraph<IProject, DefaultEdge> ret = 
 				new DefaultDirectedGraph<IProject, DefaultEdge>(DefaultEdge.class);
@@ -268,11 +268,16 @@ public class ProjectManager implements IProjectManager, IProjectFactory {
 
 		TopologicalOrderIterator<IProject, DefaultEdge> tord = 
 				new TopologicalOrderIterator<IProject, DefaultEdge>(ret);
+
+		ArrayList<IProject> r = new ArrayList<IProject>();
 		
-		return tord;
+		while (tord.hasNext())
+			r.add(tord.next());
+		
+		return r;
 	}
 	
-	public Iterator<IProject> computeDependencies(IProject project) throws ThinklabException {
+	public List<IProject> computeDependencies(IProject project) throws ThinklabException {
 		
 		DefaultDirectedGraph<IProject, DefaultEdge> ret = 
 				new DefaultDirectedGraph<IProject, DefaultEdge>(DefaultEdge.class);
@@ -308,7 +313,12 @@ public class ProjectManager implements IProjectManager, IProjectFactory {
 		TopologicalOrderIterator<IProject, DefaultEdge> tord = 
 				new TopologicalOrderIterator<IProject, DefaultEdge>(ret);
 		
-		return tord;
+		ArrayList<IProject> r = new ArrayList<IProject>();
+		
+		while (tord.hasNext())
+			r.add(tord.next());
+		
+		return r;
 	}
 
 	private Collection<IProject> collectDependencies(IProject project, Collection<IProject> ret) throws ThinklabException {

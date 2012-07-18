@@ -6,10 +6,11 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.ExecuteResultHandler;
-import org.apache.commons.exec.ExecuteWatchdog;
 import org.integratedmodelling.exceptions.ThinklabException;
+import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.Session;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
+import org.integratedmodelling.thinklab.client.project.ProjectManager;
 import org.integratedmodelling.thinklab.client.utils.NetUtilities;
 
 /**
@@ -56,6 +57,7 @@ public class EmbeddedServer extends RESTServer {
 		 * port, although that may be overkill at this point.
 		 */
 		if (!NetUtilities.portAvailable(8182)) {
+			_running = true;
 			return OK_RESULT;
 		}
 		
@@ -95,7 +97,6 @@ public class EmbeddedServer extends RESTServer {
 					_err;
 		}
 		
-
 		/*
 		 * wait until server is active before giving control to client
 		 */
@@ -104,7 +105,7 @@ public class EmbeddedServer extends RESTServer {
 			try {
 				Thread.sleep(500);
 				timeout += 500;
-			} catch (InterruptedException e) {
+			} catch (Exception e) {
 			}
 		} while (NetUtilities.portAvailable(8182) && timeout < TIMEOUT);
 		
@@ -141,6 +142,37 @@ public class EmbeddedServer extends RESTServer {
 	@Override
 	public boolean isActive() {
 		return _running;
+	}
+
+	@Override
+	public Result deploy(IProject p) {
+
+		String dirs = "";
+		
+		try {
+			for (IProject proj : p.getPrerequisites()) {
+				dirs += (dirs.isEmpty() ? "" : ",") + proj.getLoadPath();
+			}
+		} catch (ThinklabException e) {
+			return error(e);
+		}
+		
+		System.out.println("sending deps " + dirs);
+		
+		try {
+			System.out.println("command 1");
+			Result res = getSession().send("project", false, "cmd", "register", "directory", dirs);
+			if (res.getStatus() == OK) {
+				System.out.println("command 2");
+				res = getSession().send("project", false, "cmd", "load", "plugin", p.getId());
+			}
+			System.out.println("command done");
+			return res;
+		} catch (Exception e) {
+			System.out.println("fucc ");
+			e.printStackTrace();
+			return error(e);
+		}
 	}
 
 

@@ -14,6 +14,7 @@ import org.integratedmodelling.common.HashableObject;
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabRuntimeException;
 import org.integratedmodelling.thinklab.api.factories.IProjectManager;
+import org.integratedmodelling.thinklab.api.lang.IResolver;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.Configuration;
@@ -34,7 +35,7 @@ public class Project extends HashableObject implements IProject {
 	private String[] _dependencies;
 	private boolean _loaded = false;
 	
-	IProjectManager _manager;
+	ProjectManager _manager;
 	
 	/*
 	 * these 2 are in sync
@@ -51,7 +52,7 @@ public class Project extends HashableObject implements IProject {
 	public Project(File path, IProjectManager manager) {
 		
 		_path = path;
-		_manager = manager;
+		_manager = (ProjectManager) manager;
 		_id = MiscUtilities.getFileName(path.toString());
 		_properties = getProperties();
 		String pp = getProperties().getProperty(IProject.PREREQUISITES_PROPERTY, "");
@@ -100,17 +101,12 @@ public class Project extends HashableObject implements IProject {
 
 	private void loadDependencies(Resolver resolver) throws ThinklabException {
 
-		for (String dep : _dependencies) {
-			IProject p = _manager.getProject(dep);
-			if (p == null)
-				throw new ThinklabClientException(_id + ": cannot load prerequisite project " + dep);
-
-			/*
-			 * load with newly initialized resolver
-			 */
-			Resolver r = (Resolver) resolver.getImportResolver();
-			r.initialize(resolver.server, p);
-			((Project)p).load(r);
+		for (IProject p : _manager.computeDependencies(this)) {
+			if (p.equals(this))
+				continue;
+			IResolver r = resolver.getImportResolver();
+			((Resolver)r).initialize(resolver.server, p);
+			((Project)p).load((Resolver) r);
 		}
 	}
 
@@ -271,18 +267,8 @@ public class Project extends HashableObject implements IProject {
 	}
 
 	@Override
-	public List<IProject> getPrerequisites() {
-		
-		ArrayList<IProject> ret = new ArrayList<IProject>();
-
-		for (String s : _dependencies) {
-			IProject p = _manager.getProject(s);
-			if (p != null) {
-				ret.add(p);
-			}
-		}
-		
-		return ret;
+	public List<IProject> getPrerequisites() throws ThinklabException {
+		return _manager.computeDependencies(this);
 	}
 
 	@Override
