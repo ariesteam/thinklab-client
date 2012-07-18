@@ -25,7 +25,7 @@ import org.integratedmodelling.thinklab.client.utils.FolderZiper;
 import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
 
 public class Project extends HashableObject implements IProject {
-
+	
 	String _id = null;
 	File _path;
 
@@ -46,6 +46,7 @@ public class Project extends HashableObject implements IProject {
 	 * if true, we need refresh
 	 */
 	private boolean _isDirty = false;
+	
 	
 	public Project(File path, IProjectManager manager) {
 		
@@ -375,5 +376,9 @@ public class Project extends HashableObject implements IProject {
 
 		return getSourceDirectory() + File.separator + 
 				ns.replace('.', File.separatorChar) + ".tql";
+	}
+	
+	String[] getPrerequisiteIds() {
+		return _dependencies;
 	}
 }

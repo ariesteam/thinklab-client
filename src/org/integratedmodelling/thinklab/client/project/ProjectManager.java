@@ -5,20 +5,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import org.apache.commons.io.FileUtils;
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabIOException;
+import org.integratedmodelling.exceptions.ThinklabProjectException;
 import org.integratedmodelling.exceptions.ThinklabResourceNotFoundException;
 import org.integratedmodelling.thinklab.api.factories.IProjectFactory;
 import org.integratedmodelling.thinklab.api.factories.IProjectManager;
 import org.integratedmodelling.thinklab.api.lang.IResolver;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.api.runtime.IServer;
-import org.integratedmodelling.thinklab.client.Configuration;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.modelling.Resolver;
 import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
+import org.jgrapht.alg.CycleDetector;
+import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.traverse.TopologicalOrderIterator;
 
 public class ProjectManager implements IProjectManager, IProjectFactory {
 
@@ -148,7 +154,7 @@ public class ProjectManager implements IProjectManager, IProjectFactory {
 		 */
 		ArrayList<File> pdirs = new ArrayList<File>();
 		
-		for (File f : Configuration.getProjectDirectory().listFiles()) {
+		for (File f : projectDirectory.listFiles()) {
 			if (isThinklabProject(f)) {
 				pdirs.add(f);
 			}
@@ -216,4 +222,117 @@ public class ProjectManager implements IProjectManager, IProjectFactory {
 		return ((Project)p).getZipArchive();
 	}
 	
+	/*
+	 * non-API
+	 */
+	
+	/** 
+	 * Computes the dependency graph for all projects registered; return an iterator of them in 
+	 * order of dependency. Throws an exception if circular dependencies are detected.
+	 * 
+	 * @return
+	 * @throws ThinklabException
+	 */
+	public Iterator<IProject> computeDependencies() throws ThinklabException {
+		
+		DefaultDirectedGraph<IProject, DefaultEdge> ret = 
+				new DefaultDirectedGraph<IProject, DefaultEdge>(DefaultEdge.class);
+		
+		for (IProject pd : _projects.values()) {
+			
+			ret.addVertex(pd);
+			for (String req : ((Project)pd).getPrerequisiteIds()) {
+				
+				IProject rpd = getProject(req);
+				
+				if (rpd == null) {
+					throw new ThinklabProjectException("project " + req + " required by project " + pd.getId() + " cannot be found in project path");
+				}
+				
+				ret.addVertex(rpd);
+				ret.addEdge(rpd, pd);
+			}
+		}
+		
+		CycleDetector<IProject, DefaultEdge> cd = 
+				new CycleDetector<IProject, DefaultEdge>(ret);
+		
+		if (cd.detectCycles()) {
+			
+			String s = "";
+			for (IProject pd : cd.findCycles()) {
+				s += (s.isEmpty() ? "" : ", ") + pd.getId();
+			}
+			throw new ThinklabProjectException("circular dependencies detected between projects " + s);
+		}
+
+		TopologicalOrderIterator<IProject, DefaultEdge> tord = 
+				new TopologicalOrderIterator<IProject, DefaultEdge>(ret);
+		
+		return tord;
+	}
+	
+	public Iterator<IProject> computeDependencies(IProject project) throws ThinklabException {
+		
+		DefaultDirectedGraph<IProject, DefaultEdge> ret = 
+				new DefaultDirectedGraph<IProject, DefaultEdge>(DefaultEdge.class);
+		
+		for (IProject pd : collectDependencies(project, null)) {
+			
+			ret.addVertex(pd);
+			for (String req : ((Project)pd).getPrerequisiteIds()) {
+				
+				IProject rpd = getProject(req);
+				
+				if (rpd == null) {
+					throw new ThinklabProjectException("project " + req + " required by project " + pd.getId() + " cannot be found in project path");
+				}
+				
+				ret.addVertex(rpd);
+				ret.addEdge(rpd, pd);
+			}
+		}
+		
+		CycleDetector<IProject, DefaultEdge> cd = 
+				new CycleDetector<IProject, DefaultEdge>(ret);
+		
+		if (cd.detectCycles()) {
+			
+			String s = "";
+			for (IProject pd : cd.findCycles()) {
+				s += (s.isEmpty() ? "" : ", ") + pd.getId();
+			}
+			throw new ThinklabProjectException("circular dependencies detected between projects " + s);
+		}
+
+		TopologicalOrderIterator<IProject, DefaultEdge> tord = 
+				new TopologicalOrderIterator<IProject, DefaultEdge>(ret);
+		
+		return tord;
+	}
+
+	private Collection<IProject> collectDependencies(IProject project, Collection<IProject> ret) throws ThinklabException {
+		
+		if (ret == null)
+			ret = new HashSet<IProject>();
+
+		if (ret.contains(project))
+			/*
+			 * circular dependency: we let the sorter deal with that
+			 */
+			return ret;
+		
+		ret.add(project);
+		
+		for (String id : ((Project)project).getPrerequisiteIds()) {
+			IProject dep = getProject(id);
+			if (dep == null)
+				throw new ThinklabResourceNotFoundException(
+						"project " + id + " required by " + project.getId() + " has not been registered");
+
+			collectDependencies(dep, ret);
+		}
+		
+		return ret;
+	}
 }
