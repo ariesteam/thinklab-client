@@ -468,9 +468,6 @@ public class ModelManager implements IModelManager {
 		String extension = MiscUtilities.getFileExtension(file);
 		IModelParser parser = interpreters.get(extension);
 		
-		/*
-		 * if already loaded as an import, just return it
-		 */
 		Namespace ret = (Namespace) namespacesById.get(namespaceId);
 		if (ret != null)
 			return ret;
@@ -488,7 +485,6 @@ public class ModelManager implements IModelManager {
 			ret.setProject(project);
 			ret.setResourceUrl(file);
 			ret.synchronizeKnowledge();
-			namespacesById.put(ret.getId(), ret);
 		}
 		
 		return ret;
@@ -520,13 +516,15 @@ public class ModelManager implements IModelManager {
 	public INamespace loadNamespace(String namespaceId, String resource, String resourceType)
 			throws ThinklabException {
 		
+		Namespace ret = (Namespace) namespacesById.get(namespaceId);
+		if (ret != null)
+			return ret;
+		
 		String extension = resourceType;
 		if (extension == null)
 			extension = MiscUtilities.getFileExtension(resource);
 		
 		IModelParser parser = interpreters.get(extension);
-		Namespace ret = null;
-		
 		if (parser == null) {
 			throw new ThinklabValidationException("don't know how to parse a " + extension + " resource");
 		}
@@ -536,7 +534,6 @@ public class ModelManager implements IModelManager {
 		if (ret != null) {
 			ret.setId(namespaceId);
 			ret.synchronizeKnowledge();
-			namespacesById.put(ret.getId(), ret);
 		}
 		
 		return ret;

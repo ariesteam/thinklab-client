@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.Map;
 
 import org.integratedmodelling.exceptions.ThinklabException;
-import org.integratedmodelling.exceptions.ThinklabIOException;
 import org.integratedmodelling.exceptions.ThinklabUnsupportedOperationException;
 import org.integratedmodelling.lang.Axiom;
 import org.integratedmodelling.thinklab.api.lang.IModelParser;
@@ -19,6 +18,7 @@ import org.integratedmodelling.thinklab.api.lang.IModelSerializer;
 import org.integratedmodelling.thinklab.api.lang.IResolver;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
 import org.integratedmodelling.thinklab.api.modelling.parsing.INamespaceDefinition;
+import org.integratedmodelling.thinklab.client.modelling.Namespace;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
 import org.semanticweb.owlapi.io.OWLParser;
@@ -124,14 +124,15 @@ public class OwlParser implements IModelParser, IModelSerializer {
 		resolver.onNamespaceDeclared();
 
 		/*
-		 * resolve all imports
+		 * resolve all imports. TODO must use the filesystem resources when they
+		 * have corresponding ones.
 		 */
-		for (OWLOntology o : ontology.getImports()) {
-			if (!_seen.contains(o.getOntologyID().getOntologyIRI())) {
-				_seen.add(o.getOntologyID().getOntologyIRI());
-				importOntology(o, resolver, true);
-			}
-		}
+//		for (OWLOntology o : ontology.getImports()) {
+//			if (!_seen.contains(o.getOntologyID().getOntologyIRI())) {
+//				_seen.add(o.getOntologyID().getOntologyIRI());
+//				importOntology(o, resolver, true);
+//			}
+//		}
 		
 		/*
 		 * import all axioms into namespace
@@ -144,13 +145,13 @@ public class OwlParser implements IModelParser, IModelSerializer {
 		
 		_namespaces.put(namespace, ns);
 		
-		if (resolver instanceof OWLOntologyNotifier) {
-			if (imported)
-				((OWLOntologyNotifier)resolver).notifyImportedOWLOntology(ns, ontology);
-			else 
-				((OWLOntologyNotifier)resolver).notifyOWLOntology(ns, ontology);
-				
-		}
+//		if (resolver instanceof OWLOntologyNotifier) {
+//			if (imported)
+//				((OWLOntologyNotifier)resolver).notifyImportedOWLOntology(ns, ontology);
+//			else 
+//				((OWLOntologyNotifier)resolver).notifyOWLOntology(ns, ontology);
+//				
+//		}
 		
 		/*
 		 * TODO ensure that the manager can locate this ontology from now on when referenced
@@ -173,7 +174,6 @@ public class OwlParser implements IModelParser, IModelSerializer {
 			} else if (entity instanceof OWLAnnotationProperty) {
 				ns.addAxiom(Axiom.AnnotationPropertyAssertion(id));
 			} else if (entity instanceof OWLClass) {
-//				System.out.println("CLASS: " + id + " from " + axiom);
 				ns.addAxiom(Axiom.ClassAssertion(id));				
 			}
 			
@@ -215,7 +215,6 @@ public class OwlParser implements IModelParser, IModelSerializer {
 				/*
 				 * super may be in another ontology, so ensure we have the same namespace or get the proper one.
 				 */
-//				System.out.println("SUBCLASS: " + sup);				
 			}
 			
 		} else if (axiom instanceof OWLAnnotationAssertionAxiom) {
@@ -241,8 +240,7 @@ public class OwlParser implements IModelParser, IModelSerializer {
 				return _resourceIndex.get(resource);
 			}
 			
-			IResolver res = resolver.getNamespaceResolver(namespace, resource);
-			input = res.openStream();
+			input = resolver.openStream();
 			OWLOntology ontology = _manager.loadOntologyFromOntologyDocument(input);
 			input.close();
 			
@@ -250,6 +248,7 @@ public class OwlParser implements IModelParser, IModelSerializer {
 			 * import ontology and all its imports. Return namespace ID.
 			 */
 			ns = importOntology(ontology, resolver, false);
+			
 			
 			/*
 			 * do not load this again, it's in the manager.
@@ -333,6 +332,11 @@ public class OwlParser implements IModelParser, IModelSerializer {
 		if (exception != null) {
 			resolver.onException(exception, 0);
 		}
+
+		INamespace nns = _namespaces.get(ns);
+		((Namespace)nns).setResourceUrl(resource);
+		((Namespace)nns).setId(namespace);
+
 		
 		return _namespaces.get(ns);
 	}
