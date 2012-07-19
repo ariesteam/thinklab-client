@@ -119,7 +119,7 @@ public class Project extends HashableObject implements IProject {
 					(path + (path.isEmpty() ? "" : ".") + CamelCase.toLowerCase(MiscUtilities.getFileBaseName(f.toString()), '-'));
 						
 		if (f. isDirectory()) {
-		
+
 			for (File fl : f.listFiles()) {
 				loadInternal(fl, read, ret, pth, project, resolver);
 			}
@@ -395,11 +395,9 @@ public class Project extends HashableObject implements IProject {
 	String[] getPrerequisiteIds() {
 		return _dependencies;
 	}
-	
 
 	@Override
 	public boolean providesNamespace(String namespaceId) {
-		// TODO Auto-generated method stub
-		return false;
+		return findResourceForNamespace(namespaceId) != null;
 	}
 }
