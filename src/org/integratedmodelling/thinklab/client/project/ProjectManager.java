@@ -19,7 +19,7 @@ import org.integratedmodelling.thinklab.api.lang.IResolver;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.api.runtime.IServer;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
-import org.integratedmodelling.thinklab.client.modelling.Resolver;
+import org.integratedmodelling.thinklab.client.modelling.ModelManager;
 import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
 import org.jgrapht.alg.CycleDetector;
 import org.jgrapht.graph.DefaultDirectedGraph;
@@ -62,9 +62,7 @@ public class ProjectManager implements IProjectManager, IProjectFactory {
 
 		for (IProject p : getProjects()) {
 			if (!((Project)p).isLoaded()) {
-				Resolver resolver = (Resolver) getResolver();
-				resolver.initialize(this._server, p);
-				((Project)p).load(resolver);
+				((Project)p).load(getResolver(p));
 			}
 		}
 	}
@@ -76,11 +74,8 @@ public class ProjectManager implements IProjectManager, IProjectFactory {
 		
 		if (p == null)
 			throw new ThinklabResourceNotFoundException("project " + projectId + " does not exist");
-		
-		Resolver resolver = (Resolver) getResolver();
-		resolver.initialize(this._server, p);
 
-		((Project)p).load(resolver);
+		((Project)p).load(getResolver(p));
 		
 		return p;
 	}
@@ -139,10 +134,7 @@ public class ProjectManager implements IProjectManager, IProjectFactory {
 			((Project)project).unload();
 		}
 
-		Resolver resolver = (Resolver) getResolver();
-		resolver.initialize(this._server, project);
-
-		((Project)project).load(resolver);
+		((Project)project).load(getResolver(project));
 	}
 
 	@Override
@@ -167,8 +159,8 @@ public class ProjectManager implements IProjectManager, IProjectFactory {
 	}
 
 	@Override
-	public IResolver getResolver() {
-		return new Resolver();
+	public IResolver getResolver(IProject project) {
+		return ModelManager.get().getResolver(_server, project);
 	}
 
 	public static boolean isThinklabProject(File dir) {
@@ -345,4 +337,11 @@ public class ProjectManager implements IProjectManager, IProjectFactory {
 		
 		return ret;
 	}
+
+	@Override
+	public void unloadProject(String projectId) throws ThinklabException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

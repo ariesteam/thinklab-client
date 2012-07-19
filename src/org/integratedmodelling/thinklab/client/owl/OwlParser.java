@@ -121,7 +121,7 @@ public class OwlParser implements IModelParser, IModelSerializer {
 		INamespaceDefinition ns = (INamespaceDefinition) resolver.newLanguageObject(INamespace.class);
 		ns.setId(namespace);
 
-		resolver.onNamespaceDeclared(ns.getId(), ns);
+		resolver.onNamespaceDeclared();
 
 		/*
 		 * resolve all imports
@@ -140,7 +140,7 @@ public class OwlParser implements IModelParser, IModelSerializer {
 			addAxiom(axiom, ns);
 		}
 		
-		resolver.onNamespaceDefined(ns);
+		resolver.onNamespaceDefined();
 		
 		_namespaces.put(namespace, ns);
 		
@@ -173,7 +173,7 @@ public class OwlParser implements IModelParser, IModelSerializer {
 			} else if (entity instanceof OWLAnnotationProperty) {
 				ns.addAxiom(Axiom.AnnotationPropertyAssertion(id));
 			} else if (entity instanceof OWLClass) {
-				System.out.println("CLASS: " + id + " from " + axiom);
+//				System.out.println("CLASS: " + id + " from " + axiom);
 				ns.addAxiom(Axiom.ClassAssertion(id));				
 			}
 			
@@ -215,7 +215,7 @@ public class OwlParser implements IModelParser, IModelSerializer {
 				/*
 				 * super may be in another ontology, so ensure we have the same namespace or get the proper one.
 				 */
-				System.out.println("SUBCLASS: " + sup);				
+//				System.out.println("SUBCLASS: " + sup);				
 			}
 			
 		} else if (axiom instanceof OWLAnnotationAssertionAxiom) {
@@ -228,11 +228,12 @@ public class OwlParser implements IModelParser, IModelSerializer {
 	}
 
 	@Override
-	public INamespace parse(String resource, IResolver resolver)
-			throws ThinklabException {
+	public INamespace parse(String namespace, String resource, IResolver resolver) throws ThinklabException {
 		
 		String ns = "__not__found";
 		InputStream input = null;
+		
+		Throwable exception = null;
 		
 		try {
 			
@@ -240,7 +241,8 @@ public class OwlParser implements IModelParser, IModelSerializer {
 				return _resourceIndex.get(resource);
 			}
 			
-			input = resolver.resolveNamespace(null, resource);
+			IResolver res = resolver.getNamespaceResolver(namespace, resource);
+			input = res.openStream();
 			OWLOntology ontology = _manager.loadOntologyFromOntologyDocument(input);
 			input.close();
 			
@@ -260,6 +262,8 @@ public class OwlParser implements IModelParser, IModelSerializer {
 		} catch (OWLOntologyCreationIOException e) {
 			// IOExceptions during loading get wrapped in an
 			// OWLOntologyCreationIOException
+			exception = e;
+			
 			IOException ioException = e.getCause();
 			if (ioException instanceof FileNotFoundException) {
 				System.out.println("Could not load ontology. File not found: "
@@ -273,6 +277,9 @@ public class OwlParser implements IModelParser, IModelSerializer {
 						+ ioException.getMessage());
 			}
 		} catch (UnparsableOntologyException e) {
+			
+			exception = e;
+			
 			// If there was a problem loading an ontology because there are
 			// syntax errors in the document (file) that
 			// represents the ontology then an UnparsableOntologyException is
@@ -290,6 +297,9 @@ public class OwlParser implements IModelParser, IModelSerializer {
 						+ exceptions.get(parser).getMessage());
 			}
 		} catch (UnloadableImportException e) {
+			
+			exception = e;
+			
 			// If our ontology contains imports and one or more of the imports
 			// could not be loaded then an
 			// UnloadableImportException will be thrown (depending on the
@@ -307,18 +317,23 @@ public class OwlParser implements IModelParser, IModelSerializer {
 			 */
 			return _iriIndex.get(e.getOntologyID().getOntologyIRI());
 		} catch (OWLOntologyCreationException e) {
+			exception = e;
 			System.out.println("Could not load ontology: " + e.getMessage());
 		} catch (IOException e) {
-			throw new ThinklabIOException(e);
+			exception = e;
 		} finally {
 			if (input != null)
 				try {
 					input.close();
 				} catch (IOException e) {
-
+					exception = e;
 				}
 		}
 
+		if (exception != null) {
+			resolver.onException(exception, 0);
+		}
+		
 		return _namespaces.get(ns);
 	}
 

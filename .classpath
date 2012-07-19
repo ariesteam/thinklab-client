@@ -10,7 +10,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/commons-collections-3.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-collections-testframework-3.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-dbcp-1.2.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/commons-io-1.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-jxpath-1.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-lang-2.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging-1.1.1.jar"/>
@@ -25,5 +24,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/org.apache.james.mime4j.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/owlapi-bin.jar"/>
 	<classpathentry kind="lib" path="lib/xstream-1.4.3-20120321.180636-1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io-2.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

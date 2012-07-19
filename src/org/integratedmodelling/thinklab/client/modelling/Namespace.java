@@ -10,6 +10,8 @@ import org.integratedmodelling.collections.Pair;
 import org.integratedmodelling.thinklab.api.knowledge.IAxiom;
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
+import org.integratedmodelling.thinklab.api.modelling.IContext;
+import org.integratedmodelling.thinklab.api.modelling.IExtent;
 import org.integratedmodelling.thinklab.api.modelling.IModelObject;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IModelObjectDefinition;
@@ -176,7 +178,7 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	}
 	
 	@Override
-	public void addImportedNamespace(INamespaceDefinition namespace) {
+	public void addImportedNamespace(INamespace namespace) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -258,5 +260,17 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	
 	public void addWarning(String warning, int lineNumber) {	
 		_warnings.add(new Pair<String, Integer>(warning, lineNumber));
+	}
+	
+	@Override
+	public IContext getCoverage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void addCoveredExtent(IExtent extent) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
 import org.integratedmodelling.common.HashableObject;
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabRuntimeException;
@@ -20,7 +21,6 @@ import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.Configuration;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.modelling.ModelManager;
-import org.integratedmodelling.thinklab.client.modelling.Resolver;
 import org.integratedmodelling.thinklab.client.utils.CamelCase;
 import org.integratedmodelling.thinklab.client.utils.FolderZiper;
 import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
@@ -30,6 +30,8 @@ public class Project extends HashableObject implements IProject {
 	String _id = null;
 	File _path;
 
+	int _refcount = 0;
+	
 	Properties _properties = null;
 	private ArrayList<INamespace> _namespaces = new ArrayList<INamespace>();
 	private String[] _dependencies;
@@ -75,10 +77,13 @@ public class Project extends HashableObject implements IProject {
 		_isDirty = isDirty;
 	}
 
-	public void load(Resolver resolver) throws ThinklabException {
+
+	public void load(IResolver resolver) throws ThinklabException {
 
 		if (isLoaded() && isDirty())
 			unload();
+		
+		_refcount ++;
 		
 		/*
 		 * if we haven't been unloaded, we didn't need to so we don't need
@@ -87,31 +92,26 @@ public class Project extends HashableObject implements IProject {
 		if (isLoaded())
 			return;
 		
-		loadDependencies(resolver);		
+		for (IProject p : _manager.computeDependencies(this)) {
+			if (p.equals(this))
+				continue;
+			IResolver r = resolver.getImportResolver(p);
+			((Project)p).load(r);
+		}
+		
 		_namespaces = new ArrayList<INamespace>();
 		HashSet<File> read = new HashSet<File>();
 		loadInternal(new File(_path + File.separator + this.getSourceDirectory()), read, _namespaces, "", this, resolver);
 		_loaded = true;
 		_isDirty = false;
 	}
-
+	
 	private boolean isDirty() {
 		return _isDirty ;
 	}
 
-	private void loadDependencies(Resolver resolver) throws ThinklabException {
-
-		for (IProject p : _manager.computeDependencies(this)) {
-			if (p.equals(this))
-				continue;
-			IResolver r = resolver.getImportResolver();
-			((Resolver)r).initialize(resolver.server, p);
-			((Project)p).load((Resolver) r);
-		}
-	}
-
 	private void loadInternal(File f, HashSet<File> read, ArrayList<INamespace> ret, String path,
-			IProject project, Resolver resolver) throws ThinklabClientException {
+			IProject project, IResolver resolver) throws ThinklabClientException {
 
 		String pth = 
 				path == null ? 
@@ -140,15 +140,34 @@ public class Project extends HashableObject implements IProject {
 
 	public void unload() throws ThinklabException {
 		
-		for (INamespace ns : _namespaces) {
-			ModelManager.get().releaseNamespace(ns.getId());
+		if (!isLoaded())
+			return;
+
+		/*
+		 * unload dependents in reverse order of dependency.
+		 */
+		List<IProject> deps = _manager.computeDependencies(this);
+		for (int i = deps.size() - 1; i >= 0; i--) {
+			IProject p = deps.get(i);
+			if (p.equals(this))
+				continue;
+			((Project)p).unload();
 		}
 		
-		_namespaces.clear();
-		_resourcesInError.clear();
-		_loaded = false;
+		_refcount --;
+		
+		if (_refcount == 0) {
+		
+			for (INamespace ns : _namespaces) {
+				ModelManager.get().releaseNamespace(ns.getId());
+			}
+		
+			_namespaces.clear();
+			_resourcesInError.clear();
+			_loaded = false;
+		}
 	}
-
+	
 	@Override
 	public File findResource(String resource) {
 
@@ -164,12 +183,14 @@ public class Project extends HashableObject implements IProject {
 	}
 	
 	@Override
-	public File findResourceForNamespace(String namespace, String extension) {
+	public File findResourceForNamespace(String namespace) {
 
 		String fp = namespace.replace('.', File.separatorChar);
-		File ff = new File(_path + File.separator + getSourceDirectory() + File.separator + fp + "." + extension);
-		if (ff.exists()) {
-			return ff;
+		for (String extension : new String[]{"tql", "owl"}) {
+			File ff = new File(_path + File.separator + getSourceDirectory() + File.separator + fp + "." + extension);
+			if (ff.exists()) {
+				return ff;
+			}
 		}
 			
 		return null;
@@ -273,8 +294,15 @@ public class Project extends HashableObject implements IProject {
 
 	@Override
 	public long getLastModificationTime() {
-		// TODO Auto-generated method stub
-		return 0;
+
+		long lastmod = 0L;
+		
+		for (File f : FileUtils.listFiles(_path, new String[]{}, true)) {
+			if (f.lastModified() > lastmod)
+				lastmod = f.lastModified();
+		}
+		
+		return lastmod;		
 	}
 
 	// NON-API
@@ -366,5 +394,12 @@ public class Project extends HashableObject implements IProject {
 	
 	String[] getPrerequisiteIds() {
 		return _dependencies;
+	}
+	
+
+	@Override
+	public boolean providesNamespace(String namespaceId) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

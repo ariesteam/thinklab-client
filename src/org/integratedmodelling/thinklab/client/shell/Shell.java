@@ -253,7 +253,7 @@ public class Shell implements CommandLine {
 		 */
 		List<?> lines = null;
 		try {
-			lines = FileUtils.readLines(historyFile, null);
+			lines = FileUtils.readLines(historyFile);
 		} catch (IOException e) {
 			// no problem
 		}
