@@ -276,20 +276,23 @@ public class RESTServer implements IServer {
 		}
 		
 		public CResult(org.integratedmodelling.thinklab.client.Result r,
-				String s, File outputDir, Object output, Object exception) {
+				String command, Object result, String output, Throwable exception) {
 			
 			_s = r.getStatus();
-			if (_e == null)
+			_r = result;
+			_o = output; 
+			_c = command;
+			
+			if (exception == null)
 				_e = r.getException();
-
+			
 			try {
 				if (r.get(IServer.EXCEPTION_CLASS) != null) {
 					_o = r.get(IServer.STACK_TRACE).toString();
 				}
 			} catch (ThinklabClientException e) {
 				// just don't
-			}
-		
+			}		
 		}
 
 		@Override
