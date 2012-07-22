@@ -84,7 +84,18 @@ public class ClassificationDefinition implements IClassificationDefinition {
 	@Override
 	public void initialize() {
 		// TODO Auto-generated method stub
+	}
 
+	@Override
+	public boolean hasZeroRank() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isCategorical() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

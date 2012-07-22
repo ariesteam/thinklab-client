@@ -95,7 +95,7 @@ public class RESTServer implements IServer {
 			return error(e);
 		}
 			
-		return new CResult(r.getStatus(), s, outputDir, null, null);
+		return new CResult(r, s, outputDir, null, null);
 	}
 
 	@Override
@@ -275,6 +275,23 @@ public class RESTServer implements IServer {
 			_e = exception;
 		}
 		
+		public CResult(org.integratedmodelling.thinklab.client.Result r,
+				String s, File outputDir, Object output, Object exception) {
+			
+			_s = r.getStatus();
+			if (_e == null)
+				_e = r.getException();
+
+			try {
+				if (r.get(IServer.EXCEPTION_CLASS) != null) {
+					_o = r.get(IServer.STACK_TRACE).toString();
+				}
+			} catch (ThinklabClientException e) {
+				// just don't
+			}
+		
+		}
+
 		@Override
 		public int getStatus() {
 			return _s;
