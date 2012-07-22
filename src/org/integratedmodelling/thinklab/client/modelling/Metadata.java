@@ -14,7 +14,8 @@ public class Metadata extends LanguageElement implements IMetadataDefinition {
 	
 	@Override
 	public void put(String id, Object value) {
-		_data.put(id,value);
+		if (value != null && id != null)
+			_data.put(id,value);
 	}
 
 	@Override
@@ -39,38 +40,32 @@ public class Metadata extends LanguageElement implements IMetadataDefinition {
 
 	@Override
 	public String getString(String field) {
-		// TODO Auto-generated method stub
-		return null;
+		return get(field).toString();
 	}
 
 	@Override
 	public Integer getInt(String field) {
-		// TODO Auto-generated method stub
-		return null;
+		return get(field) == null ? null : Integer.parseInt(get(field).toString());
 	}
 
 	@Override
 	public Long getLong(String field) {
-		// TODO Auto-generated method stub
-		return null;
+		return get(field) == null ? null : Long.parseLong(get(field).toString());
 	}
 
 	@Override
 	public Double getDouble(String field) {
-		// TODO Auto-generated method stub
-		return null;
+		return get(field) == null ? null : Double.parseDouble(get(field).toString());
 	}
 
 	@Override
 	public Float getFloat(String field) {
-		// TODO Auto-generated method stub
-		return null;
+		return get(field) == null ? null : Float.parseFloat(get(field).toString());
 	}
 
 	@Override
 	public Boolean getBoolean(String field) {
-		// TODO Auto-generated method stub
-		return null;
+		return get(field) == null ? null : Boolean.parseBoolean(get(field).toString());
 	}
 
 	@Override

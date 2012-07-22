@@ -65,18 +65,37 @@ public class RESTServer implements IServer {
 	@Override
 	public Result executeStatement(String s) {
 		
+		File outputDir = null;
+		
 		org.integratedmodelling.thinklab.client.Result r;
 		try {
 			r = getSession().send(
-					"execute-statement", false, "statement", s, "isLocal", 
-					_isLocal ? "true" : "false");
-		} catch (ThinklabClientException e) {
+					"execute-statement", false, 
+					"statement", s, 
+					"visualize", "true",
+					"islocal", (_isLocal ? "true" : "false"));
+
+			if (r.get("location") != null) {
+				/*
+				 * local directory
+				 */
+				outputDir = new File(r.get("location").toString());
+
+			} else {
+			
+				/*
+				 * later, OK?
+				 */
+//				for (Pair<String, String> ff : r.getDownloads()) {
+//					outputDir = new File(ff.getFirst());
+//				}
+			}
+		
+		} catch (Exception e) {
 			return error(e);
 		}
-		
-		CResult ret = new CResult(r.getStatus(), s, r.getResult(), null, null);
-		
-		return ret;
+			
+		return new CResult(r.getStatus(), s, outputDir, null, null);
 	}
 
 	@Override
@@ -90,9 +109,12 @@ public class RESTServer implements IServer {
 
 		org.integratedmodelling.thinklab.client.Result r;
 		try {
-			r = getSession().send("execute-statement", true, "statement", s,
-					_isLocal ? "true" : "false");
-		} catch (ThinklabClientException e) {
+			r = getSession().send(
+					"execute-statement", true, 
+					"statement", s, 
+					"visualize", "true",
+					"islocal", (_isLocal ? "true" : "false"));
+		} catch (Exception e) {
 			return -1L;
 		}
 		
@@ -141,9 +163,22 @@ public class RESTServer implements IServer {
 	}
 
 	protected void parseCapabilities(
-			org.integratedmodelling.thinklab.client.Result r) {
-		// TODO Auto-generated method stub
-		System.out.println(r);
+			org.integratedmodelling.thinklab.client.Result res) throws ThinklabClientException {
+
+		Metadata md = (Metadata) getMetadata();
+		
+		/*
+		 * report all vars
+		 */
+ 		md.put(BOOT_TIME_MS,  Long.parseLong(res.get(BOOT_TIME_MS).toString()));
+		md.put(TOTAL_MEMORY_MB, Long.parseLong(res.get(TOTAL_MEMORY_MB).toString())/(1024L*1024L));
+		md.put(FREE_MEMORY_MB, Long.parseLong(res.get(FREE_MEMORY_MB).toString())/(1024L*1024L));
+ 		md.put(VERSION_STRING,  res.get(VERSION_STRING));
+
+		/*
+		 * TODO finish up
+		 */
+
 	}
 
 	@Override
@@ -250,6 +285,7 @@ public class RESTServer implements IServer {
 			return _c;
 		}
 
+		@Override
 		public Object getResult() {
 			return _r;
 		}

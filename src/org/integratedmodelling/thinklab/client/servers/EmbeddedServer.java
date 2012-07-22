@@ -10,7 +10,6 @@ import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.Session;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
-import org.integratedmodelling.thinklab.client.project.ProjectManager;
 import org.integratedmodelling.thinklab.client.utils.NetUtilities;
 
 /**
