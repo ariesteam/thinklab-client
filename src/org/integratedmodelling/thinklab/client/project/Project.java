@@ -434,4 +434,21 @@ public class Project extends HashableObject implements IProject {
 		}
 		_namespaces.add(ns);
 	}
+
+	@Override
+	public List<String> getUserResourceFolders() {
+
+		ArrayList<String> ret = new ArrayList<String>();
+		
+		for (File f : _path.listFiles()) {
+			if (f.isDirectory() &&
+				!f.equals(new File(_path + File.separator + getSourceDirectory())) &&
+				!ProjectManager.get().isManagedDirectory(
+						MiscUtilities.getFileName(f.toString()), this)) {
+				ret.add(MiscUtilities.getFileBaseName(f.toString()));
+			}
+		}
+		
+		return ret;
+	}
 }

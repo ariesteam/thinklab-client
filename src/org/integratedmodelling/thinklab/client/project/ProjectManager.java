@@ -345,5 +345,10 @@ public class ProjectManager implements IProjectManager, IProjectFactory {
 		
 	}
 
+	public boolean isManagedDirectory(String fileBaseName, Project project) {
+		// TODO add any other necessary files
+		return fileBaseName.equals("META-INF") || fileBaseName.startsWith(".");
+	}
+
 
 }
