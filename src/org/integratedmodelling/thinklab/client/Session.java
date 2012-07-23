@@ -21,6 +21,7 @@ import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.api.runtime.IServer;
+import org.integratedmodelling.thinklab.client.configuration.Configuration;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.listeners.ProgressListener;
 import org.integratedmodelling.thinklab.client.modelling.ModelManager;
@@ -48,6 +49,10 @@ import org.restlet.resource.ClientResource;
  */
 public class Session {
 
+	public static final String DOWNLOAD_WORKSPACE = "client_download";
+	public static final String PROJECTS_WORKSPACE = "projects";
+
+	
 	public static final int DEFAULT_SERVER_PORT = 8182;
 	
 	private String _server = "http://127.0.0.1:8182";
@@ -61,7 +66,7 @@ public class Session {
 	
 	private int delay = 4000;
 	private String _curDir = File.separator;
-	private File _currentDirectory = Configuration.getProjectDirectory();
+	private File _currentDirectory = Configuration.get().getWorkspace(PROJECTS_WORKSPACE);
 	
 	public interface Listener {
 		
@@ -306,7 +311,7 @@ public class Session {
 			// download to session subdir to minimize conflicts
 			File dpath = 
 				new File(
-						Configuration.getDownloadPath()+ 
+						Configuration.get().getWorkspace(DOWNLOAD_WORKSPACE)+ 
 						File.separator + 
 						MiscUtilities.getFilePath(handle));
 			dpath.mkdirs();
@@ -318,7 +323,7 @@ public class Session {
 			String path = MiscUtilities.getFilePath(fname.toString());
 			if (path.isEmpty())
 				fname = new File(
-					Configuration.getDownloadPath()+ 
+					Configuration.get().getWorkspace(DOWNLOAD_WORKSPACE)+ 
 					File.separator + fname);
 				
 		}
@@ -400,7 +405,7 @@ public class Session {
 		/*
 		 * reset current dir
 		 */
-		_currentDirectory = Configuration.getProjectDirectory();
+		_currentDirectory = Configuration.get().getWorkspace(PROJECTS_WORKSPACE);
 		setCurrentDirectory(project.getId());
 	}
 
@@ -539,8 +544,10 @@ public class Session {
 		if (dir == null) {
 			this._currentDirectory = 
 				_currentProject == null ?
-					Configuration.getProjectDirectory() :
-					Configuration.getProjectDirectory(_currentProject.getId());
+					Configuration.get().getWorkspace(PROJECTS_WORKSPACE) :
+						Configuration.get().getWorkspace(
+								PROJECTS_WORKSPACE + File.separator +_currentProject.getId());
+					
 			this._curDir = File.separator;
 			return;
 		}

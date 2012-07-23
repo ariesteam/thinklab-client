@@ -1,10 +1,10 @@
 package org.integratedmodelling.thinklab.client.commands;
 
 import org.integratedmodelling.thinklab.client.CommandHandler;
-import org.integratedmodelling.thinklab.client.Configuration;
 import org.integratedmodelling.thinklab.client.Result;
 import org.integratedmodelling.thinklab.client.Session;
 import org.integratedmodelling.thinklab.client.annotations.Command;
+import org.integratedmodelling.thinklab.client.configuration.Configuration;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.shell.CommandLine;
 
@@ -49,10 +49,10 @@ public class Config extends CommandHandler {
 			/*
 			 * print configuration
 			 */
-			for (Object s : Configuration.getProperties().keySet()) {
+			for (Object s : Configuration.get().getProperties().keySet()) {
 				
 				String k = (String)s;
-				String p = Configuration.getProperties().getProperty(k);
+				String p = Configuration.get().getProperties().getProperty(k);
 				
 				cl.say("  " + k + "\t" + p);
 			}
@@ -62,7 +62,7 @@ public class Config extends CommandHandler {
 		
 		String var = expect(args, 0);
 		String val = expect(args, 1);
-		Configuration.getProperties().setProperty(var, val);
+		Configuration.get().getProperties().setProperty(var, val);
 
 		return Result.ok(session);
 	}

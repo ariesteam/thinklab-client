@@ -16,6 +16,7 @@ import org.integratedmodelling.exceptions.ThinklabResourceNotFoundException;
 import org.integratedmodelling.thinklab.api.factories.IProjectFactory;
 import org.integratedmodelling.thinklab.api.factories.IProjectManager;
 import org.integratedmodelling.thinklab.api.lang.IResolver;
+import org.integratedmodelling.thinklab.api.modelling.INamespace;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.api.runtime.IServer;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
@@ -343,5 +344,6 @@ public class ProjectManager implements IProjectManager, IProjectFactory {
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }

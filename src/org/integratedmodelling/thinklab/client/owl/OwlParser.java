@@ -96,7 +96,7 @@ public class OwlParser implements IModelParser, IModelSerializer {
 				": only direct ontology import is supported");
 	}
 	
-	String importOntology(OWLOntology ontology, IResolver resolver, boolean imported) throws ThinklabException {
+	String importOntology(OWLOntology ontology, IResolver resolver, String resource, boolean imported) throws ThinklabException {
 
 		String namespace = 
 				getFileName(ontology.getOntologyID().getOntologyIRI().toURI().toString());
@@ -120,19 +120,10 @@ public class OwlParser implements IModelParser, IModelSerializer {
 		
 		INamespaceDefinition ns = (INamespaceDefinition) resolver.newLanguageObject(INamespace.class);
 		ns.setId(namespace);
-
+		ns.setResourceUrl(resource);
+		((Namespace)ns).synchronizeKnowledge();
+		
 		resolver.onNamespaceDeclared();
-
-		/*
-		 * resolve all imports. TODO must use the filesystem resources when they
-		 * have corresponding ones.
-		 */
-//		for (OWLOntology o : ontology.getImports()) {
-//			if (!_seen.contains(o.getOntologyID().getOntologyIRI())) {
-//				_seen.add(o.getOntologyID().getOntologyIRI());
-//				importOntology(o, resolver, true);
-//			}
-//		}
 		
 		/*
 		 * import all axioms into namespace
@@ -145,18 +136,6 @@ public class OwlParser implements IModelParser, IModelSerializer {
 		
 		_namespaces.put(namespace, ns);
 		
-//		if (resolver instanceof OWLOntologyNotifier) {
-//			if (imported)
-//				((OWLOntologyNotifier)resolver).notifyImportedOWLOntology(ns, ontology);
-//			else 
-//				((OWLOntologyNotifier)resolver).notifyOWLOntology(ns, ontology);
-//				
-//		}
-		
-		/*
-		 * TODO ensure that the manager can locate this ontology from now on when referenced
-		 * in others.
-		 */
 		return namespace;
 	}
 
@@ -247,7 +226,7 @@ public class OwlParser implements IModelParser, IModelSerializer {
 			/*
 			 * import ontology and all its imports. Return namespace ID.
 			 */
-			ns = importOntology(ontology, resolver, false);
+			ns = importOntology(ontology, resolver, resource, false);
 			
 			
 			/*
@@ -336,6 +315,7 @@ public class OwlParser implements IModelParser, IModelSerializer {
 		INamespace nns = _namespaces.get(ns);
 		((Namespace)nns).setResourceUrl(resource);
 		((Namespace)nns).setId(namespace);
+		((Namespace)nns).synchronizeKnowledge();
 
 		
 		return _namespaces.get(ns);

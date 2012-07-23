@@ -56,9 +56,9 @@ import javax.swing.JPanel;
 import org.apache.commons.io.FileUtils;
 import org.integratedmodelling.collections.Path;
 import org.integratedmodelling.thinklab.client.CommandManager;
-import org.integratedmodelling.thinklab.client.Configuration;
 import org.integratedmodelling.thinklab.client.Result;
 import org.integratedmodelling.thinklab.client.Session;
+import org.integratedmodelling.thinklab.client.configuration.Configuration;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.utils.ShellCommand;
 
@@ -179,7 +179,7 @@ public class Shell implements CommandLine {
 		/*
 		 * compile a list of executables we want to support in the shell
 		 */
-		for (Object o : Configuration.getProperties().keySet()) {
+		for (Object o : Configuration.get().getProperties().keySet()) {
 			if (o.toString().startsWith(RUNTIME_PROPERTY_PREFIX)) {
 				
 				String exec = Path.getLast(o.toString(), '.');
@@ -218,14 +218,14 @@ public class Shell implements CommandLine {
 		
 		historyFile = 
 			new File(
-				Configuration.getConfigPath() + 
+				Configuration.get().getWorkspace("client_config") + 
 				File.separator + 
 				".history");
 	}
 	
 	public  void printStatusMessage() {
 		
-		console.println("ThinkLab client shell v" + Configuration.getVersion());
+		console.println("ThinkLab client shell v" + Configuration.get().getVersion());
 		console.println();
 		
 		console.println("Enter \'help\' for a list of commands; \'exit\' quits");
@@ -286,7 +286,7 @@ public class Shell implements CommandLine {
 			for (String s : _shell) {
 				if (input.startsWith(s)) {
 					shs = s;
-					shellc = Configuration.getProperties().
+					shellc = Configuration.get().getProperties().
 						getProperty(RUNTIME_PROPERTY_PREFIX + s);
 				}
 			}

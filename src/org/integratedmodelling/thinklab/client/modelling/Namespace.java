@@ -159,6 +159,8 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	 */
 	public void synchronizeKnowledge() {
 
+		System.out.println("syncing namespace " + getId() + ": " + axioms.size() + " axioms");
+		
 		for (IAxiom axiom : axioms) {
 			
 			if (axiom.is(IAxiom.CLASS_ASSERTION)) {

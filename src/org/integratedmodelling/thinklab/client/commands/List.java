@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import org.integratedmodelling.collections.Path;
 import org.integratedmodelling.thinklab.client.CommandHandler;
-import org.integratedmodelling.thinklab.client.Configuration;
 import org.integratedmodelling.thinklab.client.Result;
 import org.integratedmodelling.thinklab.client.Session;
 import org.integratedmodelling.thinklab.client.annotations.Command;
+import org.integratedmodelling.thinklab.client.configuration.Configuration;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.shell.CommandLine;
 
@@ -67,11 +67,11 @@ public class List extends CommandHandler {
 			
 		} else if (expect(args,0).equals("remotes")) {
 			
-			for (Object o : Configuration.getProperties().keySet()) {
+			for (Object o : Configuration.get().getProperties().keySet()) {
 				String pk = o.toString();
 				if (pk.startsWith("server.")) {
 					String s = Path.getLast(pk, '.');
-					String h = Configuration.getProperties().getProperty(pk);
+					String h = Configuration.get().getProperties().getProperty(pk);
 					
 					cl.say("  " + s + "\t" + h); 
 				}

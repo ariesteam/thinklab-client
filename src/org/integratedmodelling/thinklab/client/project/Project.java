@@ -18,9 +18,10 @@ import org.integratedmodelling.thinklab.api.factories.IProjectManager;
 import org.integratedmodelling.thinklab.api.lang.IResolver;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
 import org.integratedmodelling.thinklab.api.project.IProject;
-import org.integratedmodelling.thinklab.client.Configuration;
+import org.integratedmodelling.thinklab.client.configuration.Configuration;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.modelling.ModelManager;
+import org.integratedmodelling.thinklab.client.modelling.Namespace;
 import org.integratedmodelling.thinklab.client.utils.CamelCase;
 import org.integratedmodelling.thinklab.client.utils.FolderZiper;
 import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
@@ -80,17 +81,17 @@ public class Project extends HashableObject implements IProject {
 
 	public void load(IResolver resolver) throws ThinklabException {
 
-		if (isLoaded() && isDirty())
+		if (isLoaded()/* && isDirty() */)
 			unload();
 		
-		_refcount ++;
+//		_refcount ++;
 		
 		/*
 		 * if we haven't been unloaded, we didn't need to so we don't need
 		 * loading, either.
 		 */
-		if (isLoaded())
-			return;
+//		if (isLoaded())
+//			return;
 		
 		for (IProject p : _manager.computeDependencies(this)) {
 			if (p.equals(this))
@@ -140,9 +141,19 @@ public class Project extends HashableObject implements IProject {
 			INamespace ns;
 			try {
 				ns = ModelManager.get().loadFile(f.toString(), pth, this, resolver);
-				if (ns != null) 
+				if (ns != null) {
 					ret.add(ns);
+					/*
+					 * this is necessary to publish the
+					 * namespace if it is not created by a parser that uses
+					 * the resolver.
+					 */
+					ModelManager.get().notifyNamespace(ns);
+				} else {
+					System.out.println("Hostia ns " + pth + " is null");
+				}
 			} catch (ThinklabException e) {
+				System.out.println(pth + " has errors: " + e.getMessage());
 				_resourcesInError.add(f);
 				_errors.add(e.getMessage());
 			}
@@ -165,9 +176,9 @@ public class Project extends HashableObject implements IProject {
 			((Project)p).unload();
 		}
 		
-		_refcount --;
-		
-		if (_refcount == 0) {
+//		_refcount --;
+//		
+//		if (_refcount == 0) {
 		
 			for (INamespace ns : _namespaces) {
 				ModelManager.get().releaseNamespace(ns.getId());
@@ -176,7 +187,7 @@ public class Project extends HashableObject implements IProject {
 			_namespaces.clear();
 			_resourcesInError.clear();
 			_loaded = false;
-		}
+//		}
 	}
 	
 	@Override
@@ -374,9 +385,9 @@ public class Project extends HashableObject implements IProject {
 		
 		File ret = null;
 		try {
-			ret = File.createTempFile("tpr", ".zip", Configuration.getTemporaryPath());
+			ret = File.createTempFile("tpr", ".zip", Configuration.get().getTempArea("pack"));
 			FolderZiper.zipFolder(
-				Configuration.getProjectDirectory(_id).toString(), 
+				Configuration.get().getProjectDirectory(_id).toString(), 
 				ret.toString());
 		} catch (Exception e) {
 			throw new ThinklabClientException(e);
@@ -410,5 +421,17 @@ public class Project extends HashableObject implements IProject {
 	@Override
 	public boolean providesNamespace(String namespaceId) {
 		return findResourceForNamespace(namespaceId) != null;
+	}
+
+	/*
+	 * imported namespaces are not seen directly by loadInternal but need to be
+	 * reported here by the resolver.
+	 */
+	public void notifyNamespace(Namespace ns) {
+		for (INamespace n : _namespaces) {
+			if (n.getId().equals(ns.getId()))
+				return;
+		}
+		_namespaces.add(ns);
 	}
 }

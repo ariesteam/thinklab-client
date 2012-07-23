@@ -3,10 +3,10 @@ package org.integratedmodelling.thinklab.client.commands;
 import java.net.URL;
 
 import org.integratedmodelling.thinklab.client.CommandHandler;
-import org.integratedmodelling.thinklab.client.Configuration;
 import org.integratedmodelling.thinklab.client.Result;
 import org.integratedmodelling.thinklab.client.Session;
 import org.integratedmodelling.thinklab.client.annotations.Command;
+import org.integratedmodelling.thinklab.client.configuration.Configuration;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.shell.CommandLine;
 
@@ -23,7 +23,7 @@ public class Connect extends CommandHandler {
 		if (remote.startsWith("htt") && remote.contains("://"))
 			server = remote;
 		else 
-			server = Configuration.getProperties().getProperty("server." + remote);
+			server = Configuration.get().getProperties().getProperty("server." + remote);
 		
 		if (server == null)
 			throw new ThinklabClientException("server " + remote + " is unknown");

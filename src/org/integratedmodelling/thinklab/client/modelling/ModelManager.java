@@ -46,6 +46,7 @@ import org.integratedmodelling.thinklab.api.modelling.parsing.INamespaceDefiniti
 import org.integratedmodelling.thinklab.api.modelling.parsing.IPropertyDefinition;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.api.runtime.IServer;
+import org.integratedmodelling.thinklab.client.project.Project;
 import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
 
 /**
@@ -101,6 +102,8 @@ public class ModelManager implements IModelManager {
 		@Override
 		public boolean onException(Throwable e, int lineNumber) {
 
+			System.out.println("EXCEPTION " + e.getMessage() + " at " + lineNumber);
+			
 			if (_currentNs != null) {
 				((Namespace)_currentNs).addError(e.getMessage(), lineNumber);
 			}
@@ -109,6 +112,9 @@ public class ModelManager implements IModelManager {
 
 		@Override
 		public boolean onWarning(String warning, int lineNumber) {
+			
+			System.out.println("WARNING " + warning + " at " + lineNumber);
+
 			if (_currentNs != null) {
 				((Namespace)_currentNs).addWarning(warning, lineNumber);
 			}
@@ -308,6 +314,12 @@ public class ModelManager implements IModelManager {
 			Namespace ns = new Namespace();
 			ns.setId(namespace);
 			ns.setResourceUrl(resource);
+			ns.setProject(project);
+			
+			/*
+			 * report it to the project - it may need this if this is an import.
+			 */
+			((Project)project).notifyNamespace(ns);
 
 			long timestamp = new Date().getTime();
 			URL url = null;
@@ -568,6 +580,11 @@ public class ModelManager implements IModelManager {
 
 	public IResolver getResolver(IServer server, IProject project) {
 		return new Resolver(server, project);
+	}
+
+	public void notifyNamespace(INamespace ns) {
+		if (!namespacesById.containsKey(ns.getId()))
+			namespacesById.put(ns.getId(), ns);
 	}
 
 }

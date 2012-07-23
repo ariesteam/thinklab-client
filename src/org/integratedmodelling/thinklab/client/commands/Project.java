@@ -7,10 +7,10 @@ import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.api.runtime.IServer;
 import org.integratedmodelling.thinklab.client.CommandHandler;
-import org.integratedmodelling.thinklab.client.Configuration;
 import org.integratedmodelling.thinklab.client.Result;
 import org.integratedmodelling.thinklab.client.Session;
 import org.integratedmodelling.thinklab.client.annotations.Command;
+import org.integratedmodelling.thinklab.client.configuration.Configuration;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.project.ProjectManager;
 import org.integratedmodelling.thinklab.client.shell.CommandLine;
@@ -50,10 +50,10 @@ public class Project extends CommandHandler {
 			
 			String projectId = expect(args,1);
 			session.setCurrentProject(ProjectManager.get().
-					createProject(Configuration.getProjectDirectory(projectId), null));
+					createProject(Configuration.get().getProjectDirectory(projectId), null));
 			info = 
 				"project " + projectId + " created in " + 
-				Configuration.getProjectDirectory(projectId);
+				Configuration.get().getProjectDirectory(projectId);
 		
 		} else if (cmd.equals("load")) {
 
@@ -175,7 +175,7 @@ public class Project extends CommandHandler {
 					Pair<File, Integer> zip = session.download(handle, null, null);
 					cl.say("done (" + zip.getSecond()/1024 + "k)");
 				
-					FolderZiper.unzip(zip.getFirst(), Configuration.getProjectDirectory());
+					FolderZiper.unzip(zip.getFirst(), Configuration.get().getProjectDirectory());
 				
 					session.setCurrentProject(ProjectManager.get().loadProject(pid));
 					info = "project " + pid + " imported from " + session.getName() + " and loaded";
