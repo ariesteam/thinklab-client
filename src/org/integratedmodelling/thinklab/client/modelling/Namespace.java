@@ -14,6 +14,7 @@ import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IExtent;
 import org.integratedmodelling.thinklab.api.modelling.IModelObject;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IConceptDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IModelObjectDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.INamespaceDefinition;
 import org.integratedmodelling.thinklab.api.project.IProject;
@@ -45,6 +46,7 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	String _storageKbox = null;
 	String _lookupKbox = null;
 	String _expressionLanguage = null;
+	private IConceptDefinition _agentType;
 	
 	public Namespace() {}
 	public Namespace(String id) { setId(id); }
@@ -159,8 +161,6 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	 */
 	public void synchronizeKnowledge() {
 
-		System.out.println("syncing namespace " + getId() + ": " + axioms.size() + " axioms");
-		
 		for (IAxiom axiom : axioms) {
 			
 			if (axiom.is(IAxiom.CLASS_ASSERTION)) {
@@ -251,17 +251,10 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	public String getExpressionLanguage() {
 		return _expressionLanguage;
 	}
-	
-	public void addError(String error, int lineNumber) {
-		_errors.add(new Pair<String, Integer>(error, lineNumber));
-	}
-	
+		
+	@Override
 	public boolean hasErrors() {
 		return _errors.size() > 0;
-	}
-	
-	public void addWarning(String warning, int lineNumber) {	
-		_warnings.add(new Pair<String, Integer>(warning, lineNumber));
 	}
 	
 	@Override
@@ -274,5 +267,20 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	public void addCoveredExtent(IExtent extent) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public void setAgentConcept(IConceptDefinition agentConcept) {
+		this._agentType = agentConcept;
+	}
+	
+	@Override
+	public void addWarning(String warning, int lineNumber) {	
+		_warnings.add(new Pair<String, Integer>(warning, lineNumber));
+	}
+	
+	@Override
+	public void addError(int errorCode, String errorMessage, int lineNumber) {
+		this._errors.add(new Pair<String, Integer>(errorMessage, lineNumber));
 	}
 }

@@ -290,10 +290,16 @@ public class OwlParser implements IModelParser, IModelSerializer {
 					.getOntologyCreationException();
 			System.out.println("Reason: " + cause.getMessage());
 		} catch (OWLOntologyAlreadyExistsException e) {
+
 			/*
-			 * just return the namespace for the IRI; if null, ok, it will be null
+			 * OK, then wrap it and screw that.
 			 */
-			return _iriIndex.get(e.getOntologyID().getOntologyIRI());
+			OWLOntology ontology = _manager.getOntology(e.getOntologyID().getOntologyIRI());
+			if (ontology != null) {
+				ns = importOntology(ontology, resolver, resource, false);
+				_resourceIndex.put(resource, _namespaces.get(ns));
+			}
+
 		} catch (OWLOntologyCreationException e) {
 			exception = e;
 			System.out.println("Could not load ontology: " + e.getMessage());
@@ -317,7 +323,6 @@ public class OwlParser implements IModelParser, IModelSerializer {
 		((Namespace)nns).setId(namespace);
 		((Namespace)nns).synchronizeKnowledge();
 
-		
 		return _namespaces.get(ns);
 	}
 

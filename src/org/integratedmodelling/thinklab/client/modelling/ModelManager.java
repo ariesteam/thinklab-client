@@ -11,6 +11,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.UUID;
 
 import org.integratedmodelling.exceptions.ThinklabException;
@@ -61,7 +62,8 @@ public class ModelManager implements IModelManager {
 	private static ModelManager _this = null;
 	
 	HashMap<String, IModelParser> interpreters = new HashMap<String, IModelParser>();
-	HashMap<String, INamespace> namespacesById = new HashMap<String, INamespace>();
+	Map<String, INamespace> namespacesById = 
+			Collections.synchronizedMap(new HashMap<String, INamespace>());
 	
 	public static ModelManager get() {
 		if (_this == null) {
@@ -105,7 +107,7 @@ public class ModelManager implements IModelManager {
 			System.out.println("EXCEPTION " + e.getMessage() + " at " + lineNumber);
 			
 			if (_currentNs != null) {
-				((Namespace)_currentNs).addError(e.getMessage(), lineNumber);
+				((Namespace)_currentNs).addError(0, e.getMessage(), lineNumber);
 			}
 			return true;
 		}
@@ -133,14 +135,10 @@ public class ModelManager implements IModelManager {
 
 		@Override
 		public void onNamespaceDefined() {
-			if (this.namespace.hasErrors()) {
-				System.out.println("coccodio");
-			}
 		}
 
 		@Override
-		public IConceptDefinition resolveExternalConcept(String id, int line)
-				 {
+		public IConceptDefinition resolveExternalConcept(String id, int line) {
 			
 			ConceptObject ret = new ConceptObject();
 			ret.setId(id);
@@ -315,6 +313,7 @@ public class ModelManager implements IModelManager {
 			ns.setId(namespace);
 			ns.setResourceUrl(resource);
 			ns.setProject(project);
+			namespacesById.put(namespace, ns);
 			
 			/*
 			 * report it to the project - it may need this if this is an import.
@@ -356,9 +355,7 @@ public class ModelManager implements IModelManager {
 			ret.namespace = ns;
 			ret.resourceId = resource;
 			ret.resourceUrl = url;
-			
-			namespacesById.put(namespace, ns);
-			
+						
 			return ret;
 
 		}

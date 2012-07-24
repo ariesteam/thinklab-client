@@ -159,9 +159,17 @@ public class EmbeddedServer extends RESTServer {
 		System.out.println("sending deps " + dirs);
 		
 		try {
-			Result res = getSession().send("project", false, "cmd", "register", "directory", dirs);
+			Result res =
+				getSession().send(
+							"project", false, 
+							"cmd", "register", 
+							"directory", dirs, 
+							"plugin", p.getId());
 			if (res.getStatus() == OK) {
-				res = getSession().send("project", false, "cmd", "load", "plugin", p.getId());
+				res = getSession().send(
+						"project", false, 
+						"cmd", "load", 
+						"plugin", p.getId());
 			}
 			return res;
 		} catch (Exception e) {

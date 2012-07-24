@@ -150,7 +150,10 @@ public class Project extends HashableObject implements IProject {
 					 */
 					ModelManager.get().notifyNamespace(ns);
 				} else {
-					System.out.println("Hostia ns " + pth + " is null");
+					/*
+					 * should not happen anymore
+					 */
+					System.out.println("NAH namespace is null.");
 				}
 			} catch (ThinklabException e) {
 				System.out.println(pth + " has errors: " + e.getMessage());

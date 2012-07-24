@@ -9,7 +9,6 @@ import org.integratedmodelling.thinklab.api.knowledge.IConcept;
 import org.integratedmodelling.thinklab.api.listeners.IListener;
 import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IExtent;
-import org.integratedmodelling.thinklab.api.modelling.IObservation;
 import org.integratedmodelling.thinklab.api.modelling.IState;
 import org.integratedmodelling.thinklab.api.modelling.ITopologicallyComparable;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IContextDefinition;
@@ -96,19 +95,7 @@ public class Context extends ModelObject implements IContextDefinition {
 	}
 
 	@Override
-	public IState getState(IConcept observable) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void merge(IObservation observation) throws ThinklabException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void merge(IContext context) throws ThinklabException {
+	public void merge(Object observation) throws ThinklabException {
 		// TODO Auto-generated method stub
 		
 	}
