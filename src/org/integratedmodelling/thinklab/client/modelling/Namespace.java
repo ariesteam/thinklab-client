@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.integratedmodelling.collections.Pair;
+import org.integratedmodelling.collections.Triple;
 import org.integratedmodelling.thinklab.api.knowledge.IAxiom;
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
@@ -96,19 +97,8 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 		
 		if (mo.getId() != null) {
 			_names.add(mo.getId());
-		}
-		
-		/*
-		 * FIXME this should disappear
-		 */
-		if ( (_resourceUrl != null && 
-				(_resourceUrl.toString().endsWith(".tql") || _resourceUrl.toString().endsWith(".clj") )) &&				
-				(mo instanceof ConceptObject || mo instanceof PropertyObject) && 
-				mo.getFirstLineNumber() == 0 && mo.getLastLineNumber() == 0) {
-			_knowledge.add(mo);
-		} else {
-			modelObjects.add(mo);			
-		}
+		}		
+		modelObjects.add(mo);			
 	}
 	
 	@Override
@@ -282,5 +272,20 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	@Override
 	public void addError(int errorCode, String errorMessage, int lineNumber) {
 		this._errors.add(new Pair<String, Integer>(errorMessage, lineNumber));
+	}
+	
+	@Override
+	public Collection<Triple<Integer, String, Integer>> getErrors() {
+
+		List<Triple<Integer, String, Integer>> ret = new ArrayList<Triple<Integer,String,Integer>>();
+		for (Pair<String, Integer> e : _errors) {
+			ret.add(new Triple<Integer, String, Integer>(0, e.getFirst(), e.getSecond()));
+		}
+		return ret;
+	}
+
+	@Override
+	public Collection<Pair<String, Integer>> getWarnings() {
+		return _warnings;
 	}
 }
