@@ -87,7 +87,6 @@ public class ModelManager implements IModelManager {
 		
 		HashSet<String> _defined = new HashSet<String>();
 
-		private INamespace _currentNs;
 		private HashMap<String, IModelObjectDefinition> symbolTable =
 				new HashMap<String, IModelObjectDefinition>();
 
@@ -106,8 +105,8 @@ public class ModelManager implements IModelManager {
 
 			System.out.println("EXCEPTION " + e.getMessage() + " at " + lineNumber);
 			
-			if (_currentNs != null) {
-				((Namespace)_currentNs).addError(0, e.getMessage(), lineNumber);
+			if (namespace != null) {
+				namespace.addError(0, e.getMessage(), lineNumber);
 			}
 			return true;
 		}
@@ -117,8 +116,8 @@ public class ModelManager implements IModelManager {
 			
 			System.out.println("WARNING " + warning + " at " + lineNumber);
 
-			if (_currentNs != null) {
-				((Namespace)_currentNs).addWarning(warning, lineNumber);
+			if (namespace != null) {
+				namespace.addWarning(warning, lineNumber);
 			}
 			return true;
 		}

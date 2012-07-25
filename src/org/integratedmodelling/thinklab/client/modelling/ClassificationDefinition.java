@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
 import org.integratedmodelling.thinklab.api.modelling.IClassifier;
+import org.integratedmodelling.thinklab.api.modelling.IObserver;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IClassificationDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IConceptDefinition;
 
@@ -96,6 +97,24 @@ public class ClassificationDefinition implements IClassificationDefinition {
 	public boolean isCategorical() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public void notifyObserver(IObserver observer) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Type getType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setTypeHint(Type type) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
