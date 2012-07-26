@@ -11,6 +11,8 @@ import org.integratedmodelling.thinklab.api.lang.IPrototype;
 import org.integratedmodelling.thinklab.api.metadata.IMetadata;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.api.runtime.IServer;
+import org.integratedmodelling.thinklab.client.CommandManager;
+import org.integratedmodelling.thinklab.client.Result;
 import org.integratedmodelling.thinklab.client.Session;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.modelling.Metadata;
@@ -101,7 +103,13 @@ public class RESTServer implements IServer {
 	@Override
 	public Result executeCommand(String command) {
 
-		return OK_RESULT;
+		Result ret = null;
+		try {
+			ret = CommandManager.execute(command, getSession(), null);
+		} catch (ThinklabClientException e) {
+			return error(e);
+		}
+		return ret;
 	}
 
 	@Override
