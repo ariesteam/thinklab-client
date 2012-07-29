@@ -6,7 +6,7 @@ import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionCall;
 import org.integratedmodelling.thinklab.api.project.IProject;
 
-public class FunctionDefinition extends ModelObject implements IFunctionCall {
+public class FunctionCall extends ModelObject implements IFunctionCall {
 
 	String _type;
 	Map<String, Object> _parameters;
@@ -38,5 +38,5 @@ public class FunctionDefinition extends ModelObject implements IFunctionCall {
 		// TODO use server, throw warnings etc
 		return null;
 	}
-	
 }
+

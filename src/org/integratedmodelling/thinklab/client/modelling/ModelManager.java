@@ -220,7 +220,7 @@ public class ModelManager implements IModelManager {
 			} else if (cls.equals(IMetadata.class)) {
 				return new Metadata();
 			} else if (cls.equals(IFunctionCall.class)) {
-				return new FunctionDefinition();
+				return new FunctionCall();
 			}  else if (cls.equals(IClassificationDefinition.class)) {
 				return new ClassificationDefinition();
 			}
