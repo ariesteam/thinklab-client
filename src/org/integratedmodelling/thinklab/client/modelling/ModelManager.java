@@ -40,7 +40,7 @@ import org.integratedmodelling.thinklab.api.modelling.IUnit;
 import org.integratedmodelling.thinklab.api.modelling.IValuingObserver;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IClassificationDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IConceptDefinition;
-import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionCall;
 import org.integratedmodelling.thinklab.api.modelling.parsing.ILanguageDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IModelObjectDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.INamespaceDefinition;
@@ -178,13 +178,13 @@ public class ModelManager implements IModelManager {
 			// TODO Auto-generated method stub
 			
 		}
-
-		@Override
-		public IExpression resolveFunction(String functionId,
-				Collection<String> parameterNames) {
-			// TODO use current server; supply defaults for core library
-			return null;
-		}
+//
+//		@Override
+//		public IExpression resolveFunction(String functionId,
+//				Collection<String> parameterNames) {
+//			// TODO use current server; supply defaults for core library
+//			return null;
+//		}
 
 		@Override
 		public ILanguageDefinition newLanguageObject(Class<?> cls) {
@@ -219,7 +219,7 @@ public class ModelManager implements IModelManager {
 				return new UnitDefinition();
 			} else if (cls.equals(IMetadata.class)) {
 				return new Metadata();
-			} else if (cls.equals(IFunctionDefinition.class)) {
+			} else if (cls.equals(IFunctionCall.class)) {
 				return new FunctionDefinition();
 			}  else if (cls.equals(IClassificationDefinition.class)) {
 				return new ClassificationDefinition();
@@ -239,18 +239,18 @@ public class ModelManager implements IModelManager {
 			return UUID.randomUUID().toString() + "___";
 		}
 
-		@Override
-		public Object runFunction(IFunctionDefinition function) {
-			
-			IExpression f = resolveFunction(function.getId(), function.getParameters().keySet());
-			if (f != null) {
-				try {
-					return f.eval(function.getParameters());
-				} catch (ThinklabException e) {
-				}
-			}
-			return null;
-		}
+//		@Override
+//		public Object runFunction(IFunctionDefinition function) {
+//			
+//			IExpression f = resolveFunction(function.getId(), function.getParameters().keySet());
+//			if (f != null) {
+//				try {
+//					return f.eval(function.getParameters());
+//				} catch (ThinklabException e) {
+//				}
+//			}
+//			return null;
+//		}
 
 		@Override
 		public IModelObject getLastProcessedObject() {
@@ -384,6 +384,17 @@ public class ModelManager implements IModelManager {
 		@Override
 		public HashMap<String, IModelObjectDefinition> getSymbolTable() {
 			return this.symbolTable ;
+		}
+
+		@Override
+		public IProject getProject() {
+			return project;
+		}
+
+		@Override
+		public boolean validateFunctionCall(IFunctionCall ret) {
+			// TODO USE SERVER PROTOTYPES
+			return true;
 		}
 	}
 	
@@ -553,12 +564,12 @@ public class ModelManager implements IModelManager {
 		return null;
 	}
 
-	@Override
-	public IExpression resolveFunction(String functionId,
-			Collection<String> parameterNames) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	@Override
+//	public IExpression resolveFunction(String functionId,
+//			Collection<String> parameterNames) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 	@Override
 	public Collection<INamespace> loadSourceDirectory(File sourcedir, IProject project)

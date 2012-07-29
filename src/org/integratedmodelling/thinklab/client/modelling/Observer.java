@@ -8,7 +8,7 @@ import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IObserver;
 import org.integratedmodelling.thinklab.api.modelling.IScenario;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IExpressionDefinition;
-import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionCall;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IObserverDefinition;
 
 public abstract class Observer extends ObservingObject implements IObserverDefinition {
@@ -54,7 +54,7 @@ public abstract class Observer extends ObservingObject implements IObserverDefin
 
 
 	@Override
-	public void setAccessorGeneratorFunction(IFunctionDefinition function) {
+	public void setAccessorGeneratorFunction(IFunctionCall function) {
 		// TODO Auto-generated method stub
 		
 	}

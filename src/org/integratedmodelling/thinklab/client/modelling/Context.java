@@ -12,7 +12,7 @@ import org.integratedmodelling.thinklab.api.modelling.IExtent;
 import org.integratedmodelling.thinklab.api.modelling.IState;
 import org.integratedmodelling.thinklab.api.modelling.ITopologicallyComparable;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IContextDefinition;
-import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionCall;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IModelDefinition;
 
 public class Context extends ModelObject implements IContextDefinition {
@@ -125,7 +125,7 @@ public class Context extends ModelObject implements IContextDefinition {
 	}
 
 	@Override
-	public void addObservationGeneratorFunction(IFunctionDefinition function) {
+	public void addObservationGeneratorFunction(IFunctionCall function) {
 		// TODO Auto-generated method stub
 		
 	}

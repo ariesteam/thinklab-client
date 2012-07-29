@@ -12,7 +12,7 @@ import org.integratedmodelling.thinklab.api.modelling.IExtent;
 import org.integratedmodelling.thinklab.api.modelling.IObservation;
 import org.integratedmodelling.thinklab.api.modelling.IObserver;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IExpressionDefinition;
-import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionCall;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IModelDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IObserverDefinition;
 
@@ -63,7 +63,7 @@ public class Model extends ObservingObject implements IModelDefinition {
 	}
 
 	@Override
-	public void setDatasourceGeneratorFunction(IFunctionDefinition function) {
+	public void setDatasourceGeneratorFunction(IFunctionCall function) {
 		// TODO Auto-generated method stub
 		
 	}
