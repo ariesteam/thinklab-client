@@ -67,7 +67,7 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 	String _observableCName;
 	
 	@Override
-	public void addObservable(IList instance) {
+	public void addObservable(IList instance, String formalName) {
 		try {
 			_observableCName = instance.first().toString();
 			_observables.add(KnowledgeManager.get().entify(instance));

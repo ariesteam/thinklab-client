@@ -63,7 +63,7 @@ public class Model extends ObservingObject implements IModelDefinition {
 	}
 
 	@Override
-	public void setDatasourceGeneratorFunction(IFunctionCall function) {
+	public void setObservableFunction(IFunctionCall function, String formalName) {
 		// TODO Auto-generated method stub
 		
 	}
