@@ -9,6 +9,7 @@ import org.integratedmodelling.thinklab.api.knowledge.IKnowledge;
 import org.integratedmodelling.thinklab.api.knowledge.IOntology;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
 import org.integratedmodelling.thinklab.api.knowledge.query.IQuery;
+import org.semanticweb.owlapi.model.OWLClass;
 
 /**
  * Just a proxy for a concept, can be used to create concepts that are automatically inserted in the
@@ -22,6 +23,8 @@ public class Concept implements IConcept {
 
 	String _id;
 	String _cs;
+	
+	OWLClass _owl;
 	
 	public Concept(String cs, String id) {
 		this._cs = cs;

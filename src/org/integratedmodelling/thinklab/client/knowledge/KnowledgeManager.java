@@ -17,6 +17,10 @@ import org.integratedmodelling.thinklab.api.lang.IList;
  * blindly any concept and ontology that it's asked to produce. Used to parse models where all concepts
  * defined are expected to be created. Don't use improperly.
  * 
+ * TODO implement all the concept, property, ontology and reasoning functions using OWLAPI 2.0 and 
+ * use as delegate for the KM in thinklab. We need reasoning in the client if we want any meaningful
+ * way to organize concepts.
+ * 
  * @author Ferd
  *
  */
@@ -107,7 +111,7 @@ public class KnowledgeManager implements IKnowledgeManager {
 
 	@Override
 	public ISemanticObject<?> entify(IList semantics) throws ThinklabException {
-		return new DummySemanticObject(semantics);
+		return new SemanticObject(semantics);
 	}
 
 	@Override

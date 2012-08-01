@@ -11,11 +11,18 @@ import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
 import org.integratedmodelling.thinklab.api.lang.IList;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
 
-public class DummySemanticObject implements ISemanticObject<Object> {
+/**
+ * This semantic object is a dummy - will just have is() working when the ontology functions are
+ * integrated.
+ *
+ * @author Ferd
+ *
+ */
+public class SemanticObject implements ISemanticObject<Object> {
 
 	IList _list;
 	
-	public DummySemanticObject(IList list) {
+	public SemanticObject(IList list) {
 		_list = list;
 	}
 	

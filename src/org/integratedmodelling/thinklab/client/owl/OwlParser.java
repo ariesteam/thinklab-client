@@ -47,6 +47,10 @@ import org.semanticweb.owlapi.model.UnloadableImportException;
 /**
  * Import concepts and properties from OWL ontologies.
  * 
+ * TODO make this the client's FileKnowledgeRepository and have it store a registry of what
+ * it parses. Ensure it's used as a singleton by the ModelManager when reading projects. Then
+ * just use this in thinklab and send the rest to bed.
+ * 
  * @author Ferd
  *
  */
