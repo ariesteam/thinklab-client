@@ -84,12 +84,6 @@ public class Ontology implements IOntology {
 
 
 	@Override
-	public long getLastModificationDate() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
 	public void define(Collection<IAxiom> axioms) throws ThinklabException {
 		// TODO Auto-generated method stub
 		
