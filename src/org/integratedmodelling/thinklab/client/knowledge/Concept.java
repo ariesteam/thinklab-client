@@ -9,6 +9,7 @@ import org.integratedmodelling.thinklab.api.knowledge.IKnowledge;
 import org.integratedmodelling.thinklab.api.knowledge.IOntology;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
 import org.integratedmodelling.thinklab.api.knowledge.query.IQuery;
+import org.integratedmodelling.thinklab.api.metadata.IMetadata;
 import org.semanticweb.owlapi.model.OWLClass;
 
 /**
@@ -48,74 +49,9 @@ public class Concept implements IConcept {
 	}
 
 	@Override
-	public boolean is(String semanticType) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void addAnnotation(String property, String value) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public String getAnnotation(String property) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public String getURI() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public String getLabel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getLabel(String languageCode) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getDescription(String languageCode) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void addDescription(String desc) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void addDescription(String desc, String language) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void addLabel(String desc) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void addLabel(String desc, String language) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -211,6 +147,12 @@ public class Concept implements IConcept {
 
 	@Override
 	public Set<IConcept> getSemanticClosure() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IMetadata getMetadata() {
 		// TODO Auto-generated method stub
 		return null;
 	}

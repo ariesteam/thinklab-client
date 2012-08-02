@@ -1,7 +1,5 @@
 package org.integratedmodelling.thinklab.client.knowledge;
 
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -12,12 +10,12 @@ import org.integratedmodelling.thinklab.api.knowledge.IConcept;
 import org.integratedmodelling.thinklab.api.knowledge.IOntology;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
 import org.integratedmodelling.thinklab.api.lang.IList;
+import org.integratedmodelling.thinklab.api.metadata.IMetadata;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 /**
- * A proxy for an ontology. Holds a list of concepts and a list of axioms. Can be
- * turned into a list and marshalled to a server for actual knowledge creation. Contains
- * no instances, properties or restrictions directly, just concepts for indexing and axioms for
- * the actual stuff.
+ * Simplest possible interface to an OWLApi ontology, only exposing the few things thinklab now
+ * needs - basically the read-only type system embedded in the kbox.
  * 
  * @author Ferd
  *
@@ -29,57 +27,11 @@ public class Ontology implements IOntology {
 	ArrayList<IList> _axioms = new ArrayList<IList>();
 	HashMap<String, IConcept> _concepts = new HashMap<String, IConcept>();
 
+	OWLOntology _ontology;
+	
 	public Ontology(String id) {
 		this._id = id;
 		this._uriFragment = id.replace('.', '/');
-	}
-
-	@Override
-	public String getLabel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getLabel(String languageCode) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getDescription(String languageCode) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void addDescription(String desc) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void addDescription(String desc, String language) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void addLabel(String desc) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void addLabel(String desc, String language) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -88,14 +40,10 @@ public class Ontology implements IOntology {
 	}
 
 	@Override
-	public String getUniqueObjectName(String prefix) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Collection<IConcept> getConcepts() {
 		// TODO Auto-generated method stub
+		
+		_ontology.get
 		return null;
 	}
 
@@ -131,12 +79,6 @@ public class Ontology implements IOntology {
 	}
 
 	@Override
-	public void read(URL url) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public String getURI() {
 		// TODO Auto-generated method stub
 		return null;
@@ -150,40 +92,21 @@ public class Ontology implements IOntology {
 	}
 
 	@Override
-	public boolean write(URI uri) throws ThinklabException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isAnonymous() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public IConcept createConcept(IList list) throws ThinklabException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IConcept createConcept(String localName, IConcept[] parents)
-			throws ThinklabException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IList asList() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void define(Collection<IAxiom> axioms) throws ThinklabException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public boolean write(String uri) throws ThinklabException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public IMetadata getMetadata() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

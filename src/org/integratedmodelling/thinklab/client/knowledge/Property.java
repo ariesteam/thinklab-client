@@ -7,6 +7,7 @@ import org.integratedmodelling.thinklab.api.knowledge.IConcept;
 import org.integratedmodelling.thinklab.api.knowledge.IKnowledge;
 import org.integratedmodelling.thinklab.api.knowledge.IOntology;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
+import org.integratedmodelling.thinklab.api.metadata.IMetadata;
 
 public class Property implements IProperty {
 
@@ -36,77 +37,10 @@ public class Property implements IProperty {
 	}
 
 	@Override
-	public boolean is(String semanticType) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void addAnnotation(String property, String value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getAnnotation(String property) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public String getURI() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public String getLabel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getLabel(String languageCode) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getDescription(String languageCode) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void addDescription(String desc) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void addDescription(String desc, String language) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void addLabel(String desc) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void addLabel(String desc, String language) {
-		// TODO Auto-generated method stub
-
-	}
-
 	@Override
 	public IOntology getOntology() {
 		// TODO Auto-generated method stub
@@ -195,6 +129,12 @@ public class Property implements IProperty {
 	public boolean isFunctional() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public IMetadata getMetadata() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
