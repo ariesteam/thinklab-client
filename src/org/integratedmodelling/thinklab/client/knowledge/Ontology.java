@@ -42,8 +42,6 @@ public class Ontology implements IOntology {
 	@Override
 	public Collection<IConcept> getConcepts() {
 		// TODO Auto-generated method stub
-		
-		_ontology.get
 		return null;
 	}
 
