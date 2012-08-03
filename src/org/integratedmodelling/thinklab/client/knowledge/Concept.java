@@ -104,7 +104,7 @@ public class Concept implements IConcept {
 	}
 
 	@Override
-	public IConcept getParent() throws ThinklabException {
+	public IConcept getParent() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -113,24 +113,6 @@ public class Concept implements IConcept {
 	public int getPropertiesCount(String property) {
 		// TODO Auto-generated method stub
 		return 0;
-	}
-
-	@Override
-	public int getMinCardinality(IProperty property) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxCardinality(IProperty property) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public Collection<IProperty> getAnnotationProperties() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -153,6 +135,12 @@ public class Concept implements IConcept {
 
 	@Override
 	public IMetadata getMetadata() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int[] getCardinality(IProperty property) {
 		// TODO Auto-generated method stub
 		return null;
 	}
