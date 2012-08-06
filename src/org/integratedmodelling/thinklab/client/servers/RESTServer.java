@@ -341,8 +341,7 @@ public class RESTServer implements IServer {
 
 	@Override
 	public IKnowledgeManager getKnowledgeManager() {
-		// TODO Auto-generated method stub
-		return null;
+		return _km;
 	}
 
 

@@ -59,6 +59,14 @@ public class EmbeddedServer extends RESTServer {
 		 */
 		if (!NetUtilities.portAvailable(8182)) {
 			_running = true;
+			/*
+			 * read up knowledge from server location
+			 */
+			try { 
+				((KnowledgeManager)_km).loadKnowledge(Configuration.get().getWorkspace("knowledge"));
+			} catch (ThinklabException e) {
+				return error(e);
+			}
 			return OK_RESULT;
 		}
 		

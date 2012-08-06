@@ -38,8 +38,25 @@ public class ProjectManager implements IProjectManager, IProjectFactory {
 		return _this;
 	}
 	
+	/**
+	 * Ugly, but this is a singleton and we only connect to one server at a time.
+	 * 
+	 * @param server
+	 */
 	public void setCurrentServer(IServer server) {
 		this._server = server;
+	}
+	
+	/**
+	 * If this isn't null, all projects will contribute their knowledge to the
+	 * knowledge manager in it, which is primed with whatever core knowledge is
+	 * known at the server side. This way we can provide reasoning at the client
+	 * side.
+	 * 
+	 * @return
+	 */
+	public IServer getCurrentServer() {
+		return this._server;
 	}
 	
 	protected ProjectManager() {
@@ -123,7 +140,7 @@ public class ProjectManager implements IProjectManager, IProjectFactory {
 	}
 
 	@Override
-	public void refreshProject(String projectId) throws ThinklabException {
+	public synchronized void refreshProject(String projectId) throws ThinklabException {
 		
 		IProject project = _projects.get(projectId);
 
@@ -135,6 +152,13 @@ public class ProjectManager implements IProjectManager, IProjectFactory {
 		}
 		
 		((Project)project).load(getResolver(project));
+	}
+	
+	public void refreshAllProjects() throws ThinklabException {
+
+		for (IProject p : getProjects()) {
+			((Project)p).load(getResolver(p));
+		}
 	}
 
 	@Override

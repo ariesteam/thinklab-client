@@ -8,8 +8,11 @@ import java.util.List;
 
 import org.integratedmodelling.collections.Pair;
 import org.integratedmodelling.collections.Triple;
+import org.integratedmodelling.exceptions.ThinklabException;
+import org.integratedmodelling.exceptions.ThinklabRuntimeException;
 import org.integratedmodelling.thinklab.api.knowledge.IAxiom;
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
+import org.integratedmodelling.thinklab.api.knowledge.IOntology;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
 import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IExtent;
@@ -19,6 +22,8 @@ import org.integratedmodelling.thinklab.api.modelling.parsing.IConceptDefinition
 import org.integratedmodelling.thinklab.api.modelling.parsing.IModelObjectDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.INamespaceDefinition;
 import org.integratedmodelling.thinklab.api.project.IProject;
+import org.integratedmodelling.thinklab.client.project.ProjectManager;
+import org.integratedmodelling.thinklab.common.owl.KnowledgeManager;
 
 /**
  * Beans to incarnate the model expressed in any of the Thinklab modeling languages. All languages should just
@@ -48,6 +53,8 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	String _lookupKbox = null;
 	String _expressionLanguage = null;
 	private IConceptDefinition _agentType;
+	IOntology ontology = null;
+	int lastAxiom = 0;
 	
 	public Namespace() {}
 	public Namespace(String id) { setId(id); }
@@ -55,6 +62,7 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	public long getTimeStamp() {
 		return timeStamp;
 	}
+	
 	public void setTimeStamp(long timeStamp) {
 		this.timeStamp = timeStamp;
 	}
@@ -142,23 +150,27 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	}
 	
 	/**
-	 * Synchronize axioms with ConceptObjects and PropertyObjects. Only
-	 * parses axioms -> object and not the other way around as we assume
-	 * that parsers will generate axioms from model objects.
-	 * 
-	 * TODO very incomplete!
-	 * 
+	 * Create the namespace's ontology from any accumulated axioms. If no axioms were
+	 * in the file, the ontology will be null to prevent OWLAPI overhead.
 	 */
 	public void synchronizeKnowledge() {
 
-		for (IAxiom axiom : axioms) {
+		if (ontology == null && axioms.size() > 0) {
 			
-			if (axiom.is(IAxiom.CLASS_ASSERTION)) {
-				if (!_names.contains(axiom.getArgument(0))) {
-					ConceptObject co = new ConceptObject();
-					co.setId(axiom.getArgument(0).toString());
-					co.setNamespace(this);
-					addModelObject(co);
+			KnowledgeManager km = null;
+			if (ProjectManager.get().getCurrentServer() != null) {
+				km = (KnowledgeManager) ProjectManager.get().getCurrentServer().getKnowledgeManager();
+				ontology = km.requireOntology(_id, project.getOntologyNamespacePrefix());
+			}
+			if (ontology != null) {
+				try {
+					Collection<IAxiom> ax = new ArrayList<IAxiom>();
+					for (int i = lastAxiom; i < axioms.size(); i++)
+						ax.add(axioms.get(i));
+					ontology.define(ax);
+					lastAxiom = axioms.size();
+				} catch (ThinklabException e) {
+					throw new ThinklabRuntimeException(e);
 				}
 			}
 		}
@@ -171,20 +183,16 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	
 	@Override
 	public void addImportedNamespace(INamespace namespace) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override
 	public IConcept getConcept(String s) {
-		// TODO Auto-generated method stub
-		return null;
+		return ontology == null ? null : ontology.getConcept(s);
 	}
 	
 	@Override
 	public IProperty getProperty(String s) {
-		// TODO Auto-generated method stub
-		return null;
+		return ontology == null ? null : ontology.getProperty(s);
 	}
 	
 	@Override
@@ -199,7 +207,6 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	
 	@Override
 	public String getResourceUrl() {
-		// TODO Auto-generated method stub
 		return _resourceUrl;
 	}
 	

@@ -20,7 +20,6 @@ import org.integratedmodelling.exceptions.ThinklabValidationException;
 import org.integratedmodelling.lang.SemanticType;
 import org.integratedmodelling.thinklab.api.factories.IModelManager;
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
-import org.integratedmodelling.thinklab.api.knowledge.IExpression;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
 import org.integratedmodelling.thinklab.api.lang.IModelParser;
 import org.integratedmodelling.thinklab.api.lang.IResolver;
@@ -48,7 +47,9 @@ import org.integratedmodelling.thinklab.api.modelling.parsing.IPropertyDefinitio
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.api.runtime.IServer;
 import org.integratedmodelling.thinklab.client.project.Project;
+import org.integratedmodelling.thinklab.client.project.ProjectManager;
 import org.integratedmodelling.thinklab.client.utils.MiscUtilities;
+import org.integratedmodelling.thinklab.common.owl.KnowledgeManager;
 
 /**
  * A model manager that can parse the Thinklab language and build a model map, without actually being 
@@ -143,17 +144,13 @@ public class ModelManager implements IModelManager {
 				IConcept c = server.getKnowledgeManager().getConcept(id);
 				if (c == null) {
 					onWarning("concept " + id + " is not known to the current server", line);
-				}
+				} 
 			} else {
-				onWarning("no server connected: cannot establish semantics for " + id, line);				
+				onWarning("no server is connected: cannot establish semantics for " + id, line);				
 			}
 			
 			ConceptObject ret = new ConceptObject();
 			ret.setId(id);
-			
-			/*
-			 * TODO discuss import with knowledge manager and server if any. Should have been seen before.
-			 */
 			
 			return ret;
 		}
@@ -166,8 +163,9 @@ public class ModelManager implements IModelManager {
 				if (c == null) {
 					onWarning("property " + id + " is not known to the current server", line);
 				}
+			}  else {
+				onWarning("no server is connected: cannot establish semantics for " + id, line);				
 			}
-
 			
 			/*
 			 * TODO - check this. We basically create a new namespace per unseen property, not 
@@ -295,8 +293,8 @@ public class ModelManager implements IModelManager {
 		}
 
 		@Override
-		public INamespace getNamespace(String id, int lineNumber) {
-			
+		public synchronized INamespace getNamespace(String id, int lineNumber) {
+
 			INamespace ns = namespacesById.get(id);
 			
 			if (ns == null && this.project != null && this.project.providesNamespace(id)) {
@@ -329,7 +327,9 @@ public class ModelManager implements IModelManager {
 			ns.setId(namespace);
 			ns.setResourceUrl(resource);
 			ns.setProject(project);
-			namespacesById.put(namespace, ns);
+			synchronized(namespacesById) {
+				namespacesById.put(namespace, ns);
+			}
 			
 			/*
 			 * report it to the project - it may need this if this is an import.
@@ -462,12 +462,12 @@ public class ModelManager implements IModelManager {
 	}
 
 	@Override
-	public INamespace getNamespace(String arg0) {
+	public synchronized INamespace getNamespace(String arg0) {
 		return namespacesById.get(arg0);
 	}
 
 	@Override
-	public Collection<INamespace> getNamespaces() {
+	public synchronized Collection<INamespace> getNamespaces() {
 
 		ArrayList<INamespace> ret = new ArrayList<INamespace>();
 		for (INamespace n : namespacesById.values()) {
@@ -499,7 +499,7 @@ public class ModelManager implements IModelManager {
 		return null;
 	}
 
-	public INamespace loadFile(String file, String namespaceId, IProject project, IResolver resolver) throws ThinklabException {
+	public synchronized INamespace loadFile(String file, String namespaceId, IProject project, IResolver resolver) throws ThinklabException {
 		
 		String extension = MiscUtilities.getFileExtension(file);
 		IModelParser parser = interpreters.get(extension);
@@ -533,7 +533,17 @@ public class ModelManager implements IModelManager {
 	
 	@Override
 	public void releaseNamespace(String arg0) {
-		namespacesById.remove(arg0);
+		synchronized(namespacesById) {
+			Namespace ns = (Namespace) namespacesById.get(arg0);
+			if (ns != null) {
+				if (ProjectManager.get().getCurrentServer() != null && ns.ontology != null) {
+					KnowledgeManager km = 
+							(KnowledgeManager) ProjectManager.get().getCurrentServer().getKnowledgeManager();
+					km.releaseOntology(ns.ontology);
+				}
+				namespacesById.remove(arg0);
+			}
+		}
 	}
 
 	@Override
@@ -549,7 +559,7 @@ public class ModelManager implements IModelManager {
 
 	
 	
-	public INamespace loadNamespace(String namespaceId, String resource, String resourceType)
+	public synchronized INamespace loadNamespace(String namespaceId, String resource, String resourceType)
 			throws ThinklabException {
 		
 		Namespace ret = (Namespace) namespacesById.get(namespaceId);
@@ -600,8 +610,10 @@ public class ModelManager implements IModelManager {
 	}
 
 	public void notifyNamespace(INamespace ns) {
-		if (!namespacesById.containsKey(ns.getId()))
-			namespacesById.put(ns.getId(), ns);
+		synchronized(namespacesById) {
+			if (!namespacesById.containsKey(ns.getId()))
+				namespacesById.put(ns.getId(), ns);
+		}
 	}
 
 }
