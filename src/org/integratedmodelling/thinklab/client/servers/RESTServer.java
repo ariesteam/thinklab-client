@@ -7,16 +7,17 @@ import java.util.List;
 
 import org.integratedmodelling.collections.Pair;
 import org.integratedmodelling.exceptions.ThinklabException;
+import org.integratedmodelling.thinklab.api.factories.IKnowledgeManager;
 import org.integratedmodelling.thinklab.api.lang.IPrototype;
 import org.integratedmodelling.thinklab.api.metadata.IMetadata;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.api.runtime.IServer;
 import org.integratedmodelling.thinklab.client.CommandManager;
-import org.integratedmodelling.thinklab.client.Result;
 import org.integratedmodelling.thinklab.client.Session;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.modelling.Metadata;
 import org.integratedmodelling.thinklab.client.utils.FolderZiper;
+import org.integratedmodelling.thinklab.common.owl.KnowledgeManager;
 
 public class RESTServer implements IServer {
 
@@ -36,6 +37,8 @@ public class RESTServer implements IServer {
 	
 	protected ArrayList<IPrototype> _functions;
 	protected ArrayList<IPrototype> _commands;
+	
+	protected IKnowledgeManager _km = new KnowledgeManager();
 	
 	public RESTServer(String url, String user, String password) {
 		_url = url;
@@ -334,6 +337,12 @@ public class RESTServer implements IServer {
 	public void loadAll(Collection<IProject> projects) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public IKnowledgeManager getKnowledgeManager() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

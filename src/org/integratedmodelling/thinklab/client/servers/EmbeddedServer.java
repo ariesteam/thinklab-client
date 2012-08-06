@@ -11,6 +11,8 @@ import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.client.Session;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.utils.NetUtilities;
+import org.integratedmodelling.thinklab.common.configuration.Configuration;
+import org.integratedmodelling.thinklab.common.owl.KnowledgeManager;
 
 /**
  * Boots a server on the local machine and gives specialized access to it 
@@ -113,6 +115,15 @@ public class EmbeddedServer extends RESTServer {
 			return error(null);
 		}
 
+		/*
+		 * read up knowledge from server location
+		 */
+		try { 
+			((KnowledgeManager)_km).loadKnowledge(Configuration.get().getWorkspace("knowledge"));
+		} catch (ThinklabException e) {
+			return error(e);
+		}
+		
 		/*
 		 * parse capabilities and set metadata
 		 */

@@ -114,8 +114,8 @@ public class ModelManager implements IModelManager {
 		@Override
 		public boolean onWarning(String warning, int lineNumber) {
 			
-			System.out.println("WARNING " + warning + " at " + lineNumber);
-
+//			System.out.println("WARNING " + warning + " at " + lineNumber);
+//
 			if (namespace != null) {
 				namespace.addWarning(warning, lineNumber);
 			}
@@ -139,6 +139,15 @@ public class ModelManager implements IModelManager {
 		@Override
 		public IConceptDefinition resolveExternalConcept(String id, int line) {
 			
+			if (server != null) {
+				IConcept c = server.getKnowledgeManager().getConcept(id);
+				if (c == null) {
+					onWarning("concept " + id + " is not known to the current server", line);
+				}
+			} else {
+				onWarning("no server connected: cannot establish semantics for " + id, line);				
+			}
+			
 			ConceptObject ret = new ConceptObject();
 			ret.setId(id);
 			
@@ -151,6 +160,14 @@ public class ModelManager implements IModelManager {
 		
 		@Override
 		public IPropertyDefinition resolveExternalProperty(String id, int line) {
+			
+			if (server != null) {
+				IProperty c = server.getKnowledgeManager().getProperty(id);
+				if (c == null) {
+					onWarning("property " + id + " is not known to the current server", line);
+				}
+			}
+
 			
 			/*
 			 * TODO - check this. We basically create a new namespace per unseen property, not 
@@ -563,13 +580,6 @@ public class ModelManager implements IModelManager {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-//	@Override
-//	public IExpression resolveFunction(String functionId,
-//			Collection<String> parameterNames) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
 
 	@Override
 	public Collection<INamespace> loadSourceDirectory(File sourcedir, IProject project)

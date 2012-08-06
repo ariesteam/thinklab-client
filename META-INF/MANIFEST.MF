@@ -533,4 +533,5 @@ Export-Package: asm,
  tests.src.mypackage,
  uk.co.flamingpenguin.jewel,
  uk.co.flamingpenguin.jewel.cli;uses:="uk.co.flamingpenguin.jewel,new uk.co.flamingpenguin.jewel.cli"
-Require-Bundle: thinklab-api;bundle-version="1.0.0"
+Require-Bundle: thinklab-api;bundle-version="1.0.0",
+ thinklab-common;bundle-version="1.0.0"

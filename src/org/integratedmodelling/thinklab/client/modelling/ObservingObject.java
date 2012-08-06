@@ -11,8 +11,8 @@ import org.integratedmodelling.thinklab.api.lang.IList;
 import org.integratedmodelling.thinklab.api.modelling.IObservingObject;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IObservingObjectDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IPropertyDefinition;
-import org.integratedmodelling.thinklab.client.knowledge.KnowledgeManager;
-import org.integratedmodelling.thinklab.client.knowledge.Property;
+import org.integratedmodelling.thinklab.common.owl.KnowledgeManager;
+import org.integratedmodelling.thinklab.common.owl.Property;
 
 /**
  * Models and Observers. They both have observables, which are complicated enough to handle
@@ -85,7 +85,8 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 	@Override
 	public void addDependency(Object cmodel, String formalName, IPropertyDefinition property, boolean optional) {
 		_dependencies.add(new Dependency(cmodel, formalName, 
-				(property == null ? null : new Property(property.getNamespace().getId(), property.getId())), 
+				(property == null ? null : KnowledgeManager.get().getProperty(property.getName())), 
+				
 				optional));
 	}
 
