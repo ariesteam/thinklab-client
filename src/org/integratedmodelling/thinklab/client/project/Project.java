@@ -454,4 +454,24 @@ public class Project extends HashableObject implements IProject {
 		
 		return ret;
 	}
+
+	@Override
+	public boolean hasErrors() {
+		
+		for (INamespace n : _namespaces) {
+			if (n.hasErrors())
+				return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean hasWarnings() {
+		
+		for (INamespace n : _namespaces) {
+			if (n.hasWarnings())
+				return true;
+		}
+		return false;
+	}
 }

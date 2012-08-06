@@ -295,4 +295,14 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	public Collection<Pair<String, Integer>> getWarnings() {
 		return _warnings;
 	}
+
+	@Override
+	public IOntology getOntology() {
+		return ontology;
+	}
+
+	@Override
+	public boolean hasWarnings() {
+		return _warnings.size() > 0;
+	}
 }

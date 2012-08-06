@@ -143,7 +143,9 @@ public class ModelManager implements IModelManager {
 			if (server != null) {
 				IConcept c = server.getKnowledgeManager().getConcept(id);
 				if (c == null) {
-					onWarning("concept " + id + " is not known to the current server", line);
+					onException(
+							new ThinklabValidationException("concept " + id + " is not known to the current server"), 
+							line);
 				} 
 			} else {
 				onWarning("no server is connected: cannot establish semantics for " + id, line);				
@@ -161,7 +163,9 @@ public class ModelManager implements IModelManager {
 			if (server != null) {
 				IProperty c = server.getKnowledgeManager().getProperty(id);
 				if (c == null) {
-					onWarning("property " + id + " is not known to the current server", line);
+					onException(
+							new ThinklabValidationException("property " + id + " is not known to the current server"),
+							line);
 				}
 			}  else {
 				onWarning("no server is connected: cannot establish semantics for " + id, line);				
