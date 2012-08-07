@@ -374,7 +374,6 @@ Export-Package: asm,
    org.integratedmodelling.thinklab.client.project,
    org.integratedmodelling.thinklab.api.knowledge,
    org.integratedmodelling.thinklab.api.factories",
- org.integratedmodelling.thinklab.client.owl;uses:="org.integratedmodelling.thinklab.api.lang,org.integratedmodelling.thinklab.api.modelling,org.semanticweb.owlapi.model",
  org.integratedmodelling.thinklab.client.project;uses:="org.integratedmodelling.thinklab.api.project,org.integratedmodelling.thinklab.api.knowledge",
  org.integratedmodelling.thinklab.client.resource,
  org.integratedmodelling.thinklab.client.servers;

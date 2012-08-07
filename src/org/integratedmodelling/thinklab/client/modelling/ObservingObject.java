@@ -81,7 +81,6 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 		return _observableCName;
 	}
 
-
 	@Override
 	public void addDependency(Object cmodel, String formalName, IPropertyDefinition property, boolean optional) {
 		_dependencies.add(new Dependency(cmodel, formalName, 

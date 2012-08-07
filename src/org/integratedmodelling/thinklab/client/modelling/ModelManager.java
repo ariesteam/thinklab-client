@@ -615,7 +615,6 @@ public class ModelManager implements IModelManager {
 
 	public void notifyNamespace(INamespace ns) {
 		synchronized(namespacesById) {
-			if (!namespacesById.containsKey(ns.getId()))
 				namespacesById.put(ns.getId(), ns);
 		}
 	}

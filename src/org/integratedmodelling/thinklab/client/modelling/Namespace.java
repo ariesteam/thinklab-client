@@ -48,9 +48,8 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	long timeStamp;
 	IProject project;
 	private String _resourceUrl;
-	String _trainingKbox = null;
-	String _storageKbox = null;
-	String _lookupKbox = null;
+	ArrayList<String> _trainingNamespaces = new ArrayList<String>();
+	ArrayList<String> _lookupNamespaces = new ArrayList<String>();
 	String _expressionLanguage = null;
 	private IConceptDefinition _agentType;
 	IOntology ontology = null;
@@ -211,35 +210,6 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	}
 	
 	@Override
-	public void setStorageKbox(String kboxUri) {
-		_storageKbox = kboxUri;
-	}
-
-	@Override
-	public void setTrainingKbox(String kboxUri) {
-		_trainingKbox = kboxUri;
-	}
-	
-	@Override
-	public String getStorageKbox() {
-		return _storageKbox;
-	}
-	
-	@Override
-	public String getTrainingKbox() {
-		return _trainingKbox;
-	}
-	
-	@Override
-	public void setLookupKbox(String kboxUri) {
-		_lookupKbox = kboxUri;
-	}
-	
-	@Override
-	public String getLookupKbox() {
-		return _lookupKbox;
-	}
-	@Override
 	public void setExpressionLanguage(String language) {
 		_expressionLanguage = language;
 	}
@@ -304,5 +274,30 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	@Override
 	public boolean hasWarnings() {
 		return _warnings.size() > 0;
+	}
+	
+	@Override
+	public List<String> getTrainingNamespaces() {
+		return _trainingNamespaces;
+	}
+	
+	@Override
+	public List<String> getLookupNamespaces() {
+		return _lookupNamespaces;
+	}
+	
+	@Override
+	public void addLookupNamespace(String tns) {
+		_lookupNamespaces.add(tns);
+	}
+	
+	@Override
+	public void addTrainingNamespace(String tns) {
+		_trainingNamespaces.add(tns);
+	}
+	
+	@Override
+	public void setOntology(IOntology iOntology) {
+		ontology = iOntology;
 	}
 }
