@@ -46,11 +46,6 @@ public class Project extends HashableObject implements IProject {
 	private ArrayList<File> _resourcesInError = new ArrayList<File>();
 	private ArrayList<String> _errors = new ArrayList<String>();
 
-	/*
-	 * if true, we need refresh
-	 */
-	private boolean _isDirty = false;
-	
 	
 	public Project(File path, IProjectManager manager) {
 		
@@ -68,16 +63,6 @@ public class Project extends HashableObject implements IProject {
 	public String getId() {
 		return _id;
 	}
-
-	/**
-	 * Use this to force unload when refresh is called.
-	 * 
-	 * @param isDirty
-	 */
-	public void setDirty(boolean isDirty) {
-		_isDirty = isDirty;
-	}
-
 
 	public void load(IResolver resolver) throws ThinklabException {
 
@@ -109,13 +94,8 @@ public class Project extends HashableObject implements IProject {
 		}
 		
 		_loaded = true;
-		_isDirty = false;
 	}
 	
-	private boolean isDirty() {
-		return _isDirty ;
-	}
-
 	private void loadInternal(File f, HashSet<File> read, ArrayList<INamespace> ret, String path,
 			IProject project, IResolver resolver) throws ThinklabClientException {
 

@@ -7,7 +7,9 @@ import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.ExecuteResultHandler;
 import org.integratedmodelling.exceptions.ThinklabException;
+import org.integratedmodelling.exceptions.ThinklabRuntimeException;
 import org.integratedmodelling.thinklab.api.project.IProject;
+import org.integratedmodelling.thinklab.api.runtime.IServer;
 import org.integratedmodelling.thinklab.client.Session;
 import org.integratedmodelling.thinklab.client.exceptions.ThinklabClientException;
 import org.integratedmodelling.thinklab.client.utils.NetUtilities;
@@ -38,10 +40,35 @@ public class EmbeddedServer extends RESTServer {
 	public EmbeddedServer() {
 		super(LOCAL_URL, null, null);
 		_isLocal = true;
-		_instDir = System.getenv("THINKLAB_HOME");
+		_instDir = System.getProperty("thinklab.inst");
 		if (_instDir == null) {
 			// server is useless. Do not say anything.
 		}
+		
+		File f = Configuration.get().getWorkspace(IServer.KNOWLEDGE_STORAGE_AREA);
+		if (f.exists() && new File(f + File.separator + "thinklab.owl").exists()) {
+			try {
+				((KnowledgeManager)_km).loadKnowledge(f);
+			} catch (ThinklabException e) {
+				throw new ThinklabRuntimeException(e);
+			}
+		}
+		
+		if (!NetUtilities.portAvailable(8182)) {
+			_running = true;
+		}
+	}
+
+	
+	
+	public static boolean isAvailable() {
+		/*
+		 * lookup thinklab installation
+		 */
+		String idir = System.getProperty("thinklab.inst");
+		return idir != null && 
+			new File(idir + File.separator + "bin").exists();
+		
 	}
 	
 	
@@ -50,23 +77,14 @@ public class EmbeddedServer extends RESTServer {
 	
 		if (_instDir == null)
 			return error(
-				new ThinklabClientException("no THINKLAB_HOME defined: cannot access a local Thinklab installation"));
+				new ThinklabClientException("no property 'thinklab.inst' defined: cannot access a local Thinklab installation"));
 		
 		/*
 		 * see if a server was started before we boot. CHECK - we
 		 * should check that it's actually a thinklab server on the
 		 * port, although that may be overkill at this point.
 		 */
-		if (!NetUtilities.portAvailable(8182)) {
-			_running = true;
-			/*
-			 * read up knowledge from server location
-			 */
-			try { 
-				((KnowledgeManager)_km).loadKnowledge(Configuration.get().getWorkspace("knowledge"));
-			} catch (ThinklabException e) {
-				return error(e);
-			}
+		if (_running) {
 			return OK_RESULT;
 		}
 		
@@ -151,7 +169,6 @@ public class EmbeddedServer extends RESTServer {
 		 * remain running, this just kills the session. Behavior is proper, but
 		 * no restart facility is available for now.
 		 */
-		
 		_running = false;
 		
 		return OK_RESULT;

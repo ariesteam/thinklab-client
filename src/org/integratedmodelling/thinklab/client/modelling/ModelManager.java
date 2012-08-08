@@ -521,7 +521,6 @@ public class ModelManager implements IModelManager {
 		ret = (Namespace) parser.parse(namespaceId, file, res);
 		
 		if (ret != null && !((Namespace)(ret)).hasErrors()) {
-		
 			ret.setProject(project);
 			ret.setResourceUrl(file);
 			ret.synchronizeKnowledge();
