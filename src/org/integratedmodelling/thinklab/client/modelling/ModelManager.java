@@ -88,8 +88,8 @@ public class ModelManager implements IModelManager {
 		
 		HashSet<String> _defined = new HashSet<String>();
 
-		private HashMap<String, IModelObjectDefinition> symbolTable =
-				new HashMap<String, IModelObjectDefinition>();
+		private HashMap<String, Object> symbolTable =
+				new HashMap<String, Object>();
 
 		public Resolver(IServer server, IProject project) {
 			this.server = server;
@@ -403,7 +403,7 @@ public class ModelManager implements IModelManager {
 		}
 
 		@Override
-		public HashMap<String, IModelObjectDefinition> getSymbolTable() {
+		public HashMap<String, Object> getSymbolTable() {
 			return this.symbolTable ;
 		}
 
