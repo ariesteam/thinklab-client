@@ -3,8 +3,10 @@ package org.integratedmodelling.thinklab.client.modelling;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.integratedmodelling.collections.Pair;
 import org.integratedmodelling.collections.Triple;
@@ -55,6 +57,8 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	IOntology ontology = null;
 	int lastAxiom = 0;
 	
+	Map<String, Object> _symbolTable = new HashMap<String, Object>();
+	
 	public Namespace() {}
 	public Namespace(String id) { setId(id); }
 	
@@ -88,6 +92,11 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 			axiomCatalog.add(axiom);
 			axioms.add(axiom);
 		}
+	}
+	
+	@Override
+	public Map<String, Object> getSymbolTable() {
+		return _symbolTable;
 	}
 	
 	/**

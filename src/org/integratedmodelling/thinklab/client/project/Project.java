@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.integratedmodelling.common.HashableObject;
@@ -64,7 +65,7 @@ public class Project extends HashableObject implements IProject {
 		return _id;
 	}
 
-	public void load(IResolver resolver) throws ThinklabException {
+	public void load(IResolver resolver, Set<File> context) throws ThinklabException {
 
 		if (isLoaded()/* && isDirty() */)
 			unload();
@@ -82,21 +83,20 @@ public class Project extends HashableObject implements IProject {
 			if (p.equals(this))
 				continue;
 			IResolver r = resolver.getImportResolver(p);
-			((Project)p).load(r);
+			((Project)p).load(r, context);
 		}
 		
 		_namespaces = new ArrayList<INamespace>();
-		HashSet<File> read = new HashSet<File>();
 		
 		File srcDir = new File(_path + File.separator + this.getSourceDirectory());
 		for (File fl : srcDir.listFiles()) {
-			loadInternal(fl, read, _namespaces, "", this, resolver);
+			loadInternal(fl, context, _namespaces, "", this, resolver);
 		}
 		
 		_loaded = true;
 	}
 	
-	private void loadInternal(File f, HashSet<File> read, ArrayList<INamespace> ret, String path,
+	private void loadInternal(File f, Set<File> context, ArrayList<INamespace> ret, String path,
 			IProject project, IResolver resolver) throws ThinklabClientException {
 
 		String pth = 
@@ -107,11 +107,13 @@ public class Project extends HashableObject implements IProject {
 		if (f. isDirectory()) {
 
 			for (File fl : f.listFiles()) {
-				loadInternal(fl, read, ret, pth, project, resolver);
+				loadInternal(fl, context, ret, pth, project, resolver);
 			}
 			
 		} else if (ModelManager.get().canParseExtension(MiscUtilities.getFileExtension(f.toString()))) {
 
+			if (context.contains(f))
+				return;
 			/*
 			 * already imported by someone else
 			 */

@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.integratedmodelling.exceptions.ThinklabException;
@@ -76,10 +77,10 @@ public class ProjectManager implements IProjectManager, IProjectFactory {
 
 	@Override
 	public void loadAllProjects() throws ThinklabException {
-
+		Set<File> context = new HashSet<File>();
 		for (IProject p : getProjects()) {
 			if (!((Project)p).isLoaded()) {
-				((Project)p).load(getResolver(p));
+				((Project)p).load(getResolver(p), context);
 			}
 		}
 	}
@@ -92,7 +93,7 @@ public class ProjectManager implements IProjectManager, IProjectFactory {
 		if (p == null)
 			throw new ThinklabResourceNotFoundException("project " + projectId + " does not exist");
 
-		((Project)p).load(getResolver(p));
+		((Project)p).load(getResolver(p), new HashSet<File>());
 		
 		return p;
 	}
@@ -151,13 +152,13 @@ public class ProjectManager implements IProjectManager, IProjectFactory {
 			((Project)project).unload();
 		}
 		
-		((Project)project).load(getResolver(project));
+		((Project)project).load(getResolver(project), new HashSet<File>());
 	}
 	
 	public void refreshAllProjects() throws ThinklabException {
 
 		for (IProject p : getProjects()) {
-			((Project)p).load(getResolver(p));
+			((Project)p).load(getResolver(p), new HashSet<File>());
 		}
 	}
 

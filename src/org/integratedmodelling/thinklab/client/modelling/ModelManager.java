@@ -41,7 +41,6 @@ import org.integratedmodelling.thinklab.api.modelling.parsing.IClassificationDef
 import org.integratedmodelling.thinklab.api.modelling.parsing.IConceptDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionCall;
 import org.integratedmodelling.thinklab.api.modelling.parsing.ILanguageDefinition;
-import org.integratedmodelling.thinklab.api.modelling.parsing.IModelObjectDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.INamespaceDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IPropertyDefinition;
 import org.integratedmodelling.thinklab.api.project.IProject;
@@ -194,16 +193,9 @@ public class ModelManager implements IModelManager {
 
 		@Override
 		public void onModelObjectDefined(IModelObject ret) {
-			// TODO Auto-generated method stub
-			
+			if (!isGeneratedId(ret.getId()))
+				namespace.getSymbolTable().put(ret.getId(), ret);
 		}
-//
-//		@Override
-//		public IExpression resolveFunction(String functionId,
-//				Collection<String> parameterNames) {
-//			// TODO use current server; supply defaults for core library
-//			return null;
-//		}
 
 		@Override
 		public ILanguageDefinition newLanguageObject(Class<?> cls) {
@@ -403,8 +395,8 @@ public class ModelManager implements IModelManager {
 		}
 
 		@Override
-		public HashMap<String, Object> getSymbolTable() {
-			return this.symbolTable ;
+		public Map<String, Object> getSymbolTable() {
+			return this.namespace.getSymbolTable() ;
 		}
 
 		@Override
@@ -416,6 +408,15 @@ public class ModelManager implements IModelManager {
 		public boolean validateFunctionCall(IFunctionCall ret) {
 			// TODO USE SERVER PROTOTYPES
 			return true;
+		}
+
+		@Override
+		public void defineSymbol(String id, Object value, int lineNumber) {
+			/*
+			 * TODO may want to save line number to provide warnings or error messages if
+			 * things get overridden.
+			 */
+			this.namespace.getSymbolTable().put(id, value);
 		}
 	}
 	
