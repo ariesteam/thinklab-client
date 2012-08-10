@@ -196,6 +196,11 @@ public class RESTServer implements IServer {
 	public Result shutdown() {
 		
 		if (_session != null) {
+			try {
+				_session.send("manager", false, "cmd", "shutdown");
+			} catch (ThinklabClientException e) {
+				return error(e);
+			}
 			_session.disconnect();
 			_session = null;
 		}
@@ -342,6 +347,34 @@ public class RESTServer implements IServer {
 	@Override
 	public IKnowledgeManager getKnowledgeManager() {
 		return _km;
+	}
+
+	@Override
+	public Result send(String... cmd) {
+		
+		String[] args = new String[cmd.length - 1];
+		for (int i = 1; i < cmd.length; i++) {
+			args[i-1] = cmd[i];
+		}
+		try {
+			return _session.send(cmd[0], false, args);
+		} catch (ThinklabClientException e) {
+			return error(e);
+		}
+	}
+
+	@Override
+	public Result sendAsynchronous(String... cmd) {
+		
+		String[] args = new String[cmd.length - 1];
+		for (int i = 1; i < cmd.length; i++) {
+			args[i-1] = cmd[i];
+		}
+		try {
+			return _session.send(cmd[0], true, args);
+		} catch (ThinklabClientException e) {
+			return error(e);
+		}
 	}
 
 

@@ -160,15 +160,11 @@ public class EmbeddedServer extends RESTServer {
 	public Result shutdown() {
 
 		/*
-		 * delete session
+		 * TODO
+		 * send shutdown message and delete session. This assumes that the server is capable of
+		 * shutting down. We should also ensure that we kill any residual process we started.
 		 */
 		super.shutdown();
-
-		/*
-		 * TODO so far haven't found a way to destroy the process. Server will
-		 * remain running, this just kills the session. Behavior is proper, but
-		 * no restart facility is available for now.
-		 */
 		_running = false;
 		
 		return OK_RESULT;
