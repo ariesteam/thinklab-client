@@ -242,7 +242,7 @@ public class ModelManager implements IModelManager {
 
 		@Override
 		public boolean isGeneratedId(String id) {
-			return id.endsWith("___");
+			return id == null || id.endsWith("___");
 		}
 
 		@Override
@@ -276,7 +276,7 @@ public class ModelManager implements IModelManager {
 		}
 
 		@Override
-		public void handleObserveStatement(Object observable,  IContext ctx, boolean resetContext, int lineNumber)  {
+		public void handleObserveStatement(Object observable,  IContext ctx, int lineNumber)  {
 			// TODO Auto-generated method stub
 			
 		}

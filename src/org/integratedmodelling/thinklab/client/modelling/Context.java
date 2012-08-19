@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
+import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
 import org.integratedmodelling.thinklab.api.listeners.IListener;
 import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IExtent;
@@ -159,6 +160,12 @@ public class Context extends ModelObject implements IContextDefinition {
 	public double cover(ITopologicallyComparable<?>[] context) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public void setObservable(ISemanticObject<?> agent) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

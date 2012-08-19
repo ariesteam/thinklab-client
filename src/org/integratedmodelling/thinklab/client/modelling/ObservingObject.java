@@ -12,7 +12,6 @@ import org.integratedmodelling.thinklab.api.modelling.IObservingObject;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IObservingObjectDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IPropertyDefinition;
 import org.integratedmodelling.thinklab.common.owl.KnowledgeManager;
-import org.integratedmodelling.thinklab.common.owl.Property;
 
 /**
  * Models and Observers. They both have observables, which are complicated enough to handle
