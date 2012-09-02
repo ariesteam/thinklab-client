@@ -28,14 +28,16 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 		private String _formalName;
 		private IProperty _property;
 		private boolean _optional;
-
+		private boolean _distribute;
+		
 		Dependency() {}
 		
-		Dependency(Object cmodel, String formalName, IProperty property, boolean required) {
+		Dependency(Object cmodel, String formalName, IProperty property, boolean required, boolean distribute) {
 			this._cmodel = cmodel;
 			this._formalName = formalName;
 			this._property = property;
 			this._optional = required;
+			this._distribute = distribute;
 		}
 		
 		@Override
@@ -56,6 +58,11 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 		@Override
 		public IProperty getProperty() {
 			return _property;
+		}
+
+		@Override
+		public boolean isDistributed() {
+			return _distribute;
 		}
 		
 	}
@@ -81,11 +88,10 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 	}
 
 	@Override
-	public void addDependency(Object cmodel, String formalName, IPropertyDefinition property, boolean optional) {
+	public void addDependency(Object cmodel, String formalName, IPropertyDefinition property, boolean optional, boolean distribute) {
 		_dependencies.add(new Dependency(cmodel, formalName, 
 				(property == null ? null : KnowledgeManager.get().getProperty(property.getName())), 
-				
-				optional));
+				optional, distribute));
 	}
 
 	@Override

@@ -1,12 +1,16 @@
 package org.integratedmodelling.thinklab.client.modelling;
 
+import java.util.List;
+
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabUnsupportedOperationException;
 import org.integratedmodelling.thinklab.api.knowledge.IExpression;
 import org.integratedmodelling.thinklab.api.modelling.IAccessor;
 import org.integratedmodelling.thinklab.api.modelling.IContext;
+import org.integratedmodelling.thinklab.api.modelling.IExtent;
 import org.integratedmodelling.thinklab.api.modelling.IObserver;
 import org.integratedmodelling.thinklab.api.modelling.IScenario;
+import org.integratedmodelling.thinklab.api.modelling.ISubject;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IExpressionDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionCall;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IObserverDefinition;
@@ -16,7 +20,8 @@ public abstract class Observer extends ObservingObject implements IObserverDefin
 	IObserver _mediated = null;
 	IAccessor _accessor = null;
 	
-	public IContext getUnresolvedContext(IContext totalContext) {
+	@Override
+	public List<IExtent> getUnresolvedContext(ISubject totalContext) {
 		return null;
 	}
 	

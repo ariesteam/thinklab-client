@@ -35,6 +35,7 @@ import org.integratedmodelling.thinklab.api.modelling.IObservation;
 import org.integratedmodelling.thinklab.api.modelling.IRankingObserver;
 import org.integratedmodelling.thinklab.api.modelling.IScenario;
 import org.integratedmodelling.thinklab.api.modelling.IStoryline;
+import org.integratedmodelling.thinklab.api.modelling.ISubject;
 import org.integratedmodelling.thinklab.api.modelling.IUnit;
 import org.integratedmodelling.thinklab.api.modelling.IValuingObserver;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IClassificationDefinition;
@@ -43,6 +44,7 @@ import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionCall;
 import org.integratedmodelling.thinklab.api.modelling.parsing.ILanguageDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.INamespaceDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IPropertyDefinition;
+import org.integratedmodelling.thinklab.api.modelling.parsing.ISubjectGenerator;
 import org.integratedmodelling.thinklab.api.project.IProject;
 import org.integratedmodelling.thinklab.api.runtime.IServer;
 import org.integratedmodelling.thinklab.client.project.Project;
@@ -234,6 +236,8 @@ public class ModelManager implements IModelManager {
 				return new FunctionCall();
 			}  else if (cls.equals(IClassificationDefinition.class)) {
 				return new ClassificationDefinition();
+			} else if (cls.equals(ISubjectGenerator.class)) {
+				return new SubjectGenerator();
 			}
 			
 			return null;
@@ -250,19 +254,6 @@ public class ModelManager implements IModelManager {
 			return UUID.randomUUID().toString() + "___";
 		}
 
-//		@Override
-//		public Object runFunction(IFunctionDefinition function) {
-//			
-//			IExpression f = resolveFunction(function.getId(), function.getParameters().keySet());
-//			if (f != null) {
-//				try {
-//					return f.eval(function.getParameters());
-//				} catch (ThinklabException e) {
-//				}
-//			}
-//			return null;
-//		}
-
 		@Override
 		public IModelObject getLastProcessedObject() {
 			// TODO Auto-generated method stub
@@ -276,7 +267,7 @@ public class ModelManager implements IModelManager {
 		}
 
 		@Override
-		public void handleObserveStatement(Object observable,  IContext ctx, int lineNumber)  {
+		public void handleObserveStatement(Object observable, ISubjectGenerator ctx,  boolean distribute, IPropertyDefinition property, int lineNumber)  {
 			// TODO Auto-generated method stub
 			
 		}
@@ -424,36 +415,36 @@ public class ModelManager implements IModelManager {
 		interpreters.put(extension, modelParser);
 	}
 	
-	@Override
-	public Collection<IScenario> getApplicableScenarios(IModel arg0,
-			IContext arg1, boolean arg2) throws ThinklabException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IContext getContext(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<IModelObject> getDependencies(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IModel getModel(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IModelObject getModelObject(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	@Override
+//	public Collection<IScenario> getApplicableScenarios(IModel arg0,
+//			IContext arg1, boolean arg2) throws ThinklabException {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public IContext getContext(String arg0) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public Collection<IModelObject> getDependencies(String arg0) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public IModel getModel(String arg0) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public IModelObject getModelObject(String arg0) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 	
 	/**
 	 * Override this to return a new subclass of Resolver to intercept
@@ -491,18 +482,18 @@ public class ModelManager implements IModelManager {
 		
 		return ret;
 	}
-
-	@Override
-	public IScenario getScenario(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getSource(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//
+//	@Override
+//	public IScenario getScenario(String arg0) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public String getSource(String arg0) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 	public synchronized INamespace loadFile(String file, String namespaceId, IProject project, IResolver resolver) throws ThinklabException {
 		
@@ -550,12 +541,12 @@ public class ModelManager implements IModelManager {
 		}
 	}
 
-	@Override
-	public Collection<INamespace> load(IProject project)
-			throws ThinklabException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	@Override
+//	public Collection<INamespace> load(IProject project)
+//			throws ThinklabException {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 	public boolean canParseExtension(String fileExtension) {
 		return interpreters.containsKey(fileExtension);
@@ -595,19 +586,19 @@ public class ModelManager implements IModelManager {
 		return null;
 	}
 
-	@Override
-	public Collection<INamespace> loadSourceDirectory(File sourcedir, IProject project)
-			throws ThinklabException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IObservation observe(Object object, IContext context)
-			throws ThinklabException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	@Override
+//	public Collection<INamespace> loadSourceDirectory(File sourcedir, IProject project)
+//			throws ThinklabException {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public IObservation observe(Object object, IContext context)
+//			throws ThinklabException {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 	public IResolver getResolver(IServer server, IProject project) {
 		return new Resolver(server, project);
@@ -617,6 +608,26 @@ public class ModelManager implements IModelManager {
 		synchronized(namespacesById) {
 				namespacesById.put(ns.getId(), ns);
 		}
+	}
+
+	@Override
+	public ISubject observe(Object observable) throws ThinklabException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ISubject observe(Object observable, ISubject context,
+			IProperty property, boolean distribute) throws ThinklabException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<IScenario> getScenarios(IModel model, ISubject context)
+			throws ThinklabException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

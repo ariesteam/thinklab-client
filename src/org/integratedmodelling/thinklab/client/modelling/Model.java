@@ -9,8 +9,8 @@ import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
 import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IDataSource;
 import org.integratedmodelling.thinklab.api.modelling.IExtent;
-import org.integratedmodelling.thinklab.api.modelling.IObservation;
 import org.integratedmodelling.thinklab.api.modelling.IObserver;
+import org.integratedmodelling.thinklab.api.modelling.ISubject;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IExpressionDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionCall;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IModelDefinition;
@@ -46,7 +46,7 @@ public class Model extends ObservingObject implements IModelDefinition {
 	}
 
 	@Override
-	public IObservation observe(IContext context)
+	public ISubject observe(ISubject context)
 			throws ThinklabException {
 		throw new ThinklabUnsupportedOperationException("models cannot be contextualized at the client side");
 	}

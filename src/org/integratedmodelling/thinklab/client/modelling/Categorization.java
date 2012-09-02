@@ -4,8 +4,8 @@ import java.util.Set;
 
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
-import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IState;
+import org.integratedmodelling.thinklab.api.modelling.ISubject;
 import org.integratedmodelling.thinklab.api.modelling.parsing.ICategorizingObserverDefinition;
 
 public class Categorization extends Observer implements ICategorizingObserverDefinition {
@@ -23,7 +23,7 @@ public class Categorization extends Observer implements ICategorizingObserverDef
 	}
 
 	@Override
-	public IState createState(ISemanticObject<?> observable, IContext context)
+	public IState createState(ISemanticObject<?> observable, ISubject context)
 			throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
