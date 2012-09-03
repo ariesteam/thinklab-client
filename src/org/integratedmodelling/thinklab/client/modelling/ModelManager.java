@@ -26,13 +26,12 @@ import org.integratedmodelling.thinklab.api.lang.IResolver;
 import org.integratedmodelling.thinklab.api.metadata.IMetadata;
 import org.integratedmodelling.thinklab.api.modelling.ICategorizingObserver;
 import org.integratedmodelling.thinklab.api.modelling.IClassifyingObserver;
-import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IMeasuringObserver;
 import org.integratedmodelling.thinklab.api.modelling.IModel;
 import org.integratedmodelling.thinklab.api.modelling.IModelObject;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
-import org.integratedmodelling.thinklab.api.modelling.IObservation;
 import org.integratedmodelling.thinklab.api.modelling.IRankingObserver;
+import org.integratedmodelling.thinklab.api.modelling.IScale;
 import org.integratedmodelling.thinklab.api.modelling.IScenario;
 import org.integratedmodelling.thinklab.api.modelling.IStoryline;
 import org.integratedmodelling.thinklab.api.modelling.ISubject;
@@ -216,8 +215,6 @@ public class ModelManager implements IModelManager {
 				return new Value();
 			} else if (cls.equals(IModel.class)) {
 				return new Model();
-			} else if (cls.equals(IContext.class)) {
-				return new Context();
 			} else if (cls.equals(IStoryline.class)) {
 				return new Storyline();
 			} else if (cls.equals(IScenario.class)) {
@@ -226,8 +223,6 @@ public class ModelManager implements IModelManager {
 				return new ConceptObject();
 			} else if (cls.equals(IProperty.class)) {
 				return new PropertyObject();
-			} else if (cls.equals(IObservation.class)) {
-				return new Observation();
 			} else if (cls.equals(IUnit.class)) {
 				return new UnitDefinition();
 			} else if (cls.equals(IMetadata.class)) {
@@ -581,7 +576,7 @@ public class ModelManager implements IModelManager {
 	}
 
 	@Override
-	public IContext getCoverage(IModel model) {
+	public IScale getCoverage(IModel model) {
 		// TODO Auto-generated method stub
 		return null;
 	}

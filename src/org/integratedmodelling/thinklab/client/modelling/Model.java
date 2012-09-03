@@ -6,10 +6,10 @@ import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabUnsupportedOperationException;
 import org.integratedmodelling.thinklab.api.knowledge.IExpression;
 import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
-import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IDataSource;
 import org.integratedmodelling.thinklab.api.modelling.IExtent;
 import org.integratedmodelling.thinklab.api.modelling.IObserver;
+import org.integratedmodelling.thinklab.api.modelling.IScale;
 import org.integratedmodelling.thinklab.api.modelling.ISubject;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IExpressionDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionCall;
@@ -75,7 +75,7 @@ public class Model extends ObservingObject implements IModelDefinition {
 	}
 
 	@Override
-	public IContext getCoverage() {
+	public IScale getCoverage() {
 		// TODO Auto-generated method stub
 		return null;
 	}

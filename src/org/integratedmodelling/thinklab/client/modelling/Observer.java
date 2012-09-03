@@ -6,9 +6,9 @@ import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabUnsupportedOperationException;
 import org.integratedmodelling.thinklab.api.knowledge.IExpression;
 import org.integratedmodelling.thinklab.api.modelling.IAccessor;
-import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IExtent;
 import org.integratedmodelling.thinklab.api.modelling.IObserver;
+import org.integratedmodelling.thinklab.api.modelling.IScale;
 import org.integratedmodelling.thinklab.api.modelling.IScenario;
 import org.integratedmodelling.thinklab.api.modelling.ISubject;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IExpressionDefinition;
@@ -65,12 +65,12 @@ public abstract class Observer extends ObservingObject implements IObserverDefin
 	}
 
 	@Override
-	public IAccessor getAccessor(IContext context) {
+	public IAccessor getAccessor(IScale context) {
 		return _accessor;
 	}
 
 	@Override
-	public IObserver train(IContext context) throws ThinklabException {
+	public IObserver train(ISubject context) throws ThinklabException {
 		throw new ThinklabUnsupportedOperationException("models cannot be trained at the client side");
 	}
 

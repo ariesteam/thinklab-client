@@ -2,7 +2,7 @@ package org.integratedmodelling.thinklab.client.modelling;
 
 import java.util.ArrayList;
 
-import org.integratedmodelling.collections.Pair;
+import org.integratedmodelling.collections.Triple;
 import org.integratedmodelling.thinklab.api.lang.IList;
 import org.integratedmodelling.thinklab.api.modelling.IModel;
 import org.integratedmodelling.thinklab.api.modelling.ISubject;
@@ -14,8 +14,8 @@ public class SubjectGenerator extends ModelObject implements ISubjectGenerator {
 
 	IList observable;
 	ArrayList<IFunctionCall> ogens = new ArrayList<IFunctionCall>();
-	ArrayList<Pair<IPropertyDefinition, IModel>> odeps = 
-			new ArrayList<Pair<IPropertyDefinition,IModel>>();
+	ArrayList<Triple<IPropertyDefinition, IModel, Boolean>> odeps = 
+			new ArrayList<Triple<IPropertyDefinition,IModel, Boolean>>();
 	
 	
 	@Override
@@ -35,13 +35,28 @@ public class SubjectGenerator extends ModelObject implements ISubjectGenerator {
 		 */
 		ogens.add(ff);
 	}
-
 	@Override
-	public void addModelDependency(IPropertyDefinition property, IModel observer) {
-		/*
-		 * TODO vaidation
-		 */
-		odeps.add(new Pair<IPropertyDefinition, IModel>(property, observer));
+	public void addModelDependency(IPropertyDefinition property, IModel observer, boolean propagate) {
+		odeps.add(new Triple<IPropertyDefinition, IModel, Boolean>(property, observer, propagate));
 	}
 
+
+//	public void initialize() throws ThinklabException {
+//				/*
+//		 * check that 'propagate' status only applies to object properties
+//		 */
+//		for (Triple<IPropertyDefinition, IModel, Boolean> mm : odeps) {
+//			IProperty p = Thinklab.p(mm.getFirst().getName());
+//			if (mm.getThird() && !p.isObjectProperty())
+//				throw new ThinklabValidationException(p + ": multiple agents can only be the target of object properties");
+//			
+//			DepModel dp = new DepModel();
+//			dp.property = p;
+//			dp.model = mm.getSecond();
+//			dp.propagate = mm.getThird();
+//		
+//			mdeps.add(dp);
+//		}
+//	}
+	
 }

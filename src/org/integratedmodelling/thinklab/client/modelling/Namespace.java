@@ -16,10 +16,10 @@ import org.integratedmodelling.thinklab.api.knowledge.IAxiom;
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
 import org.integratedmodelling.thinklab.api.knowledge.IOntology;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
-import org.integratedmodelling.thinklab.api.modelling.IContext;
 import org.integratedmodelling.thinklab.api.modelling.IExtent;
 import org.integratedmodelling.thinklab.api.modelling.IModelObject;
 import org.integratedmodelling.thinklab.api.modelling.INamespace;
+import org.integratedmodelling.thinklab.api.modelling.IScale;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IConceptDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IModelObjectDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.INamespaceDefinition;
@@ -234,7 +234,7 @@ public class Namespace extends LanguageElement implements INamespaceDefinition {
 	}
 	
 	@Override
-	public IContext getCoverage() {
+	public IScale getCoverage() {
 		// TODO Auto-generated method stub
 		return null;
 	}
