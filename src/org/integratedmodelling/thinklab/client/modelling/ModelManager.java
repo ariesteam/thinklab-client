@@ -262,7 +262,7 @@ public class ModelManager implements IModelManager {
 		}
 
 		@Override
-		public void handleObserveStatement(Object observable, ISubjectGenerator ctx,  boolean distribute, IPropertyDefinition property, int lineNumber)  {
+		public void handleObserveStatement(Object observable,  boolean distribute, IPropertyDefinition property, int lineNumber)  {
 			// TODO Auto-generated method stub
 			
 		}
@@ -403,6 +403,12 @@ public class ModelManager implements IModelManager {
 			 * things get overridden.
 			 */
 			this.namespace.getSymbolTable().put(id, value);
+		}
+
+		@Override
+		public void setCurrentContext(ISubject observe) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 	
@@ -607,13 +613,6 @@ public class ModelManager implements IModelManager {
 
 	@Override
 	public ISubject observe(Object observable) throws ThinklabException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ISubject observe(Object observable, ISubject context,
-			IProperty property, boolean distribute) throws ThinklabException {
 		// TODO Auto-generated method stub
 		return null;
 	}

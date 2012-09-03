@@ -19,7 +19,7 @@ public class SubjectGenerator extends ModelObject implements ISubjectGenerator {
 	
 	
 	@Override
-	public ISubject createSubject() {
+	public ISubject observe() {
 		return null;
 	}
 
