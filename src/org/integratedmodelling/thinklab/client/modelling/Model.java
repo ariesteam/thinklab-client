@@ -3,7 +3,6 @@ package org.integratedmodelling.thinklab.client.modelling;
 import java.util.List;
 
 import org.integratedmodelling.exceptions.ThinklabException;
-import org.integratedmodelling.exceptions.ThinklabUnsupportedOperationException;
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
 import org.integratedmodelling.thinklab.api.knowledge.IExpression;
 import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
@@ -11,7 +10,6 @@ import org.integratedmodelling.thinklab.api.modelling.IDataSource;
 import org.integratedmodelling.thinklab.api.modelling.IExtent;
 import org.integratedmodelling.thinklab.api.modelling.IObserver;
 import org.integratedmodelling.thinklab.api.modelling.IScale;
-import org.integratedmodelling.thinklab.api.modelling.ISubject;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IExpressionDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionCall;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IModelDefinition;
@@ -44,12 +42,6 @@ public class Model extends ObservingObject implements IModelDefinition {
 	@Override
 	public IObserver getObserver() {
 		return _observer;
-	}
-
-	@Override
-	public ISubject observe(ISubject context)
-			throws ThinklabException {
-		throw new ThinklabUnsupportedOperationException("models cannot be contextualized at the client side");
 	}
 
 	@Override
