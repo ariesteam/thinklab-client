@@ -404,12 +404,6 @@ public class ModelManager implements IModelManager {
 			 */
 			this.namespace.getSymbolTable().put(id, value);
 		}
-
-		@Override
-		public void setCurrentContext(ISubject observe) {
-			// TODO Auto-generated method stub
-			
-		}
 	}
 	
 	public void addInterpreter(String extension, IModelParser modelParser) {

@@ -50,7 +50,7 @@ public class ModelObject extends LanguageElement implements IModelObject, IModel
 	
 	@Override
 	public String getName() {
-		return getNamespace().getId() + "/" + _id;
+		return getNamespace().getId() + "." + _id;
 	}
 	
 	@Override
