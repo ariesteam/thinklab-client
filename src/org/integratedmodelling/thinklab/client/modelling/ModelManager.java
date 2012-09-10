@@ -183,7 +183,7 @@ public class ModelManager implements IModelManager {
 			PropertyObject ret = new PropertyObject();
 			SemanticType st = new SemanticType(id);
 			ret.setId(st.getLocalName());
-			ret.setNamespace(new Namespace(st.getLocalName()));
+			ret.setNamespace(new Namespace(st.getConceptSpace()));
 			
 			/*
 			 * TODO discuss import with knowledge manager. Should have been seen before.

@@ -355,13 +355,6 @@ Export-Package: asm,
  org.integratedmodelling.thinklab.client.commands;uses:="org.integratedmodelling.thinklab.client,org.integratedmodelling.thinklab.client.shell",
  org.integratedmodelling.thinklab.client.configuration,
  org.integratedmodelling.thinklab.client.exceptions;uses:="org.integratedmodelling.exceptions",
- org.integratedmodelling.thinklab.client.knowledge;
-  uses:="org.integratedmodelling.thinklab.api.knowledge.query,
-   org.integratedmodelling.thinklab.api.lang,
-   org.integratedmodelling.thinklab.api.knowledge.kbox,
-   org.integratedmodelling.thinklab.api.modelling,
-   org.integratedmodelling.thinklab.api.factories,
-   org.integratedmodelling.thinklab.api.knowledge",
  org.integratedmodelling.thinklab.client.listeners,
  org.integratedmodelling.thinklab.client.modelling;
   uses:="org.integratedmodelling.thinklab.api.metadata,
