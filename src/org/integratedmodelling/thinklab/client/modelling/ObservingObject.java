@@ -89,9 +89,9 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 
 	@Override
 	public void addDependency(Object cmodel, String formalName, IPropertyDefinition property, boolean optional, boolean distribute) {
-		_dependencies.add(new Dependency(cmodel, formalName, 
-				(property == null ? null : KnowledgeManager.get().getProperty(property.getName())), 
-				optional, distribute));
+//		_dependencies.add(new Dependency(cmodel, formalName, 
+//				(property == null ? null : KnowledgeManager.get().getProperty(property.getName())), 
+//				optional, distribute));
 	}
 
 	@Override
