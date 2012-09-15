@@ -5,7 +5,7 @@ import java.util.List;
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabUnsupportedOperationException;
 import org.integratedmodelling.thinklab.api.knowledge.IExpression;
-import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
+import org.integratedmodelling.thinklab.api.lang.IList;
 import org.integratedmodelling.thinklab.api.modelling.IAccessor;
 import org.integratedmodelling.thinklab.api.modelling.IExtent;
 import org.integratedmodelling.thinklab.api.modelling.IObserver;
@@ -86,10 +86,10 @@ public abstract class Observer extends ObservingObject implements IObserverDefin
 	}
 	
 	@Override
-	public ISemanticObject<?> getFinalObservable() {
+	public IList getFinalObservable() {
 
 		return _mediated == null ? 
-					_observables.get(0) : 
+					_observables.get(0).getSemantics() : 
 					((Observer)_mediated).getFinalObservable();
 	}
 	

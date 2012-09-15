@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabRuntimeException;
+import org.integratedmodelling.thinklab.api.knowledge.IConcept;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
 import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
 import org.integratedmodelling.thinklab.api.lang.IList;
@@ -112,6 +113,15 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 	@Override
 	public List<IDependency> getDependencies() {
 		return _dependencies;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.integratedmodelling.thinklab.api.modelling.IObservingObject#hasActionsFor(org.integratedmodelling.thinklab.api.knowledge.IConcept, org.integratedmodelling.thinklab.api.knowledge.IConcept)
+	 */
+	@Override
+	public boolean hasActionsFor(IConcept observable, IConcept domainConcept) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 
