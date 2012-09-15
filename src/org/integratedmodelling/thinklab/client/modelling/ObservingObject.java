@@ -8,7 +8,9 @@ import org.integratedmodelling.exceptions.ThinklabRuntimeException;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
 import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
 import org.integratedmodelling.thinklab.api.lang.IList;
+import org.integratedmodelling.thinklab.api.modelling.IModel;
 import org.integratedmodelling.thinklab.api.modelling.IObservingObject;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IModelDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IObservingObjectDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IPropertyDefinition;
 import org.integratedmodelling.thinklab.common.owl.KnowledgeManager;
@@ -29,6 +31,7 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 		private IProperty _property;
 		private boolean _optional;
 		private boolean _distribute;
+		private IModel  _contextModel;
 		
 		Dependency() {}
 		
@@ -64,6 +67,16 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 		public boolean isDistributed() {
 			return _distribute;
 		}
+
+		@Override
+		public IModel getContextModel() {
+			return _contextModel;
+		}
+
+		@Override
+		public Object getWhereCondition() {
+			return null;
+		}
 		
 	}
 	
@@ -88,7 +101,9 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 	}
 
 	@Override
-	public void addDependency(Object cmodel, String formalName, IPropertyDefinition property, boolean optional, boolean distribute) {
+	public void addDependency(Object cmodel, String formalName, IPropertyDefinition property, boolean optional, boolean distribute, 
+			IModelDefinition contextModel, 
+			Object whereCondition) {
 //		_dependencies.add(new Dependency(cmodel, formalName, 
 //				(property == null ? null : KnowledgeManager.get().getProperty(property.getName())), 
 //				optional, distribute));
