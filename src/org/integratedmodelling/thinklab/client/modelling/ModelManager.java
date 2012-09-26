@@ -115,8 +115,8 @@ public class ModelManager implements IModelManager {
 		@Override
 		public boolean onWarning(String warning, int lineNumber) {
 			
-//			System.out.println("WARNING " + warning + " at " + lineNumber);
-//
+			System.out.println("WARNING " + warning + " at " + lineNumber);
+
 			if (namespace != null) {
 				namespace.addWarning(warning, lineNumber);
 			}
@@ -403,6 +403,12 @@ public class ModelManager implements IModelManager {
 			 * things get overridden.
 			 */
 			this.namespace.getSymbolTable().put(id, value);
+		}
+
+		@Override
+		public IConcept getConceptFor(String key) {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}
 	
