@@ -61,8 +61,6 @@ public abstract class Observer extends ObservingObject implements IObserverDefin
 
 	@Override
 	public void setAccessorGeneratorFunction(IFunctionCall function) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

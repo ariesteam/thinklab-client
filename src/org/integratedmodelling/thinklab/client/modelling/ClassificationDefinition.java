@@ -117,4 +117,10 @@ public class ClassificationDefinition implements IClassificationDefinition {
 		
 	}
 
+	@Override
+	public boolean isContiguousAndFinite() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
