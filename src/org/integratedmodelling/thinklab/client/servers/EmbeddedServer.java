@@ -45,7 +45,7 @@ public class EmbeddedServer extends RESTServer {
 			// server is useless. Do not say anything.
 		}
 		
-		File f = Configuration.get().getWorkspace(IServer.KNOWLEDGE_STORAGE_AREA);
+		File f = Configuration.get().getScratchArea(IServer.KNOWLEDGE_STORAGE_AREA);
 		if (f.exists() && new File(f + File.separator + "thinklab.owl").exists()) {
 			try {
 				((KnowledgeManager)_km).loadKnowledge(f);
