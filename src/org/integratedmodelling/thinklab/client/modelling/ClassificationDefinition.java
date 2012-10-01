@@ -3,6 +3,7 @@ package org.integratedmodelling.thinklab.client.modelling;
 import java.util.List;
 
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
+import org.integratedmodelling.thinklab.api.modelling.IClassification;
 import org.integratedmodelling.thinklab.api.modelling.IClassifier;
 import org.integratedmodelling.thinklab.api.modelling.IObserver;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IClassificationDefinition;
@@ -119,6 +120,12 @@ public class ClassificationDefinition implements IClassificationDefinition {
 
 	@Override
 	public boolean isContiguousAndFinite() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isIdentical(IClassification _classification) {
 		// TODO Auto-generated method stub
 		return false;
 	}

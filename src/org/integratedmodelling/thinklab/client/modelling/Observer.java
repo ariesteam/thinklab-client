@@ -90,6 +90,12 @@ public abstract class Observer extends ObservingObject implements IObserverDefin
 					_observables.get(0).getSemantics() : 
 					((Observer)_mediated).getFinalObservable();
 	}
+
+	@Override
+	public boolean isTrivialMediation(IObserver observer2) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 	
 }
