@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.integratedmodelling.collections.Triple;
 import org.integratedmodelling.thinklab.api.lang.IList;
 import org.integratedmodelling.thinklab.api.modelling.IModel;
+import org.integratedmodelling.thinklab.api.modelling.INamespace;
 import org.integratedmodelling.thinklab.api.modelling.ISubject;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionCall;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IPropertyDefinition;
@@ -19,7 +20,7 @@ public class SubjectGenerator extends ModelObject implements ISubjectGenerator {
 	
 	
 	@Override
-	public ISubject observe() {
+	public ISubject observe(INamespace namespace) {
 		return null;
 	}
 

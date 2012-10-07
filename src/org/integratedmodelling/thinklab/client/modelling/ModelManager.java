@@ -309,6 +309,7 @@ public class ModelManager implements IModelManager {
 			ns.setId(namespace);
 			ns.setResourceUrl(resource);
 			ns.setProject(project);
+			
 			synchronized(namespacesById) {
 				namespacesById.put(namespace, ns);
 			}
@@ -610,12 +611,12 @@ public class ModelManager implements IModelManager {
 				namespacesById.put(ns.getId(), ns);
 		}
 	}
-
-	@Override
-	public ISubject observe(Object observable) throws ThinklabException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//
+//	@Override
+//	public ISubject observe(Object observable) throws ThinklabException {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 	@Override
 	public Collection<IScenario> getScenarios(IModel model, ISubject context)
