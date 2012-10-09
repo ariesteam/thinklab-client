@@ -1,13 +1,10 @@
 package org.integratedmodelling.thinklab.client.modelling;
 
-import java.util.List;
-
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabUnsupportedOperationException;
 import org.integratedmodelling.thinklab.api.knowledge.IExpression;
 import org.integratedmodelling.thinklab.api.lang.IList;
 import org.integratedmodelling.thinklab.api.modelling.IAccessor;
-import org.integratedmodelling.thinklab.api.modelling.IExtent;
 import org.integratedmodelling.thinklab.api.modelling.IObserver;
 import org.integratedmodelling.thinklab.api.modelling.IScale;
 import org.integratedmodelling.thinklab.api.modelling.IScenario;
@@ -20,12 +17,7 @@ public abstract class Observer extends ObservingObject implements IObserverDefin
 
 	IObserver _mediated = null;
 	IAccessor _accessor = null;
-	
-	@Override
-	public List<IExtent> getUnresolvedContext(ISubject totalContext) {
-		return null;
-	}
-	
+
 	/**
 	 * Add one observer with an optional conditional expression to contextualize the model to use. Creation
 	 * of conditional observers if more than one observer is added or there are conditions is
