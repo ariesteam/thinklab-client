@@ -9,7 +9,6 @@ import org.integratedmodelling.thinklab.api.modelling.IObserver;
 import org.integratedmodelling.thinklab.api.modelling.IScale;
 import org.integratedmodelling.thinklab.api.modelling.IScenario;
 import org.integratedmodelling.thinklab.api.modelling.ISubject;
-import org.integratedmodelling.thinklab.api.modelling.parsing.IExpressionDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionCall;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IObserverDefinition;
 
@@ -27,7 +26,7 @@ public abstract class Observer extends ObservingObject implements IObserverDefin
 	 * @param expression
 	 */
 	@Override
-	public void addMediatedObserver(IObserverDefinition odef, IExpressionDefinition edef) {
+	public void addMediatedObserver(IObserverDefinition odef, IExpression edef) {
 		
 		IObserver observer = (IObserver)odef;
 		IExpression expression = (IExpression)edef;

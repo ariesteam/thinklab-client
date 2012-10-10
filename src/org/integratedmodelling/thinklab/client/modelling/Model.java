@@ -11,7 +11,6 @@ import org.integratedmodelling.thinklab.api.modelling.IDataSource;
 import org.integratedmodelling.thinklab.api.modelling.IExtent;
 import org.integratedmodelling.thinklab.api.modelling.IObserver;
 import org.integratedmodelling.thinklab.api.modelling.IScale;
-import org.integratedmodelling.thinklab.api.modelling.parsing.IExpressionDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionCall;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IModelDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IObserverDefinition;
@@ -22,7 +21,7 @@ public class Model extends ObservingObject implements IModelDefinition {
 	IAccessor _accessor = null;
 	
 	@Override
-	public void addObserver(IObserverDefinition odef, IExpressionDefinition edef) {
+	public void addObserver(IObserverDefinition odef, IExpression edef) {
 		
 		IObserver observer = (IObserver)odef;
 		IExpression expression = (IExpression)edef;

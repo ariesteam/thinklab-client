@@ -6,6 +6,7 @@ import java.util.List;
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabRuntimeException;
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
+import org.integratedmodelling.thinklab.api.knowledge.IExpression;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
 import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
 import org.integratedmodelling.thinklab.api.lang.IList;
@@ -124,5 +125,15 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 		return false;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.integratedmodelling.thinklab.api.modelling.parsing.IObservingObjectDefinition#addAction(org.integratedmodelling.thinklab.api.knowledge.IConcept, java.lang.String, org.integratedmodelling.thinklab.api.modelling.parsing.IExpressionDefinition, org.integratedmodelling.thinklab.api.modelling.parsing.IExpressionDefinition, boolean)
+	 */
+	@Override
+	public void addAction(IConcept domain, String subject,
+			IExpression action, IExpression condition,
+			boolean negated) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
