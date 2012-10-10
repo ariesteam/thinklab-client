@@ -21,6 +21,7 @@ import org.integratedmodelling.lang.SemanticType;
 import org.integratedmodelling.thinklab.api.factories.IModelManager;
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
+import org.integratedmodelling.thinklab.api.lang.IExpressionLanguageAdapter;
 import org.integratedmodelling.thinklab.api.lang.IModelParser;
 import org.integratedmodelling.thinklab.api.lang.IResolver;
 import org.integratedmodelling.thinklab.api.metadata.IMetadata;
@@ -410,6 +411,11 @@ public class ModelManager implements IModelManager {
 		public IConcept getConceptFor(String key) {
 			// TODO Auto-generated method stub
 			return null;
+		}
+
+		@Override
+		public IExpressionLanguageAdapter getLanguageAdapter() {
+			return new DummyLanguageAdapter();
 		}
 	}
 	
