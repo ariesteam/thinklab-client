@@ -129,9 +129,7 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 	 * @see org.integratedmodelling.thinklab.api.modelling.parsing.IObservingObjectDefinition#addAction(org.integratedmodelling.thinklab.api.knowledge.IConcept, java.lang.String, org.integratedmodelling.thinklab.api.modelling.parsing.IExpressionDefinition, org.integratedmodelling.thinklab.api.modelling.parsing.IExpressionDefinition, boolean)
 	 */
 	@Override
-	public void addAction(IConcept domain, String subject,
-			IExpression action, IExpression condition,
-			boolean negated) {
+	public void addAction(String target, int type, IExpression action, IExpression condition, IConcept[] domains) {
 		// TODO Auto-generated method stub
 		
 	}
