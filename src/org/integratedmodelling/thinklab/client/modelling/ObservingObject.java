@@ -1,6 +1,7 @@
 package org.integratedmodelling.thinklab.client.modelling;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.integratedmodelling.exceptions.ThinklabException;
@@ -10,8 +11,10 @@ import org.integratedmodelling.thinklab.api.knowledge.IExpression;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
 import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
 import org.integratedmodelling.thinklab.api.lang.IList;
+import org.integratedmodelling.thinklab.api.modelling.IExtent;
 import org.integratedmodelling.thinklab.api.modelling.IModel;
 import org.integratedmodelling.thinklab.api.modelling.IObservingObject;
+import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionCall;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IModelDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IObservingObjectDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IPropertyDefinition;
@@ -132,6 +135,18 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 	public void addAction(String target, int type, IExpression action, IExpression condition, IConcept[] domains) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public IConcept addExtentConstraintFunction(IFunctionCall extentGenerator) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<IExtent> getExtentConstraints() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
