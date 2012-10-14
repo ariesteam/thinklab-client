@@ -105,5 +105,10 @@ public class Model extends ObservingObject implements IModelDefinition {
 		
 	}
 
+	@Override
+	public List<String> getObservableNames() {
+		return _observableNames;
+	}
+
 
 }

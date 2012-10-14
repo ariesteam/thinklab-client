@@ -6,19 +6,19 @@ import java.util.List;
 
 import org.integratedmodelling.exceptions.ThinklabException;
 import org.integratedmodelling.exceptions.ThinklabRuntimeException;
+import org.integratedmodelling.lang.SemanticType;
 import org.integratedmodelling.thinklab.api.knowledge.IConcept;
 import org.integratedmodelling.thinklab.api.knowledge.IExpression;
 import org.integratedmodelling.thinklab.api.knowledge.IProperty;
 import org.integratedmodelling.thinklab.api.knowledge.ISemanticObject;
 import org.integratedmodelling.thinklab.api.lang.IList;
 import org.integratedmodelling.thinklab.api.modelling.IExtent;
-import org.integratedmodelling.thinklab.api.modelling.IModel;
 import org.integratedmodelling.thinklab.api.modelling.IObservingObject;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IFunctionCall;
-import org.integratedmodelling.thinklab.api.modelling.parsing.IModelDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IObservingObjectDefinition;
 import org.integratedmodelling.thinklab.api.modelling.parsing.IPropertyDefinition;
 import org.integratedmodelling.thinklab.common.owl.KnowledgeManager;
+import org.integratedmodelling.thinklab.common.utils.CamelCase;
 
 /**
  * Models and Observers. They both have observables, which are complicated enough to handle
@@ -36,7 +36,7 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 		private IProperty _property;
 		private boolean _optional;
 		private boolean _distribute;
-		private IModel  _contextModel;
+		private Object  _contextModel;
 		
 		Dependency() {}
 		
@@ -74,7 +74,7 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 		}
 
 		@Override
-		public IModel getContextModel() {
+		public Object getContextModel() {
 			return _contextModel;
 		}
 
@@ -87,14 +87,20 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 	
 	ArrayList<IDependency> _dependencies = new ArrayList<IDependency>();
 	ArrayList<ISemanticObject<?>> _observables = new ArrayList<ISemanticObject<?>>();
-
+	ArrayList<String> _observableNames = new ArrayList<String>();
+	
 	String _observableCName;
 	
 	@Override
 	public void addObservable(IList instance, String formalName) {
 		try {
-			_observableCName = instance.first().toString();
+			if (_observableCName == null)
+				_observableCName = instance.first().toString();
 			_observables.add(KnowledgeManager.get().entify(instance));
+			if (formalName == null) {
+				formalName = CamelCase.toLowerCase(new SemanticType(_observableCName).getLocalName(), '-');
+			}
+			_observableNames.add(formalName);
 		} catch (ThinklabException e) {
 			throw new ThinklabRuntimeException(e);
 		}
@@ -107,7 +113,7 @@ public abstract class ObservingObject extends ModelObject implements IObservingO
 
 	@Override
 	public void addDependency(Object cmodel, String formalName, IPropertyDefinition property, boolean optional, boolean distribute, 
-			IModelDefinition contextModel, 
+			Object contextGenerator, 
 			Object whereCondition) {
 //		_dependencies.add(new Dependency(cmodel, formalName, 
 //				(property == null ? null : KnowledgeManager.get().getProperty(property.getName())), 
